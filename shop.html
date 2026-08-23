@@ -338,13 +338,14 @@
         })();
 
         // ============================================================
-        // একটাই "VISION DATA" consolidated Apps Script — Student, Shop,
+        // একটাই Supabase Edge Function ("vision-api") — Student, Shop,
         // Teachers/Course Name/Course Data/Free Class সবকিছুর জন্য একই
         // endpoint (index.html/course-details.html/student-login.html-এও
-        // এই একই URL বসানো)। আগে শপের জন্য আলাদা script/deployment ছিল,
-        // এখন আর দরকার নেই।
+        // এই একই URL বসানো)। আগে Google Apps Script ব্যবহার হতো, এখন
+        // Supabase Edge Function এই একই action/response contract মেনে
+        // কাজ করে।
         // ============================================================
-        const SHOP_FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbzX0y0FDBcFVxkUoIY2VqFG4XZ3BcoYJfoVvMNYKF28UQLqWPKeMax30MYqDXlM_t3cXQ/exec";
+        const SHOP_FORM_ENDPOINT = "https://ermnoiqrdtwkwnozoihk.supabase.co/functions/v1/vision-api";
 
         function callShopApi(payload){
             const controller = new AbortController();
