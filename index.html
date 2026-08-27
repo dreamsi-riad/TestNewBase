@@ -423,6 +423,27 @@ let inquiryData = [];
 let activePendingId = null;
 let activeInquiryId = null;
 
+const ADMIN_SESSION_KEY = 'vision_admin_session';
+
+function enterApp(admin){
+  currentAdmin = admin;
+  document.getElementById('welcomeText').textContent = 'স্বাগতম, ' + currentAdmin.name;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadCounts();
+}
+
+// আগে থেকে সেভ করা সেশন থাকলে সরাসরি লগইন স্ক্রিন স্কিপ করে অ্যাপে ঢুকিয়ে দেয়
+(function restoreSession(){
+  try{
+    const saved = localStorage.getItem(ADMIN_SESSION_KEY);
+    if(saved){
+      const admin = JSON.parse(saved);
+      if(admin && admin.mobile){ enterApp(admin); }
+    }
+  } catch(err){ /* corrupted/blocked storage — ignore, show login normally */ }
+})();
+
 /* ---------------- helpers ---------------- */
 function post(payload){
   return fetch(FORM_ENDPOINT, {
@@ -470,11 +491,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   try{
     const res = await post({ action:'admin_login', mobile, password });
     if(res.status === 'ok'){
-      currentAdmin = res.data;
-      document.getElementById('welcomeText').textContent = 'স্বাগতম, ' + currentAdmin.name;
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      loadCounts();
+      try{ localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(res.data)); } catch(err){ /* storage unavailable — session just won't persist */ }
+      enterApp(res.data);
     } else {
       errEl.textContent = res.message || 'লগইন ব্যর্থ হয়েছে।';
     }
@@ -488,6 +506,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   currentAdmin = null;
+  try{ localStorage.removeItem(ADMIN_SESSION_KEY); } catch(err){ /* storage unavailable */ }
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginForm').reset();
