@@ -694,6 +694,14 @@ function renderInquiryList(){
   });
 }
 
+function formatWatchTime(minutes){
+  const total = Math.round(Number(minutes) || 0);
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  if(h > 0) return `${h} ঘণ্টা ${m} মিনিট`;
+  return `${m} মিনিট`;
+}
+
 function openDetailModal(id){
   const r = inquiryData.find(x => x.id === id);
   if(!r) return;
@@ -705,7 +713,8 @@ function openDetailModal(id){
     ['ডিপার্টমেন্ট', r.department], ['ইনস্টিটিউট', r.institute],
     ['ইমেইল', r.email], ['ঠিকানা', r.address],
     ['এনরোলড', r.enrolledAt], ['মেয়াদ শেষ', r.expiresAt],
-    ['পেমেন্ট', r.payment || '—'], ['অ্যাপ্রুভড বাই', r.admin || '—']
+    ['পেমেন্ট', r.payment || '—'], ['অ্যাপ্রুভড বাই', r.admin || '—'],
+    ['ওয়াচ টাইম', formatWatchTime(r.watchTime)]
   ]);
   const lockBtn = document.getElementById('dtLockBtn');
   lockBtn.textContent = r.locked ? 'আনলক করুন' : 'লক করুন';
