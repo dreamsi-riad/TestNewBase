@@ -274,6 +274,27 @@ main{ max-width:820px; margin:0 auto; padding:20px 16px 60px; }
 }
 .modal-box h3{ margin:0 0 4px; font-size:19px; }
 .modal-sub{ font-size:12px; color:var(--ink-soft); margin:0 0 18px; }
+.course-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:linear-gradient(90deg, var(--accent), var(--sky));
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  padding:7px 14px;
+  border-radius:20px;
+  margin:0 0 18px;
+}
+.course-badge .sector{
+  background:rgba(255,255,255,0.85);
+  color:var(--ink);
+  font-size:11px;
+  font-weight:800;
+  padding:2px 8px;
+  border-radius:10px;
+  letter-spacing:0.3px;
+}
 .info-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -384,7 +405,7 @@ main{ max-width:820px; margin:0 auto; padding:20px 16px 60px; }
   <div class="modal-box">
     <button class="close-x" data-close="approveModal">✕</button>
     <h3 id="apName">—</h3>
-    <p class="modal-sub" id="apCourse">—</p>
+    <div class="course-badge" id="apCourse">—</div>
     <div class="info-grid" id="apInfoGrid"></div>
     <label class="field" style="margin-bottom:0;">
       <span style="font-size:13px; color:var(--ink-soft); display:block; margin-bottom:6px;">পেমেন্ট (টাকা)</span>
@@ -403,7 +424,7 @@ main{ max-width:820px; margin:0 auto; padding:20px 16px 60px; }
   <div class="modal-box">
     <button class="close-x" data-close="detailModal">✕</button>
     <h3 id="dtName">—</h3>
-    <p class="modal-sub" id="dtCourse">—</p>
+    <div class="course-badge" id="dtCourse">—</div>
     <div class="info-grid" id="dtInfoGrid"></div>
     <p class="error-text" id="dtError"></p>
     <div class="modal-actions">
@@ -581,7 +602,7 @@ function openApproveModal(id){
   if(!r) return;
   activePendingId = id;
   document.getElementById('apName').textContent = r.name || 'নাম নেই';
-  document.getElementById('apCourse').textContent = r.course + (r.nuDcu ? ' · ' + r.nuDcu : '');
+  document.getElementById('apCourse').innerHTML = escapeHtml(r.course) + (r.nuDcu ? ` <span class="sector">${escapeHtml(r.nuDcu)}</span>` : '');
   document.getElementById('apInfoGrid').innerHTML = infoGrid([
     ['মোবাইল', r.mobile], ['লেভেল', r.level], ['ইয়ার', r.year],
     ['ডিপার্টমেন্ট', r.department], ['ইনস্টিটিউট', r.institute],
@@ -677,7 +698,7 @@ function openDetailModal(id){
   if(!r) return;
   activeInquiryId = id;
   document.getElementById('dtName').textContent = r.name || 'নাম নেই';
-  document.getElementById('dtCourse').textContent = r.course + (r.nuDcu ? ' · ' + r.nuDcu : '');
+  document.getElementById('dtCourse').innerHTML = escapeHtml(r.course) + (r.nuDcu ? ` <span class="sector">${escapeHtml(r.nuDcu)}</span>` : '');
   document.getElementById('dtInfoGrid').innerHTML = infoGrid([
     ['মোবাইল', r.mobile], ['লেভেল', r.level], ['ইয়ার', r.year],
     ['ডিপার্টমেন্ট', r.department], ['ইনস্টিটিউট', r.institute],
