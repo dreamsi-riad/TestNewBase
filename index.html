@@ -1,14 +1,21 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VISION Admin Control Center</title><meta name="robots" content="noindex,nofollow"><link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&family=Baloo+Da+2:wght@700;800&display=swap" rel="stylesheet"><style>
+<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VISION Admin Control Center — Database Manager</title><meta name="robots" content="noindex,nofollow"><link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&family=Baloo+Da+2:wght@700;800&display=swap" rel="stylesheet"><style>
 :root{--i:#17233f;--m:#68748d;--p:#f5f7fb;--w:#fff;--l:#e4e8ef;--g:#e8a33d;--r:#d9534f;--ok:#20875a}*{box-sizing:border-box}body{margin:0;background:var(--p);color:var(--i);font-family:'Anek Bangla',sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.box,.panel,.stat{background:#fff;border:1px solid var(--l);border-radius:16px;box-shadow:0 14px 40px #17233f12}.box{width:min(430px,100%);padding:32px}.brand{font:800 28px 'Baloo Da 2'}.brand span{color:var(--g)}label{display:block;font-weight:700;font-size:14px;margin:12px 0 5px}input,textarea{width:100%;border:1px solid var(--l);border-radius:10px;padding:10px 12px;background:#fff}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800}.primary{background:var(--i);color:#fff}.gold{background:var(--g);color:var(--i)}.ghost{background:#fff;border:1px solid var(--l)}.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.side{background:#101a31;color:#fff;padding:16px;position:sticky;top:0;height:100vh;overflow:auto}.side nav button{display:block;width:100%;border:0;background:transparent;color:#cbd3e5;text-align:left;padding:10px 12px;border-radius:9px;margin:3px 0}.side nav button:hover,.side nav button.active{background:#263657;color:#fff}.muted{color:var(--m)}.main{min-width:0}.top{height:68px;background:#fff;border-bottom:1px solid var(--l);display:flex;justify-content:space-between;align-items:center;padding:0 22px;position:sticky;top:0;z-index:5}.content{padding:22px;max-width:1700px;margin:auto}.title{font:800 30px 'Baloo Da 2';margin:0}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{padding:17px;text-align:left}.stat .n{font-size:28px;font-weight:800}.panel{overflow:hidden;margin-top:16px}.ph{padding:14px 16px;border-bottom:1px solid var(--l);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.tools,.act{display:flex;gap:7px;flex-wrap:wrap}.tools input{width:240px}.tw{overflow:auto}.tbl{width:100%;border-collapse:collapse;min-width:900px}.tbl th,.tbl td{padding:9px 11px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px;vertical-align:top}.tbl th{background:#fafbfc}.mini{border:1px solid var(--l);background:#fff;border-radius:8px;padding:5px 8px;font-weight:700}.mini.ok{background:#eaf8f0;color:var(--ok)}.mini.bad{background:#fff0ef;color:var(--r)}.empty{padding:40px;text-align:center;color:var(--m)}.pager{padding:11px 15px;display:flex;justify-content:space-between}.drawer{position:fixed;inset:0;background:#0b1428aa;display:flex;justify-content:flex-end;z-index:20}.drawer>div{width:min(680px,100%);height:100%;overflow:auto;background:#fff;padding:20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.toast{position:fixed;right:20px;bottom:20px;background:var(--i);color:#fff;padding:10px 14px;border-radius:9px;z-index:30}@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.side nav{display:flex;overflow:auto}.side nav button{min-width:max-content}.content{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto}}@media(max-width:520px){.cards{grid-template-columns:1fr}}
+
+.small{font-size:12px}.secret{letter-spacing:2px;color:#8b94a8}.cell-link{color:#1c63d5;text-decoration:none;font-weight:600}.cell-link:hover{text-decoration:underline}
+.badge{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#f1f3f6;color:#68748d}.badge.on{background:#eaf8f0;color:#20875a}.badge.off{background:#fff0ef;color:#d9534f}
+.tbl th{position:sticky;top:0;z-index:2;white-space:nowrap}.tbl td{max-width:360px;line-height:1.45}.actions-head,.actions-cell{min-width:190px;position:sticky;right:0;background:#fff;z-index:3}.tbl th.actions-head{background:#fafbfc}.act{min-width:180px}.mini:disabled{opacity:.45;cursor:not-allowed}.error-box{color:#d9534f;background:#fff8f8;border:1px solid #ffd6d3;margin:16px;border-radius:12px}
+.drawer select{width:100%;border:1px solid var(--l);border-radius:10px;padding:10px 12px;background:#fff}.field-type{font-size:10px;color:#8a94a8;font-weight:600;margin-left:5px}.field-note{font-size:11px;color:#d9534f}.editor-meta{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f9fc;border-radius:10px;margin-bottom:12px}.editor-meta span{font-size:12px;color:#68748d}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--l)}
+.spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 </style></head><body>
-<div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center</p><label>Admin Mobile</label><input id="lm" required value="admin" placeholder="Admin mobile / admin"><label>Password</label><input id="lp" type="password" required value="1234"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
+<div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required value="admin" placeholder="Admin mobile / admin"><label>Password</label><input id="lp" type="password" required value="1234"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses">📚 Courses</button><button data-p="content">▶ Course Content</button><button data-p="subjects">◈ Subject-wise</button><button data-p="teachers">👨‍🏫 Teachers</button><button data-p="free">🎁 Free Classes</button><button data-p="gallery">🖼 Gallery / Reviews</button><button data-p="shop">🛍 Shop Products</button><button data-p="orders">📦 Orders</button><button data-p="admins">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
 <div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div><div id="toast" class="toast hidden"></div>
 <script>
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
-let S={token:localStorage.va_admin_token||'',user:JSON.parse(localStorage.va_admin_user||'null'),table:null,cols:[],rows:[],search:'',offset:0,limit:100};const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function toast(x){toastEl.textContent=x;toastEl.classList.remove('hidden');setTimeout(()=>toastEl.classList.add('hidden'),2300)}const toastEl=document.getElementById('toast');
+let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',offset:0,limit:100};
+try{S.user=JSON.parse(localStorage.va_admin_user||'null')}catch{S.user=null}const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function toast(x){toastEl.textContent=x;toastEl.classList.remove('hidden');setTimeout(()=>toastEl.classList.add('hidden'),2300)}const toastEl=document.getElementById('toast');
 async function api(action,o={}){
   const actionMap={
     admin_dashboard:'panel_admin_dashboard',
@@ -29,10 +36,17 @@ async function api(action,o={}){
   let j;
   try{ j=await r.json(); }
   catch(e){ throw Error(`Worker response invalid (HTTP ${r.status})`); }
-  if(j.status==='error')throw Error(j.message||'Worker error');
+  if(!r.ok) throw Error(j?.message||`Worker HTTP ${r.status}`);
+  if(j?.status==='error') throw Error(j.message||'Worker error');
   return j;
 }
-async function doLogin(m,p){let r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'panel_admin_login',mobile:m,password:p})}),j=await r.json();if(j.status==='error')throw Error(j.message);return j}
+async function doLogin(m,p){
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'panel_admin_login',mobile:m,password:p}),cache:'no-store'});
+  let j;try{j=await r.json()}catch{throw Error(`Worker response invalid (HTTP ${r.status})`)}
+  if(!r.ok||j?.status==='error')throw Error(j?.message||`Login failed (HTTP ${r.status})`);
+  if(!j?.data?.adminToken)throw Error('Login succeeded but admin session token was not returned.');
+  return j;
+}
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');who.textContent='Signed in: '+(S.user?.name||'Admin');page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
@@ -42,12 +56,224 @@ async function pending(){content.innerHTML='<h1 class="title">Pending Enrollment
 async function approve(id){let x=prompt('Payment status / note:','Paid');if(x===null)return;try{await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',payment:x});toast('Enrollment approved');pending()}catch(e){toast(e.message)}}
 async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><p class="muted">Manage classes, chapters, video URLs and PDFs.</p><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
 async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><p class="muted">${esc(t)}</p><div id="panel" class="panel"></div>`;refresh()}
-async function refresh(){let q=document.getElementById('panel');if(!q)return;q.innerHTML='<div class="empty">Loading…</div>';try{let schemaResponse=await api('admin_table_schema',{table:S.table});
-let s=schemaResponse.data;
-S.cols=Array.isArray(s)?s:(s.columns||[]);
-let d=(await api('admin_rows',{table:S.table,search:S.search,offset:S.offset,limit:S.limit})).data||{};
-S.rows=Array.isArray(d.rows)?d.rows:[];let th=d.columns.map(c=>`<th>${esc(c)}</th>`).join(''),tb=d.rows.map(r=>`<tr>${d.columns.map(c=>`<td>${esc(String(r[c]??'').slice(0,180))}</td>`).join('')}<td><div class="act"><button class="mini" onclick="edit(${r.__rowid})">Edit</button><button class="mini bad" onclick="del(${r.__rowid})">Delete</button>${S.table==='student_login'?`<button class="mini" onclick="pw(${r.__rowid})">Reset PW</button>`:''}</div></td></tr>`).join('');q.innerHTML=`<div class="ph"><b>${esc(P[S.table]?.[1]||S.table)} · ${d.total??S.rows.length}</b><div class="tools"><input id="search" placeholder="Search…" value="${esc(S.search)}" onkeydown="if(event.key==='Enter'){S.search=this.value;S.offset=0;refresh()}"><button class="btn gold" onclick="newR()">＋ Add</button><button class="btn ghost" onclick="refresh()">↻</button></div></div><div class="tw">${d.rows.length?`<table class="tbl"><thead><tr>${th}<th>Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records.</div>'}</div><div class="pager"><span>${d.total?d.offset+1:0}–${Math.min(d.offset+d.limit,d.total)} of ${d.total}</span><span><button class="mini" onclick="S.offset=Math.max(0,S.offset-S.limit);refresh()">←</button> <button class="mini" onclick="S.offset+=S.limit;refresh()">→</button></span></div>`}catch(e){q.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
-function newR(){editor(0,{})}function edit(id){let r=S.rows.find(x=>Number(x.__rowid)===Number(id));if(r)editor(id,r)}function editor(id,row){dt.textContent=id?'Edit record':'Add record';ef.innerHTML=`<input type="hidden" id="rid" value="${id}"><div class="grid">${S.cols.map(c=>{let v=row[c]??'',large=/description|text|address|url|feature|chapter|class/i.test(c),secret=/password/i.test(c),ro=secret&&id;return `<div class="${large?'full':''}"><label>${esc(c)}${ro?' (use Reset PW)':''}</label>${large?`<textarea rows="3" data-c="${esc(c)}" ${ro?'readonly':''}>${esc(v)}</textarea>`:`<input data-c="${esc(c)}" value="${esc(v)}" ${ro?'readonly':''} type="${secret?'password':'text'}">`}</div>`}).join('')}</div><button class="btn primary" style="margin-top:16px">Save</button>`;ef.onsubmit=save;drawer.classList.remove('hidden')}
-async function save(e){e.preventDefault();let d={};document.querySelectorAll('#ef [data-c]').forEach(x=>{if(!x.readOnly)d[x.dataset.c]=x.value});try{await api('admin_save',{table:S.table,rowid:Number(rid.value)||0,data:d});toast('Saved');closeDrawer();refresh()}catch(e){toast(e.message)}}function closeDrawer(){drawer.classList.add('hidden')}async function del(id){if(!confirm('Delete permanently?'))return;try{await api('admin_delete',{table:S.table,rowid:id});toast('Deleted');refresh()}catch(e){toast(e.message)}}async function pw(id){let p=prompt('New password (minimum 4 characters):');if(!p)return;try{await api('admin_reset_password',{table:'student_login',rowid:id,password:p});toast('Password updated')}catch(e){toast(e.message)}}
+
+function colName(c){
+  if(typeof c==='string') return c;
+  if(!c || typeof c!=='object') return '';
+  return String(c.name ?? c.column_name ?? c.key ?? c.columnName ?? '');
+}
+function colType(c){
+  if(!c || typeof c!=='object') return 'TEXT';
+  return String(c.type ?? 'TEXT').toUpperCase();
+}
+function cellValue(v){
+  if(v===null || v===undefined) return '';
+  if(typeof v==='object'){
+    try{return JSON.stringify(v);}
+    catch{return '[Object]';}
+  }
+  return String(v);
+}
+function shortValue(v,max=180){
+  const s=cellValue(v);
+  return s.length>max ? s.slice(0,max-1)+'…' : s;
+}
+function isSecretColumn(c){
+  return /^(password|active_token|token|secret)$/i.test(colName(c));
+}
+function isLargeColumn(c){
+  const n=colName(c);
+  return /description|long_description|text|address|url|link|feature|chapter|class|content|details|note|message|json|data|image/i.test(n);
+}
+function inputValue(v){
+  return cellValue(v);
+}
+function renderCell(v,c){
+  const name=colName(c);
+  if(isSecretColumn(c)) return '<span class="secret">••••••••</span>';
+  const s=shortValue(v,180);
+  if(!s) return '<span class="muted">—</span>';
+  if(/^https?:\/\//i.test(s)){
+    const safe=esc(s);
+    return `<a class="cell-link" href="${safe}" target="_blank" rel="noopener noreferrer">${esc(s.length>55?s.slice(0,55)+'…':s)}</a>`;
+  }
+  if(/^(true|false|yes|no)$/i.test(s.trim())){
+    const on=/^(true|yes)$/i.test(s.trim());
+    return `<span class="badge ${on?'on':'off'}">${esc(s)}</span>`;
+  }
+  return `<span title="${esc(cellValue(v))}">${esc(s)}</span>`;
+}
+function actionButtons(row){
+  const id=Number(row.__rowid);
+  let html=`<button class="mini" onclick="edit(${id})">Edit</button>
+            <button class="mini bad" onclick="del(${id})">Delete</button>`;
+  if(S.table==='student_login'){
+    html+=`<button class="mini" onclick="pw(${id})">Reset PW</button>`;
+  }
+  if(S.table==='student_enrolled'){
+    const blocked=String(row.blocked??'').trim().toLowerCase()==='true';
+    html+=`<button class="mini ${blocked?'ok':''}" onclick="toggleLock(${id},${blocked})">${blocked?'Unlock':'Lock'}</button>`;
+    const wt=String(row.get_wt??'').trim().toLowerCase()==='yes';
+    html+=`<button class="mini" onclick="toggleWt(${id},${wt})">${wt?'WT OFF':'WT ON'}</button>`;
+  }
+  return html;
+}
+async function refresh(){
+  const q=document.getElementById('panel');
+  if(!q)return;
+  q.innerHTML='<div class="empty"><div class="spinner"></div>Loading database…</div>';
+  try{
+    const schemaResponse=await api('admin_table_schema',{table:S.table});
+    const schemaData=schemaResponse.data;
+    S.cols=Array.isArray(schemaData)?schemaData:(schemaData?.columns||[]);
+    const cols=S.cols.map(colName).filter(Boolean);
+
+    const response=await api('admin_rows',{
+      table:S.table,
+      search:S.search,
+      offset:S.offset,
+      limit:S.limit
+    });
+    const d=response.data||{};
+    S.rows=Array.isArray(d.rows)?d.rows:[];
+
+    const th=cols.map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
+    const tb=S.rows.map(r=>`
+      <tr>
+        ${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}
+        <td class="actions-cell"><div class="act">${actionButtons(r)}</div></td>
+      </tr>
+    `).join('');
+
+    const total=Number(d.total??S.rows.length);
+    const offset=Number(d.offset??S.offset);
+    const limit=Number(d.limit??S.limit);
+    const from=total?offset+1:0;
+    const to=Math.min(offset+limit,total);
+
+    q.innerHTML=`
+      <div class="ph">
+        <div>
+          <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
+          <div class="muted small">${esc(S.table)} · ${cols.length} fields</div>
+        </div>
+        <div class="tools">
+          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
+            onkeydown="if(event.key==='Enter'){S.search=this.value.trim();S.offset=0;refresh()}">
+          <button class="btn gold" onclick="newR()">＋ Add</button>
+          <button class="btn ghost" onclick="refresh()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="tw">
+        ${S.rows.length
+          ? `<table class="tbl"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`
+          : '<div class="empty">No records found.</div>'}
+      </div>
+      <div class="pager">
+        <span>${from}–${to} of ${total}</span>
+        <span>
+          <button class="mini" ${offset<=0?'disabled':''} onclick="S.offset=Math.max(0,S.offset-S.limit);refresh()">← Previous</button>
+          <button class="mini" ${offset+limit>=total?'disabled':''} onclick="if(S.offset+S.limit<${total}){S.offset+=S.limit;refresh()}">Next →</button>
+        </span>
+      </div>`;
+  }catch(e){
+    q.innerHTML=`<div class="empty error-box"><b>Could not load this table</b><br>${esc(e.message||e)}</div>`;
+  }
+}
+function newR(){editor(0,{})}
+function edit(id){
+  const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
+  if(r) editor(id,r);
+}
+function editor(id,row){
+  dt.textContent=id?'Edit record':'Add record';
+  ef.innerHTML=`
+    <div class="editor-meta">
+      <b>${esc(P[S.table]?.[1]||S.table)}</b>
+      <span>${id?'Editing row #'+id:'Creating new row'}</span>
+    </div>
+    <input type="hidden" id="rid" value="${id}">
+    <div class="grid">
+      ${S.cols.map(c=>{
+        const name=colName(c);
+        const type=colType(c);
+        const v=inputValue(row[name]);
+        const secret=isSecretColumn(c);
+        const ro=secret&&id;
+        const large=isLargeColumn(c);
+        const bool=/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name);
+        const inputType=secret?'password':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
+        return `<div class="${large?'full':''}">
+          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${ro?' <span class="field-note">(use Reset PW)</span>':''}</label>
+          ${large
+            ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
+            : bool
+              ? `<select data-c="${esc(name)}" ${ro?'disabled':''}>
+                   <option value="">NULL / Empty</option>
+                   <option value="TRUE" ${/^(true|yes|1)$/i.test(v)?'selected':''}>TRUE</option>
+                   <option value="FALSE" ${/^(false|no|0)$/i.test(v)?'selected':''}>FALSE</option>
+                 </select>`
+              : `<input data-c="${esc(name)}" value="${esc(v)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''}>`}
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="drawer-actions">
+      <button type="button" class="btn ghost" onclick="closeDrawer()">Cancel</button>
+      <button class="btn primary" type="submit">Save Changes</button>
+    </div>`;
+  ef.onsubmit=save;
+  drawer.classList.remove('hidden');
+}
+async function save(e){
+  e.preventDefault();
+  const d={};
+  document.querySelectorAll('#ef [data-c]').forEach(x=>{
+    if(x.disabled||x.readOnly)return;
+    d[x.dataset.c]=x.value;
+  });
+  try{
+    await api('admin_save',{table:S.table,rowid:Number(rid.value)||0,data:d});
+    toast('Saved successfully');
+    closeDrawer();
+    refresh();
+  }catch(e){toast(e.message||'Save failed')}
+}
+function closeDrawer(){drawer.classList.add('hidden')}
+async function del(id){
+  if(!confirm(`Delete row #${id} permanently?\n\nThis cannot be undone.`))return;
+  try{
+    await api('admin_delete',{table:S.table,rowid:id});
+    toast('Deleted successfully');
+    if(S.offset>0 && S.rows.length===1)S.offset=Math.max(0,S.offset-S.limit);
+    refresh();
+  }catch(e){toast(e.message||'Delete failed')}
+}
+async function pw(id){
+  const p=prompt('New password (minimum 4 characters):');
+  if(!p)return;
+  if(p.length<4){toast('Password must be at least 4 characters');return}
+  try{
+    await api('admin_reset_password',{table:'student_login',rowid:id,password:p});
+    toast('Password updated');
+  }catch(e){toast(e.message||'Password update failed')}
+}
+async function toggleLock(id,isLocked){
+  const next=!isLocked;
+  if(!confirm(next?'Lock this course for the student?':'Unlock this course for the student?'))return;
+  try{
+    const r=await api('set_course_lock',{id,locked:next});
+    toast(r.message||'Updated');
+    refresh();
+  }catch(e){toast(e.message||'Update failed')}
+}
+async function toggleWt(id,isOn){
+  const next=!isOn;
+  try{
+    const r=await api('set_get_wt',{id,value:next?'Yes':''});
+    toast(r.message||'Updated');
+    refresh();
+  }catch(e){toast(e.message||'Update failed')}
+}
+
 if(S.token&&S.user)show();
 </script></body></html>
