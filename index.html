@@ -264,9 +264,16 @@ async function pw(id){
 }
 async function toggleLock(id,isLocked){
   const next=!isLocked;
-  if(!confirm(next?'Lock this course for the student?':'Unlock this course for the student?'))return;
+  let reason='';
+  if(next){
+    reason=prompt('কোর্স লক করার কারণ লিখুন:','')?.trim()||'';
+    if(!reason){toast('Lock reason required');return}
+    if(!confirm('এই কারণসহ কোর্সটি লক করবেন?\n\n'+reason))return;
+  }else{
+    if(!confirm('Unlock this course for the student?'))return;
+  }
   try{
-    const r=await api('set_course_lock',{id,locked:next});
+    const r=await api('set_course_lock',{id,locked:next,reason});
     toast(r.message||'Updated');
     refresh();
   }catch(e){toast(e.message||'Update failed')}
