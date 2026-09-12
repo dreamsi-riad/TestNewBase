@@ -23,7 +23,12 @@ async function api(action,o={}){
     admin_rows:'panel_admin_rows',
     admin_save:'panel_admin_save',
     admin_delete:'panel_admin_delete',
-    admin_reset_password:'panel_admin_reset_password'
+    admin_reset_password:'panel_admin_reset_password',
+    get_pending_requests:'panel_admin_pending',
+    approve_enrollment:'panel_admin_approve',
+    get_enrolled_students:'panel_admin_enrolled_students',
+    set_course_lock:'panel_admin_lock',
+    set_get_wt:'panel_admin_watch_gate'
   };
   const serverAction=actionMap[action]||action;
   const body={action:serverAction,...o,adminToken:S.token};
