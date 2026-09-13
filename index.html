@@ -75,12 +75,17 @@ function renderCachedRows(){
   return true;
 }
 function liveSearch(value){
-  const clear=document.getElementById('searchClear');
-  S.search=value.trim();
+  S.search=value;
   S.offset=0;
-  if(clear)clear.classList.toggle('show',!!value);
   clearTimeout(searchTimer);
-  searchTimer=setTimeout(()=>renderCachedRows(),80);
+  searchTimer=setTimeout(()=>{
+    renderCachedRows();
+    const input=document.getElementById('search');
+    if(input){
+      input.focus();
+      try{input.setSelectionRange(input.value.length,input.value.length)}catch{}
+    }
+  },80);
 }
 function clearSearch(){
   const input=document.getElementById('search');
