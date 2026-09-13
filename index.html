@@ -6,6 +6,19 @@
 .tbl th{position:sticky;top:0;z-index:2;white-space:nowrap}.tbl td{max-width:360px;line-height:1.45}.actions-head,.actions-cell{min-width:190px;position:sticky;right:0;background:#fff;z-index:3}.tbl th.actions-head{background:#fafbfc}.act{min-width:180px}.mini:disabled{opacity:.45;cursor:not-allowed}.error-box{color:#d9534f;background:#fff8f8;border:1px solid #ffd6d3;margin:16px;border-radius:12px}
 .drawer select{width:100%;border:1px solid var(--l);border-radius:10px;padding:10px 12px;background:#fff}.field-type{font-size:10px;color:#8a94a8;font-weight:600;margin-left:5px}.field-note{font-size:11px;color:#d9534f}.editor-meta{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f9fc;border-radius:10px;margin-bottom:12px}.editor-meta span{font-size:12px;color:#68748d}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--l)}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
+.search-wrap{position:relative;width:240px}
+.search-wrap input{width:100%;padding-right:38px;transition:border-color .2s,box-shadow .2s}
+.search-wrap input:focus{border-color:#68748d;box-shadow:0 0 0 3px #17233f10;outline:none}
+.search-clear{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#8b94a8;font-size:18px;line-height:1;padding:4px;display:none}
+.search-clear.show{display:block}
+.search-status{font-size:11px;color:#8b94a8;margin-top:3px}
+.panel.is-loading{opacity:.72;pointer-events:none;transition:opacity .18s ease}
+.panel{transition:opacity .18s ease,transform .18s ease}
+.tbl tbody tr{transition:background .15s ease}
+
+.content{animation:contentIn .2s ease-out}@keyframes contentIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+
 </style></head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses">📚 Courses</button><button data-p="content">▶ Course Content</button><button data-p="subjects">◈ Subject-wise</button><button data-p="teachers">👨‍🏫 Teachers</button><button data-p="free">🎁 Free Classes</button><button data-p="gallery">🖼 Gallery / Reviews</button><button data-p="shop">🛍 Shop Products</button><button data-p="orders">📦 Orders</button><button data-p="admins">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
@@ -15,6 +28,66 @@ const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
 let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',offset:0,limit:100};
+const pageCache=new Map();
+let searchTimer=null;
+let refreshSeq=0;
+function cacheKey(){return S.table||''}
+function getCache(){return pageCache.get(cacheKey())||null}
+function setCache(data){pageCache.set(cacheKey(),data)}
+function setPanelLoading(message='Loading database…'){
+  const q=document.getElementById('panel');
+  if(!q)return;
+  q.classList.add('is-loading');
+  q.insertAdjacentHTML('afterbegin','<div class="smooth-loading" id="inlineLoading"><div class="spinner"></div><div>'+esc(message)+'</div></div>');
+}
+function clearPanelLoading(){
+  const q=document.getElementById('panel');
+  if(!q)return;
+  const x=q.querySelector('#inlineLoading');
+  if(x)x.remove();
+  q.classList.remove('is-loading');
+}
+function filterRows(rows, search){
+  const q=String(search??'').trim().toLowerCase();
+  if(!q)return rows.slice();
+  return rows.filter(row=>{
+    return Object.entries(row||{}).some(([key,value])=>{
+      if(String(key)==='__rowid')return false;
+      return cellValue(value).toLowerCase().includes(q);
+    });
+  });
+}
+function renderCachedRows(){
+  const cache=getCache();
+  if(!cache)return false;
+  S.cols=cache.cols.slice();
+  const filtered=filterRows(cache.allRows,S.search);
+  const total=filtered.length;
+  S.rows=filtered.slice(S.offset,S.offset+S.limit);
+  renderTable({
+    rows:S.rows,
+    total:total,
+    offset:S.offset,
+    limit:S.limit,
+    label:cache.label||P[S.table]?.[1]||S.table,
+    local:true
+  });
+  return true;
+}
+function liveSearch(value){
+  const clear=document.getElementById('searchClear');
+  S.search=value.trim();
+  S.offset=0;
+  if(clear)clear.classList.toggle('show',!!value);
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>renderCachedRows(),80);
+}
+function clearSearch(){
+  const input=document.getElementById('search');
+  if(input){input.value='';input.focus();}
+  liveSearch('');
+}
+
 try{S.user=JSON.parse(localStorage.va_admin_user||'null')}catch{S.user=null}const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function toast(x){toastEl.textContent=x;toastEl.classList.remove('hidden');setTimeout(()=>toastEl.classList.add('hidden'),2300)}const toastEl=document.getElementById('toast');
 async function api(action,o={}){
   const actionMap={
@@ -56,8 +129,8 @@ function logout(){localStorage.removeItem('va_admin_token');localStorage.removeI
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
 async function page(p){document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><p class="muted">Add, edit, delete and search database records.</p><div id="panel" class="panel"></div>`;refresh()}
-async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
-async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="empty">Loading…</div></div>';try{let a=(await api('get_pending_requests')).data||[];panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 async function approve(id){let x=prompt('Payment status / note:','Paid');if(x===null)return;try{await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',payment:x});toast('Enrollment approved');pending()}catch(e){toast(e.message)}}
 async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><p class="muted">Manage classes, chapters, video URLs and PDFs.</p><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
 async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><p class="muted">${esc(t)}</p><div id="panel" class="panel"></div>`;refresh()}
@@ -123,67 +196,111 @@ function actionButtons(row){
   }
   return html;
 }
-async function refresh(){
+function renderTable(d){
   const q=document.getElementById('panel');
   if(!q)return;
-  q.innerHTML='<div class="empty"><div class="spinner"></div>Loading database…</div>';
+  const cols=S.cols.map(colName).filter(Boolean);
+  S.rows=Array.isArray(d.rows)?d.rows:[];
+  const th=cols.map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
+  const tb=S.rows.map(r=>`<tr>${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`).join('');
+  const total=Number(d.total??S.rows.length);
+  const offset=Number(d.offset??0);
+  const limit=Math.max(1,Number(d.limit??S.limit));
+  const from=total?offset+1:0;
+  const to=Math.min(offset+limit,total);
+  q.innerHTML=`
+    <div class="ph">
+      <div>
+        <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
+        <div class="muted small">${esc(S.table)} · ${cols.length} fields${d.local?' · Local cache':''}</div>
+      </div>
+      <div class="tools">
+        <div class="search-wrap">
+          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
+            oninput="liveSearch(this.value)" autocomplete="off" aria-label="Search all fields">
+          <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">×</button>
+        </div>
+        <button class="btn gold" onclick="newR()">＋ Add</button>
+        <button class="btn ghost" onclick="refresh(true)">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="tw">
+      ${S.rows.length?`<table class="tbl"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
+    </div>
+    <div class="pager">
+      <span>${from}–${to} of ${total}</span>
+      <span>
+        <button class="mini" ${offset<=0?'disabled':''} onclick="localPage(-1)">← Previous</button>
+        <button class="mini" ${offset+limit>=total?'disabled':''} onclick="localPage(1)">Next →</button>
+      </span>
+    </div>`;
+}
+async function refresh(force=false){
+  const q=document.getElementById('panel');
+  if(!q)return;
+
+  // Normal page visit: use browser-memory cache if available.
+  if(!force){
+    const cache=getCache();
+    if(cache){
+      S.search='';
+      S.offset=0;
+      renderCachedRows();
+      return;
+    }
+  }
+
+  const requestId=++refreshSeq;
+  q.classList.remove('is-loading');
+  q.innerHTML='<div class="smooth-loading"><div class="spinner"></div><div>Loading database…</div><div class="search-status">Loading fresh data into browser memory</div></div>';
+
   try{
     const schemaResponse=await api('admin_table_schema',{table:S.table});
+    if(requestId!==refreshSeq)return;
     const schemaData=schemaResponse.data;
     S.cols=Array.isArray(schemaData)?schemaData:(schemaData?.columns||[]);
     const cols=S.cols.map(colName).filter(Boolean);
 
+    // Load the complete dataset once for this table. Search is performed locally afterward.
     const response=await api('admin_rows',{
       table:S.table,
-      search:S.search,
-      offset:S.offset,
-      limit:S.limit
+      search:'',
+      offset:0,
+      limit:1000000
     });
+    if(requestId!==refreshSeq)return;
+
     const d=response.data||{};
-    S.rows=Array.isArray(d.rows)?d.rows:[];
+    const allRows=Array.isArray(d.rows)?d.rows:[];
+    setCache({
+      allRows:allRows,
+      cols:S.cols.slice(),
+      label:d.label||P[S.table]?.[1]||S.table,
+      loadedAt:Date.now()
+    });
 
-    const th=cols.map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
-    const tb=S.rows.map(r=>`
-      <tr>
-        ${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}
-        <td class="actions-cell"><div class="act">${actionButtons(r)}</div></td>
-      </tr>
-    `).join('');
-
-    const total=Number(d.total??S.rows.length);
-    const offset=Number(d.offset??S.offset);
-    const limit=Number(d.limit??S.limit);
-    const from=total?offset+1:0;
-    const to=Math.min(offset+limit,total);
-
-    q.innerHTML=`
-      <div class="ph">
-        <div>
-          <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-          <div class="muted small">${esc(S.table)} · ${cols.length} fields</div>
-        </div>
-        <div class="tools">
-          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
-            onkeydown="if(event.key==='Enter'){S.search=this.value.trim();S.offset=0;refresh()}">
-          <button class="btn gold" onclick="newR()">＋ Add</button>
-          <button class="btn ghost" onclick="refresh()">↻ Refresh</button>
-        </div>
-      </div>
-      <div class="tw">
-        ${S.rows.length
-          ? `<table class="tbl"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`
-          : '<div class="empty">No records found.</div>'}
-      </div>
-      <div class="pager">
-        <span>${from}–${to} of ${total}</span>
-        <span>
-          <button class="mini" ${offset<=0?'disabled':''} onclick="S.offset=Math.max(0,S.offset-S.limit);refresh()">← Previous</button>
-          <button class="mini" ${offset+limit>=total?'disabled':''} onclick="if(S.offset+S.limit<${total}){S.offset+=S.limit;refresh()}">Next →</button>
-        </span>
-      </div>`;
+    S.search='';
+    S.offset=0;
+    renderCachedRows();
   }catch(e){
     q.innerHTML=`<div class="empty error-box"><b>Could not load this table</b><br>${esc(e.message||e)}</div>`;
   }
+}
+function localPage(direction){
+  const cache=getCache();
+  if(!cache)return;
+  const total=filterRows(cache.allRows,S.search).length;
+  S.offset=Math.max(0,Math.min(S.offset+direction*S.limit,Math.max(0,total-S.limit)));
+  const filtered=filterRows(cache.allRows,S.search);
+  const pageRows=filtered.slice(S.offset,S.offset+S.limit);
+  renderTable({
+    rows:pageRows,
+    total:total,
+    offset:S.offset,
+    limit:S.limit,
+    label:cache.label||P[S.table]?.[1]||S.table,
+    local:true
+  });
 }
 function newR(){editor(0,{})}
 function edit(id){
@@ -238,6 +355,7 @@ async function save(e){
   });
   try{
     await api('admin_save',{table:S.table,rowid:Number(rid.value)||0,data:d});
+    pageCache.delete(cacheKey());
     toast('Saved successfully');
     closeDrawer();
     refresh();
@@ -248,6 +366,7 @@ async function del(id){
   if(!confirm(`Delete row #${id} permanently?\n\nThis cannot be undone.`))return;
   try{
     await api('admin_delete',{table:S.table,rowid:id});
+    pageCache.delete(cacheKey());
     toast('Deleted successfully');
     if(S.offset>0 && S.rows.length===1)S.offset=Math.max(0,S.offset-S.limit);
     refresh();
@@ -274,6 +393,7 @@ async function toggleLock(id,isLocked){
   }
   try{
     const r=await api('set_course_lock',{id,locked:next,reason});
+    pageCache.delete(cacheKey());
     toast(r.message||'Updated');
     refresh();
   }catch(e){toast(e.message||'Update failed')}
@@ -282,6 +402,7 @@ async function toggleWt(id,isOn){
   const next=!isOn;
   try{
     const r=await api('set_get_wt',{id,value:next?'Yes':''});
+    pageCache.delete(cacheKey());
     toast(r.message||'Updated');
     refresh();
   }catch(e){toast(e.message||'Update failed')}
