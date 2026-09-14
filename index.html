@@ -32,11 +32,31 @@
 .tbl tbody tr{transition:background .15s ease}
 
 .content{animation:contentIn .2s ease-out}@keyframes contentIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+.modal-overlay{position:fixed;inset:0;background:#0b1428aa;display:flex;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal-box{background:#fff;border-radius:16px;padding:26px;width:min(420px,100%);box-shadow:0 20px 60px #17233f22}
+.modal-box h3{margin:0 0 4px;font:800 21px 'Baloo Da 2'}
+.modal-box .muted{margin:0 0 14px;font-size:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--l)}
 
 </style></head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses">📚 Courses</button><button data-p="content">▶ Course Content</button><button data-p="subjects">◈ Subject-wise</button><button data-p="teachers">👨‍🏫 Teachers</button><button data-p="free">🎁 Free Classes</button><button data-p="gallery">🖼 Gallery / Reviews</button><button data-p="shop">🛍 Shop Products</button><button data-p="orders">📦 Orders</button><button data-p="admins">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
-<div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div><div id="toast" class="toast hidden"></div>
+<div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div>
+<div id="approveModal" class="modal-overlay hidden"><div class="modal-box">
+  <h3>Enrollment Approve করুন</h3>
+  <p class="muted" id="apInfo"></p>
+  <label>Discount</label>
+  <input id="apDiscount" placeholder="যেমন: 500 (না থাকলে খালি রাখুন)">
+  <label>Paid</label>
+  <input id="apPaid" placeholder="যেমন: 5500" required>
+  <label>Next Due Date</label>
+  <input id="apNextDate" type="date">
+  <div class="modal-actions">
+    <button type="button" class="btn ghost" onclick="closeApproveModal()">Cancel</button>
+    <button type="button" class="btn primary" onclick="submitApprove()">Approve</button>
+  </div>
+</div></div>
+<div id="toast" class="toast hidden"></div>
 <script>
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
@@ -149,8 +169,36 @@ lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim()
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
 async function page(p){document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><p class="muted">Add, edit, delete and search database records.</p><div id="panel" class="panel"></div>`;refresh()}
 async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
-async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
-async function approve(id){let x=prompt('Payment status / note:','Paid');if(x===null)return;try{await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',payment:x});toast('Enrollment approved');pending()}catch(e){toast(e.message)}}
+async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+function fmtDateInput(v){
+  if(!v)return '';
+  const d=new Date(v+'T00:00:00');
+  if(isNaN(d.getTime()))return v;
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return String(d.getDate()).padStart(2,'0')+' '+MO[d.getMonth()]+' '+d.getFullYear();
+}
+function approve(id){
+  const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
+  apInfo.textContent=r?`${r.name} · ${r.course}${r.nuDcu?' ('+r.nuDcu+')':''}`:'';
+  apDiscount.value='';apPaid.value='';apNextDate.value='';
+  approveModal.dataset.id=id;
+  approveModal.classList.remove('hidden');
+  setTimeout(()=>apPaid.focus(),0);
+}
+function closeApproveModal(){approveModal.classList.add('hidden')}
+async function submitApprove(){
+  const id=Number(approveModal.dataset.id);
+  const discount=apDiscount.value.trim();
+  const paid=apPaid.value.trim();
+  const nextDate=fmtDateInput(apNextDate.value.trim());
+  if(!paid){toast('Paid amount আবশ্যক');apPaid.focus();return}
+  try{
+    await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',discount,paid,nextDate});
+    toast('Enrollment approved');
+    closeApproveModal();
+    pending();
+  }catch(e){toast(e.message)}
+}
 async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><p class="muted">Manage classes, chapters, video URLs and PDFs.</p><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
 async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><p class="muted">${esc(t)}</p><div id="panel" class="panel"></div>`;refresh()}
 
