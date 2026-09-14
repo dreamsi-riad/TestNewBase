@@ -169,7 +169,7 @@ function isMasterAdmin(){return String(S.user?.adminStatus||'').trim()==='Master
 function applyRoleVisibility(){
   const master=isMasterAdmin();
   document.querySelectorAll('.master-only').forEach(b=>b.classList.toggle('hidden',!master));
-  who.textContent='Signed in: '+(S.user?.name||'Admin')+(master?'':' · Normal Admin');
+  who.textContent='Signed in: '+(S.user?.name||'Admin');
 }
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
