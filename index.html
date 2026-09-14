@@ -251,8 +251,9 @@ function renderCell(v,c){
 }
 function actionButtons(row){
   const id=Number(row.__rowid);
+  const noDelete=['student_login','student_enrolled'].includes(S.table);
   let html=`<button class="mini" onclick="edit(${id})">Edit</button>
-            <button class="mini bad" onclick="del(${id})">Delete</button>`;
+            ${noDelete?'':`<button class="mini bad" onclick="del(${id})">Delete</button>`}`;
   if(S.table==='student_login'){
     html+=`<button class="mini" onclick="pw(${id})">Reset PW</button>`;
   }
@@ -288,7 +289,7 @@ function renderTable(d){
             oninput="liveSearch(this.value)" autocomplete="off" aria-label="Search all fields">
           <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">×</button>
         </div>
-        <button class="btn gold" onclick="newR()">＋ Add</button>
+        ${['student_login','student_enrolled'].includes(S.table) ? '' : '<button class="btn gold" onclick="newR()">＋ Add</button>'}
         <button class="btn ghost" onclick="refresh(true)">↻ Refresh</button>
       </div>
     </div>
