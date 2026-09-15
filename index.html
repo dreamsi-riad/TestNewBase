@@ -30,22 +30,6 @@
 .panel.is-loading{opacity:.72;pointer-events:none;transition:opacity .18s ease}
 .panel{transition:opacity .18s ease,transform .18s ease}
 .tbl tbody tr{transition:background .15s ease}
-.enroll-table .enroll-row{cursor:pointer}
-.enroll-table .enroll-row:hover{background:#f7f9fc}
-.enroll-table th,.enroll-table td{white-space:nowrap}
-.enroll-table td{max-width:180px}
-.enroll-table .name-cell{max-width:190px}
-.enroll-table .course-cell{max-width:230px}
-.enroll-table .money-cell{font-weight:800}
-.enroll-table .date-cell{font-variant-numeric:tabular-nums}
-.details-modal .modal-box{width:min(760px,100%);max-height:min(760px,90vh);overflow:auto}
-.details-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
-.detail-item{border:1px solid var(--l);border-radius:11px;padding:11px 13px;background:#fafbfc}
-.detail-item.full{grid-column:1/-1}
-.detail-label{font-size:11px;color:var(--m);font-weight:700;margin-bottom:3px}
-.detail-value{font-size:14px;font-weight:700;word-break:break-word;white-space:pre-wrap}
-@media(max-width:620px){.details-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}}
-
 
 .content{animation:contentIn .2s ease-out}@keyframes contentIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
 .modal-overlay{position:fixed;inset:0;background:#0b1428aa;display:flex;align-items:center;justify-content:center;z-index:40;padding:16px}
@@ -54,6 +38,33 @@
 .modal-box .muted{margin:0 0 14px;font-size:13px}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--l)}
 
+/* ---- Enrollments page: course filter spinner ---- */
+.filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+.filter-bar label{margin:0;font-size:13px;color:var(--m)}
+.filter-bar select{border:1px solid var(--l);border-radius:10px;padding:9px 12px;background:#fff;min-width:260px;font-weight:600}
+.filter-bar select:focus{border-color:#68748d;box-shadow:0 0 0 3px #17233f10;outline:none}
+.filter-count{font-size:12px;color:#8b94a8}
+
+/* ---- Enrollments page: simplified table ---- */
+.tbl.enroll-tbl{min-width:900px}
+.tbl.enroll-tbl td,.tbl.enroll-tbl th{max-width:none;width:auto;white-space:nowrap}
+.tbl.enroll-tbl td.wrap{white-space:normal;max-width:210px}
+.tbl.enroll-tbl tbody tr{cursor:pointer}
+.tbl.enroll-tbl tbody tr:hover{background:#f7f9fc}
+.tbl.enroll-tbl td.actions-cell{cursor:default}
+.dis-note{font-size:11px;color:#8b94a8;font-weight:600}
+#ef input[readonly],#ef textarea[readonly],#ef select:disabled{background:#f1f4f9;color:#7a839a;cursor:not-allowed}
+.due-ok{color:#20875a;font-weight:800}
+.due-bad{color:#d9534f;font-weight:800}
+
+/* ---- Read-only details modal ---- */
+.detail-box{width:min(620px,100%);max-height:86vh;overflow:auto}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-item{background:#f7f9fc;border:1px solid var(--l);border-radius:10px;padding:9px 11px;min-width:0}
+.detail-item .k{font-size:11px;font-weight:800;color:#8b94a8;text-transform:uppercase;letter-spacing:.3px}
+.detail-item .v{font-size:14px;font-weight:600;word-break:break-word}
+.detail-item.full{grid-column:1/-1}
+@media(max-width:560px){.detail-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}}
 </style></head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
@@ -72,28 +83,23 @@
     <button type="button" class="btn primary" onclick="submitApprove()">Approve</button>
   </div>
 </div></div>
-
-<div id="enrollDetailsModal" class="modal-overlay hidden details-modal">
-  <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <div>
-        <h3>Enrollment Details</h3>
-        <p class="muted">Complete enrollment information · Read only</p>
-      </div>
-      <button type="button" class="btn ghost" onclick="closeEnrollmentDetails()">✕</button>
-    </div>
-    <div id="enrollDetailsBody" class="details-grid"></div>
-    <div class="modal-actions">
-      <button type="button" class="btn primary" onclick="closeEnrollmentDetails()">Close</button>
-    </div>
+<div id="detailModal" class="modal-overlay hidden"><div class="modal-box detail-box">
+  <h3 id="dmTitle">Enrollment Details</h3>
+  <p class="muted" id="dmSub"></p>
+  <div id="dmBody" class="detail-grid"></div>
+  <div class="modal-actions">
+    <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
   </div>
-</div>
+</div></div>
 <div id="toast" class="toast hidden"></div>
 <script>
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
-let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',offset:0,limit:100};
+let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',courseFilter:'',offset:0,limit:100};
+const ENROLL_TABLE='student_enrolled';
+const ENROLL_LOCKED_FIELDS=['course_price','discount','admin'];
+function isEnrollTable(){return S.table===ENROLL_TABLE}
 const pageCache=new Map();
 let searchTimer=null;
 let refreshSeq=0;
@@ -123,11 +129,37 @@ function filterRows(rows, search){
     });
   });
 }
+function matchesCourseFilter(row){
+  if(!isEnrollTable())return true;
+  const want=String(S.courseFilter||'').trim().toLowerCase();
+  if(!want)return true;
+  return cellValue(row?.course).trim().toLowerCase()===want;
+}
+function visibleRows(cache){
+  if(!cache)return [];
+  return filterRows(cache.allRows,S.search).filter(matchesCourseFilter);
+}
+function populateCourseFilter(cache){
+  const sel=document.getElementById('courseFilter');
+  if(!sel||!cache)return;
+  const names=Array.from(new Set(
+    (cache.allRows||[]).map(r=>cellValue(r.course).trim()).filter(Boolean)
+  )).sort((a,b)=>a.localeCompare(b));
+  if(S.courseFilter && !names.some(n=>n.toLowerCase()===S.courseFilter.toLowerCase()))S.courseFilter='';
+  sel.innerHTML='<option value="">সব কোর্স (All Courses)</option>'+
+    names.map(n=>`<option value="${esc(n)}" ${n===S.courseFilter?'selected':''}>${esc(n)}</option>`).join('');
+  sel.value=S.courseFilter||'';
+}
+function setCourseFilter(value){
+  S.courseFilter=String(value||'');
+  S.offset=0;
+  renderCachedRows();
+}
 function renderCachedRows(){
   const cache=getCache();
   if(!cache)return false;
   S.cols=cache.cols.slice();
-  const filtered=filterRows(cache.allRows,S.search);
+  const filtered=visibleRows(cache);
   const total=filtered.length;
   S.rows=filtered.slice(S.offset,S.offset+S.limit);
   renderTable({
@@ -206,7 +238,20 @@ function applyRoleVisibility(){
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
-async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><div id="panel" class="panel"></div>`;refresh()}
+async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';
+if(S.table===ENROLL_TABLE){
+  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1>
+    <div class="filter-bar">
+      <label for="courseFilter">Course</label>
+      <select id="courseFilter" onchange="setCourseFilter(this.value)">
+        <option value="">সব কোর্স (All Courses)</option>
+      </select>
+    </div>
+    <div id="panel" class="panel"></div>`;
+}else{
+  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><p class="muted">Add, edit, delete and search database records.</p><div id="panel" class="panel"></div>`;
+}
+refresh()}
 async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 function fmtDateInput(v){
@@ -304,138 +349,84 @@ function actionButtons(row){
   }
   return html;
 }
-function enrollmentDisplayName(name){
-  const labels={
-    name:'Name',
-    mobile:'Phone',
-    course:'Course Name',
-    nu_dcu:'DCU / NU',
-    course_price:'Course Price',
-    discount:'Discount',
-    paid:'Paid',
-    next_date:'Next Date',
-    status:'Status',
-    enrolled_at:'Enrolled At',
-    expires_at:'Expires At'
-  };
-  return labels[name]||name.replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+function moneyNumber(v){
+  const s=cellValue(v).replace(/[^\d.\-]/g,'').trim();
+  if(!s)return null;
+  const n=Number(s);
+  return isFinite(n)?n:null;
 }
-
-function formatEnrollmentDate(v){
-  const s=String(v??'').trim();
-  if(!s)return '';
-  const d=new Date(s);
-  if(!isNaN(d.getTime())){
-    const pad=n=>String(n).padStart(2,'0');
-    return `${pad(d.getDate())} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
-  }
-  return s;
+function fmtMoney(n){
+  if(n===null||n===undefined)return '';
+  return (Math.round(n*100)/100).toLocaleString('en-US');
 }
-
-function enrollmentMainValue(row,key){
-  const value=row?.[key];
-  if(value===null||value===undefined||String(value).trim()==='')return '—';
-  if(['enrolled_at','expires_at','next_date'].includes(key))return formatEnrollmentDate(value);
-  return cellValue(value);
+function dueAmount(row){
+  const price=moneyNumber(row.course_price);
+  if(price===null)return null;
+  const discount=moneyNumber(row.discount)||0;
+  const paid=moneyNumber(row.paid)||0;
+  return price-discount-paid;
 }
-
-function openEnrollmentDetails(id){
-  const cache=getCache();
-  const row=(cache?.allRows||[]).find(x=>Number(x.__rowid)===Number(id));
-  if(!row)return;
-
-  const preferred=['name','course','mobile','nu_dcu','course_price','discount','paid','next_date','status','enrolled_at','expires_at'];
-  const keys=[];
-  preferred.forEach(k=>{if(Object.prototype.hasOwnProperty.call(row,k))keys.push(k)});
-  Object.keys(row).forEach(k=>{
-    if(k==='__rowid'||keys.includes(k))return;
-    keys.push(k);
-  });
-
-  const body=document.getElementById('enrollDetailsBody');
-  if(!body)return;
-  body.innerHTML=keys.map(key=>{
-    const value=enrollmentMainValue(row,key);
-    const large=isLargeColumn({name:key});
+const ENROLL_HEADS=['Name','Course','Phone','NU/DCU','Course Price','Due','Next Date'];
+function enrollRowCells(r){
+  const price=moneyNumber(r.course_price);
+  const discount=moneyNumber(r.discount);
+  const due=dueAmount(r);
+  const priceCell=price===null
+    ? '<span class="muted">—</span>'
+    : `${esc(fmtMoney(price))}${discount?` <span class="dis-note">(dis: ${esc(fmtMoney(discount))})</span>`:''}`;
+  const dueCell=due===null
+    ? '<span class="muted">—</span>'
+    : `<span class="${due>0?'due-bad':'due-ok'}">${esc(fmtMoney(due))}</span>`;
+  const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
+  return [
+    `<td class="wrap"><b>${cellValue(r.name).trim()?esc(cellValue(r.name).trim()):'—'}</b></td>`,
+    `<td class="wrap">${txt(r.course)}</td>`,
+    `<td>${txt(r.mobile)}</td>`,
+    `<td>${txt(r.nu_dcu)}</td>`,
+    `<td>${priceCell}</td>`,
+    `<td>${dueCell}</td>`,
+    `<td>${txt(r.next_date)}</td>`
+  ].join('');
+}
+function rowClick(e,id){
+  if(e.target.closest('.act'))return;
+  openDetail(id);
+}
+function openDetail(id){
+  const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
+  if(!r)return;
+  const name=cellValue(r.name).trim()||'Student';
+  const course=cellValue(r.course).trim();
+  dmTitle.textContent=name;
+  dmSub.textContent=[course,cellValue(r.nu_dcu).trim(),cellValue(r.mobile).trim()].filter(Boolean).join(' · ');
+  const cols=S.cols.map(colName).filter(Boolean);
+  const due=dueAmount(r);
+  let html=cols.map(c=>{
+    const large=isLargeColumn(c);
+    const v=isSecretColumn(c)?'••••••••':cellValue(r[c]).trim();
     return `<div class="detail-item ${large?'full':''}">
-      <div class="detail-label">${esc(enrollmentDisplayName(key))}</div>
-      <div class="detail-value">${esc(value)}</div>
+      <div class="k">${esc(c)}</div>
+      <div class="v">${v?esc(v):'—'}</div>
     </div>`;
   }).join('');
-  document.getElementById('enrollDetailsModal').classList.remove('hidden');
+  html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':esc(fmtMoney(due))}</div></div>`;
+  dmBody.innerHTML=html;
+  detailModal.classList.remove('hidden');
 }
-
-function closeEnrollmentDetails(){
-  document.getElementById('enrollDetailsModal')?.classList.add('hidden');
-}
-
-function renderEnrollmentTable(d){
-  const q=document.getElementById('panel');
-  if(!q)return;
-  S.rows=Array.isArray(d.rows)?d.rows:[];
-  const total=Number(d.total??S.rows.length);
-  const offset=Number(d.offset??0);
-  const limit=Math.max(1,Number(d.limit??S.limit));
-  const from=total?offset+1:0;
-  const to=Math.min(offset+limit,total);
-
-  const cols=S.cols.map(colName).filter(Boolean);
-  const preferred=['name','course','mobile','nu_dcu','course_price','paid','next_date'];
-  const displayCols=preferred.filter(c=>cols.includes(c));
-  if(!displayCols.length){
-    displayCols.push(...cols.slice(0,7));
-  }
-
-  const th=displayCols.map(c=>`<th title="${esc(enrollmentDisplayName(c))}">${esc(enrollmentDisplayName(c))}</th>`).join('');
-  const tb=S.rows.map(r=>{
-    const id=Number(r.__rowid);
-    const cells=displayCols.map(c=>{
-      const value=enrollmentMainValue(r,c);
-      const cls=['course_price','paid','discount'].includes(c)?'money-cell':c==='course'?'course-cell':c==='name'?'name-cell':c==='next_date'?'date-cell':'';
-      return `<td class="${cls}">${esc(value)}</td>`;
-    }).join('');
-    return `<tr class="enroll-row" onclick="openEnrollmentDetails(${id})">
-      ${cells}
-      <td class="actions-cell" onclick="event.stopPropagation()"><div class="act">${actionButtons(r)}</div></td>
-    </tr>`;
-  }).join('');
-
-  q.innerHTML=`
-    <div class="ph">
-      <div>
-        <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-        <div class="muted small">${esc(S.table)} · ${displayCols.length} visible fields${d.local?' · Local cache':''}</div>
-      </div>
-      <div class="tools">
-        <div class="search-wrap">
-          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
-            oninput="liveSearch(this.value)" autocomplete="off" aria-label="Search all fields">
-          <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">×</button>
-        </div>
-        <button class="btn ghost" onclick="refresh(true)">↻ Refresh</button>
-      </div>
-    </div>
-    <div class="tw">
-      ${S.rows.length?`<table class="tbl enroll-table"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
-    </div>
-    <div class="pager">
-      <span>${from}–${to} of ${total}</span>
-      <span>
-        <button class="mini" ${offset<=0?'disabled':''} onclick="localPage(-1)">← Previous</button>
-        <button class="mini" ${offset+limit>=total?'disabled':''} onclick="localPage(1)">Next →</button>
-      </span>
-    </div>`;
-}
-
+function closeDetail(){detailModal.classList.add('hidden')}
+detailModal.addEventListener('click',e=>{if(e.target===detailModal)closeDetail()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail()});
 function renderTable(d){
-  if(S.table==='student_enrolled')return renderEnrollmentTable(d);
-
   const q=document.getElementById('panel');
   if(!q)return;
+  const enroll=isEnrollTable();
   const cols=S.cols.map(colName).filter(Boolean);
   S.rows=Array.isArray(d.rows)?d.rows:[];
-  const th=cols.map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
-  const tb=S.rows.map(r=>`<tr>${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`).join('');
+  const th=(enroll?ENROLL_HEADS:cols).map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
+  const tb=S.rows.map(r=>enroll
+    ? `<tr onclick="rowClick(event,${Number(r.__rowid)})">${enrollRowCells(r)}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`
+    : `<tr>${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`
+  ).join('');
   const total=Number(d.total??S.rows.length);
   const offset=Number(d.offset??0);
   const limit=Math.max(1,Number(d.limit??S.limit));
@@ -445,7 +436,7 @@ function renderTable(d){
     <div class="ph">
       <div>
         <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-        <div class="muted small">${esc(S.table)} · ${cols.length} fields${d.local?' · Local cache':''}</div>
+        <div class="muted small">${enroll?(S.courseFilter?'Filtered: '+esc(S.courseFilter):'All courses'):esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
       </div>
       <div class="tools">
         <div class="search-wrap">
@@ -458,7 +449,7 @@ function renderTable(d){
       </div>
     </div>
     <div class="tw">
-      ${S.rows.length?`<table class="tbl"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
+      ${S.rows.length?`<table class="tbl${enroll?' enroll-tbl':''}"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
     </div>
     <div class="pager">
       <span>${from}–${to} of ${total}</span>
@@ -468,7 +459,6 @@ function renderTable(d){
       </span>
     </div>`;
 }
-
 async function refresh(force=false){
   const q=document.getElementById('panel');
   if(!q)return;
@@ -479,6 +469,8 @@ async function refresh(force=false){
     if(cache){
       S.search='';
       S.offset=0;
+      S.cols=cache.cols.slice();
+      populateCourseFilter(cache);
       renderCachedRows();
       return;
     }
@@ -515,6 +507,7 @@ async function refresh(force=false){
 
     S.search='';
     S.offset=0;
+    populateCourseFilter(getCache());
     renderCachedRows();
   }catch(e){
     q.innerHTML=`<div class="empty error-box"><b>Could not load this table</b><br>${esc(e.message||e)}</div>`;
@@ -523,9 +516,9 @@ async function refresh(force=false){
 function localPage(direction){
   const cache=getCache();
   if(!cache)return;
-  const total=filterRows(cache.allRows,S.search).length;
+  const filtered=visibleRows(cache);
+  const total=filtered.length;
   S.offset=Math.max(0,Math.min(S.offset+direction*S.limit,Math.max(0,total-S.limit)));
-  const filtered=filterRows(cache.allRows,S.search);
   const pageRows=filtered.slice(S.offset,S.offset+S.limit);
   renderTable({
     rows:pageRows,
@@ -555,14 +548,14 @@ function editor(id,row){
         const type=colType(c);
         const v=inputValue(row[name]);
         const secret=isSecretColumn(c);
-        const enrollmentLocked=id&&S.table==='student_enrolled'&&/^(discount|admin|admin_name|approved_by|approved_at)$/i.test(name);
-        const ro=(secret||enrollmentLocked)&&id;
-        const note=ro ? (enrollmentLocked ? '(system controlled)' : '(use Reset PW)') : '';
+        const fieldLocked=isEnrollTable()&&ENROLL_LOCKED_FIELDS.includes(name);
+        const ro=(secret&&id)||fieldLocked;
+        const note=fieldLocked?' <span class="field-note">(uneditable)</span>':(secret&&id?' <span class="field-note">(use Reset PW)</span>':'');
         const large=isLargeColumn(c);
         const bool=/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name);
         const inputType=secret?'password':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         return `<div class="${large?'full':''}">
-          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${note?' <span class="field-note">'+esc(note)+'</span>':''}</label>
+          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${note}</label>
           ${large
             ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
             : bool
@@ -646,5 +639,3 @@ async function toggleWt(id,isOn){
 
 if(S.token&&S.user)show();
 </script></body></html>
-
-<script>document.getElementById('enrollDetailsModal')?.addEventListener('click',e=>{if(e.target.id==='enrollDetailsModal')closeEnrollmentDetails()});</script>
