@@ -30,6 +30,22 @@
 .panel.is-loading{opacity:.72;pointer-events:none;transition:opacity .18s ease}
 .panel{transition:opacity .18s ease,transform .18s ease}
 .tbl tbody tr{transition:background .15s ease}
+.enroll-table .enroll-row{cursor:pointer}
+.enroll-table .enroll-row:hover{background:#f7f9fc}
+.enroll-table th,.enroll-table td{white-space:nowrap}
+.enroll-table td{max-width:180px}
+.enroll-table .name-cell{max-width:190px}
+.enroll-table .course-cell{max-width:230px}
+.enroll-table .money-cell{font-weight:800}
+.enroll-table .date-cell{font-variant-numeric:tabular-nums}
+.details-modal .modal-box{width:min(760px,100%);max-height:min(760px,90vh);overflow:auto}
+.details-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
+.detail-item{border:1px solid var(--l);border-radius:11px;padding:11px 13px;background:#fafbfc}
+.detail-item.full{grid-column:1/-1}
+.detail-label{font-size:11px;color:var(--m);font-weight:700;margin-bottom:3px}
+.detail-value{font-size:14px;font-weight:700;word-break:break-word;white-space:pre-wrap}
+@media(max-width:620px){.details-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}}
+
 
 .content{animation:contentIn .2s ease-out}@keyframes contentIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
 .modal-overlay{position:fixed;inset:0;background:#0b1428aa;display:flex;align-items:center;justify-content:center;z-index:40;padding:16px}
@@ -56,6 +72,22 @@
     <button type="button" class="btn primary" onclick="submitApprove()">Approve</button>
   </div>
 </div></div>
+
+<div id="enrollDetailsModal" class="modal-overlay hidden details-modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div>
+        <h3>Enrollment Details</h3>
+        <p class="muted">Complete enrollment information · Read only</p>
+      </div>
+      <button type="button" class="btn ghost" onclick="closeEnrollmentDetails()">✕</button>
+    </div>
+    <div id="enrollDetailsBody" class="details-grid"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn primary" onclick="closeEnrollmentDetails()">Close</button>
+    </div>
+  </div>
+</div>
 <div id="toast" class="toast hidden"></div>
 <script>
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
@@ -174,7 +206,7 @@ function applyRoleVisibility(){
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
-async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><p class="muted">Add, edit, delete and search database records.</p><div id="panel" class="panel"></div>`;refresh()}
+async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><div id="panel" class="panel"></div>`;refresh()}
 async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;panel.innerHTML=a.length?`<div class="tw"><table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${a.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending requests.</div>'}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 function fmtDateInput(v){
@@ -272,7 +304,132 @@ function actionButtons(row){
   }
   return html;
 }
+function enrollmentDisplayName(name){
+  const labels={
+    name:'Name',
+    mobile:'Phone',
+    course:'Course Name',
+    nu_dcu:'DCU / NU',
+    course_price:'Course Price',
+    discount:'Discount',
+    paid:'Paid',
+    next_date:'Next Date',
+    status:'Status',
+    enrolled_at:'Enrolled At',
+    expires_at:'Expires At'
+  };
+  return labels[name]||name.replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+}
+
+function formatEnrollmentDate(v){
+  const s=String(v??'').trim();
+  if(!s)return '';
+  const d=new Date(s);
+  if(!isNaN(d.getTime())){
+    const pad=n=>String(n).padStart(2,'0');
+    return `${pad(d.getDate())} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`;
+  }
+  return s;
+}
+
+function enrollmentMainValue(row,key){
+  const value=row?.[key];
+  if(value===null||value===undefined||String(value).trim()==='')return '—';
+  if(['enrolled_at','expires_at','next_date'].includes(key))return formatEnrollmentDate(value);
+  return cellValue(value);
+}
+
+function openEnrollmentDetails(id){
+  const cache=getCache();
+  const row=(cache?.allRows||[]).find(x=>Number(x.__rowid)===Number(id));
+  if(!row)return;
+
+  const preferred=['name','course','mobile','nu_dcu','course_price','discount','paid','next_date','status','enrolled_at','expires_at'];
+  const keys=[];
+  preferred.forEach(k=>{if(Object.prototype.hasOwnProperty.call(row,k))keys.push(k)});
+  Object.keys(row).forEach(k=>{
+    if(k==='__rowid'||keys.includes(k))return;
+    keys.push(k);
+  });
+
+  const body=document.getElementById('enrollDetailsBody');
+  if(!body)return;
+  body.innerHTML=keys.map(key=>{
+    const value=enrollmentMainValue(row,key);
+    const large=isLargeColumn({name:key});
+    return `<div class="detail-item ${large?'full':''}">
+      <div class="detail-label">${esc(enrollmentDisplayName(key))}</div>
+      <div class="detail-value">${esc(value)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('enrollDetailsModal').classList.remove('hidden');
+}
+
+function closeEnrollmentDetails(){
+  document.getElementById('enrollDetailsModal')?.classList.add('hidden');
+}
+
+function renderEnrollmentTable(d){
+  const q=document.getElementById('panel');
+  if(!q)return;
+  S.rows=Array.isArray(d.rows)?d.rows:[];
+  const total=Number(d.total??S.rows.length);
+  const offset=Number(d.offset??0);
+  const limit=Math.max(1,Number(d.limit??S.limit));
+  const from=total?offset+1:0;
+  const to=Math.min(offset+limit,total);
+
+  const cols=S.cols.map(colName).filter(Boolean);
+  const preferred=['name','course','mobile','nu_dcu','course_price','paid','next_date'];
+  const displayCols=preferred.filter(c=>cols.includes(c));
+  if(!displayCols.length){
+    displayCols.push(...cols.slice(0,7));
+  }
+
+  const th=displayCols.map(c=>`<th title="${esc(enrollmentDisplayName(c))}">${esc(enrollmentDisplayName(c))}</th>`).join('');
+  const tb=S.rows.map(r=>{
+    const id=Number(r.__rowid);
+    const cells=displayCols.map(c=>{
+      const value=enrollmentMainValue(r,c);
+      const cls=['course_price','paid','discount'].includes(c)?'money-cell':c==='course'?'course-cell':c==='name'?'name-cell':c==='next_date'?'date-cell':'';
+      return `<td class="${cls}">${esc(value)}</td>`;
+    }).join('');
+    return `<tr class="enroll-row" onclick="openEnrollmentDetails(${id})">
+      ${cells}
+      <td class="actions-cell" onclick="event.stopPropagation()"><div class="act">${actionButtons(r)}</div></td>
+    </tr>`;
+  }).join('');
+
+  q.innerHTML=`
+    <div class="ph">
+      <div>
+        <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
+        <div class="muted small">${esc(S.table)} · ${displayCols.length} visible fields${d.local?' · Local cache':''}</div>
+      </div>
+      <div class="tools">
+        <div class="search-wrap">
+          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
+            oninput="liveSearch(this.value)" autocomplete="off" aria-label="Search all fields">
+          <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">×</button>
+        </div>
+        <button class="btn ghost" onclick="refresh(true)">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="tw">
+      ${S.rows.length?`<table class="tbl enroll-table"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
+    </div>
+    <div class="pager">
+      <span>${from}–${to} of ${total}</span>
+      <span>
+        <button class="mini" ${offset<=0?'disabled':''} onclick="localPage(-1)">← Previous</button>
+        <button class="mini" ${offset+limit>=total?'disabled':''} onclick="localPage(1)">Next →</button>
+      </span>
+    </div>`;
+}
+
 function renderTable(d){
+  if(S.table==='student_enrolled')return renderEnrollmentTable(d);
+
   const q=document.getElementById('panel');
   if(!q)return;
   const cols=S.cols.map(colName).filter(Boolean);
@@ -311,6 +468,7 @@ function renderTable(d){
       </span>
     </div>`;
 }
+
 async function refresh(force=false){
   const q=document.getElementById('panel');
   if(!q)return;
@@ -397,12 +555,13 @@ function editor(id,row){
         const type=colType(c);
         const v=inputValue(row[name]);
         const secret=isSecretColumn(c);
-        const ro=secret&&id;
+        const enrollmentLocked=id&&S.table==='student_enrolled'&&/^(discount|admin|admin_name|approved_by|approved_at)$/i.test(name);
+        const ro=(secret||enrollmentLocked)&&id;
         const large=isLargeColumn(c);
         const bool=/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name);
         const inputType=secret?'password':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         return `<div class="${large?'full':''}">
-          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${ro?' <span class="field-note">(use Reset PW)</span>':''}</label>
+          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${ro?' <span class="field-note">${enrollmentLocked?'(system controlled)':'(use Reset PW)'}</span>':''}</label>
           ${large
             ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
             : bool
@@ -486,3 +645,5 @@ async function toggleWt(id,isOn){
 
 if(S.token&&S.user)show();
 </script></body></html>
+
+<script>document.getElementById('enrollDetailsModal')?.addEventListener('click',e=>{if(e.target.id==='enrollDetailsModal')closeEnrollmentDetails()});</script>
