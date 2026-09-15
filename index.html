@@ -557,11 +557,12 @@ function editor(id,row){
         const secret=isSecretColumn(c);
         const enrollmentLocked=id&&S.table==='student_enrolled'&&/^(discount|admin|admin_name|approved_by|approved_at)$/i.test(name);
         const ro=(secret||enrollmentLocked)&&id;
+        const note=ro ? (enrollmentLocked ? '(system controlled)' : '(use Reset PW)') : '';
         const large=isLargeColumn(c);
         const bool=/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name);
         const inputType=secret?'password':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         return `<div class="${large?'full':''}">
-          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${ro?' <span class="field-note">${enrollmentLocked?'(system controlled)':'(use Reset PW)'}</span>':''}</label>
+          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${note?' <span class="field-note">'+esc(note)+'</span>':''}</label>
           ${large
             ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
             : bool
