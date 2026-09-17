@@ -88,6 +88,16 @@
 .pay-row .p-amt{font-weight:800;color:#0a7a3d}
 .pay-row .p-by{color:#68748d;font-size:12px;margin-left:auto}
 .pay-empty{font-size:12px;color:#8b94a8;text-align:center;padding:6px}
+</style><style>
+.content{padding:12px 16px}
+.cards{gap:10px}
+.stat{padding:12px}
+.panel{margin-top:8px}
+.ph{padding:9px 12px}
+.tbl th,.tbl td{padding:6px 8px}
+.filter-bar{margin-top:8px}
+.pager{padding:8px 12px}
+@media(max-width:760px){.content{padding:10px 12px}}
 </style><base target="_blank">
 </head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
@@ -279,11 +289,11 @@ if(S.table===ENROLL_TABLE){
     </div>
     <div id="panel" class="panel"></div>`;
 }else{
-  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><p class="muted">Add, edit, delete and search database records.</p><div id="panel" class="panel"></div>`;
+  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><div id="panel" class="panel"></div>`;
 }
 refresh()}
-async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><p class="muted">Live database overview.</p><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
-async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><p class="muted">Approve requests and activate courses.</p><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;S.pendingSearch='';renderPending()}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+async function dashboard(){content.innerHTML='<h1 class="title">Dashboard</h1><div id="cards" class="cards"><div class="smooth-loading"><div class="spinner"></div><div>Loading dashboard…</div></div></div>';try{let d=(await api('admin_dashboard')).data,a=[['student_login','Students'],['student_enrolled','Enrollments'],['course_name','Courses'],['shop_orders','Orders'],['shop_item','Products'],['teachers','Teachers'],['free_class','Free Classes'],['gallery','Gallery'],['subjectwise_course_name','Subject-wise']];cards.innerHTML=a.map(x=>`<div class="stat"><div class="n">${d.counts[x[0]]??'—'}</div><div class="muted">${x[1]}</div></div>`).join('')+`<div class="stat"><div class="n">${d.pendingEnrollments}</div><div class="muted">Pending Enrollments</div></div><div class="stat"><div class="n">${d.activeEnrollments}</div><div class="muted">Active Enrollments</div></div><div class="stat"><div class="n">${d.pendingOrders}</div><div class="muted">Pending Orders</div></div>`}catch(e){cards.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;S.pendingSearch='';renderPending()}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
 function filterPendingRows(rows,search){
   const q=String(search??'').trim().toLowerCase();
   if(!q)return rows.slice();
@@ -362,8 +372,8 @@ async function submitApprove(){
     pending();
   }catch(e){toast(e.message)}
 }
-async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><p class="muted">Manage classes, chapters, video URLs and PDFs.</p><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
-async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><p class="muted">${esc(t)}</p><div id="panel" class="panel"></div>`;refresh()}
+async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
+async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><div id="panel" class="panel"></div>`;refresh()}
 
 function colName(c){
   if(typeof c==='string') return c;
