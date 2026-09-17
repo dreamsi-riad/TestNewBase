@@ -71,12 +71,12 @@
 
 /* ---- Read-only details modal ---- */
 .detail-box{width:min(620px,100%);max-height:86vh;overflow:auto}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.detail-item{background:#f7f9fc;border:1px solid var(--l);border-radius:10px;padding:9px 11px;min-width:0}
-.detail-item .k{font-size:11px;font-weight:800;color:#8b94a8;text-transform:uppercase;letter-spacing:.3px}
-.detail-item .v{font-size:14px;font-weight:600;word-break:break-word}
-.detail-item.full{grid-column:1/-1}
-@media(max-width:560px){.detail-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}}
+.detail-grid{display:block}
+.detail-item{padding:8px 2px;border-bottom:1px solid #edf0f4;min-width:0;line-height:1.45}
+.detail-item .k{display:inline;font-size:13px;font-weight:800;color:#68748d;letter-spacing:.2px}
+.detail-item .k::after{content:":";margin-right:6px}
+.detail-item .v{display:inline;font-size:14px;font-weight:600;color:var(--ink);word-break:break-word}
+.detail-item.full{display:block}
 
 .mini.wide{min-width:88px;padding:6px 14px}
 #paidCurrent{color:#1769df;font-weight:800;font-size:13px;margin-left:6px}
