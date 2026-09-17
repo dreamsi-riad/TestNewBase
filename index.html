@@ -110,8 +110,10 @@ const P={students:['student_login','Students'],enrollments:['student_enrolled','
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
 let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',courseFilter:'',offset:0,limit:100};
 const ENROLL_TABLE='student_enrolled';
+const STUDENT_TABLE='student_login';
 const ENROLL_LOCKED_FIELDS=['course_price','discount','admin'];
 function isEnrollTable(){return S.table===ENROLL_TABLE}
+function isStudentTable(){return S.table===STUDENT_TABLE}
 const pageCache=new Map();
 let searchTimer=null;
 let refreshSeq=0;
@@ -287,14 +289,14 @@ function renderPending(){
       </div>
     </div>
     ${rows.length?`<div class="tw"><table class="tbl enroll-tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Course Price</th><th>Level / Year / Dept</th><th>Date</th><th class="actions-head">Action</th></tr></thead><tbody>${rows.map(r=>`
-      <tr>
+      <tr onclick="openPendingDetail(${r.id})">
         <td class="wrap"><b>${esc(r.name)}</b><br><span class="muted small">${esc(r.mobile)}${r.email?' · '+esc(r.email):''}</span></td>
         <td class="wrap" style="color:#c0392b;font-weight:700">${esc(r.course)}</td>
         <td>${r.nuDcu?esc(r.nuDcu):'<span class="muted">—</span>'}</td>
         <td>${r.coursePrice?('৳\u00A0'+esc(r.coursePrice)):'<span class="muted">—</span>'}</td>
         <td class="wrap">${[r.level,r.year,r.department].filter(Boolean).map(esc).join(' · ')||'<span class="muted">—</span>'}</td>
         <td>${esc(r.enrolledAt)}</td>
-        <td class="actions-cell"><button class="mini ok" onclick="approve(${r.id})">Approve</button></td>
+        <td class="actions-cell"><button class="mini ok" onclick="event.stopPropagation();approve(${r.id})">Approve</button></td>
       </tr>`).join('')}</tbody></table></div>`
       :`<div class="empty">${S.pendingSearch?'No matching pending requests.':'No pending requests.'}</div>`}
     `;
@@ -429,6 +431,18 @@ function dueAmount(row){
   return price-discount-paid;
 }
 const ENROLL_HEADS=['Name','Course','Phone','NU/DCU','Course Price','Due','Next Date'];
+const STUDENT_HEADS=['Name','Level / Year / Session','Department','Mobile','Email'];
+function studentRowCells(r){
+  const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
+  const lys=[cellValue(r.level).trim(),cellValue(r.year).trim(),cellValue(r.session).trim()].filter(Boolean).join(' · ');
+  return [
+    `<td class="wrap"><b>${txt(r.name)}</b></td>`,
+    `<td class="wrap">${lys?esc(lys):'<span class="muted">—</span>'}</td>`,
+    `<td class="wrap">${txt(r.department)}</td>`,
+    `<td>${txt(r.mobile)}</td>`,
+    `<td class="wrap">${txt(r.email)}</td>`
+  ].join('');
+}
 function enrollRowCells(r){
   const price=moneyNumber(r.course_price);
   const discount=moneyNumber(r.discount);
@@ -457,12 +471,16 @@ function rowClick(e,id){
 function openDetail(id){
   const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
   if(!r)return;
-  const name=cellValue(r.name).trim()||'Student';
-  const course=cellValue(r.course).trim();
+  const name=cellValue(r.name).trim()||(isStudentTable()?'Student':'Record');
+  let subtitleParts=[];
+  if(isEnrollTable()){
+    subtitleParts=[cellValue(r.course).trim(),cellValue(r.nu_dcu).trim(),cellValue(r.mobile).trim()];
+  }else if(isStudentTable()){
+    subtitleParts=[cellValue(r.mobile).trim(),cellValue(r.email).trim(),cellValue(r.institute).trim()];
+  }
   dmTitle.textContent=name;
-  dmSub.textContent=[course,cellValue(r.nu_dcu).trim(),cellValue(r.mobile).trim()].filter(Boolean).join(' · ');
+  dmSub.textContent=subtitleParts.filter(Boolean).join(' · ');
   const cols=S.cols.map(colName).filter(Boolean);
-  const due=dueAmount(r);
   let html=cols.map(c=>{
     const large=isLargeColumn(c);
     const v=isSecretColumn(c)?'••••••••':cellValue(r[c]).trim();
@@ -471,8 +489,36 @@ function openDetail(id){
       <div class="v">${v?esc(v):'—'}</div>
     </div>`;
   }).join('');
-  html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':esc(fmtMoney(due))}</div></div>`;
+  if(isEnrollTable()){
+    const due=dueAmount(r);
+    html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':esc(fmtMoney(due))}</div></div>`;
+  }
   dmBody.innerHTML=html;
+  detailModal.classList.remove('hidden');
+}
+function openPendingDetail(id){
+  const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
+  if(!r)return;
+  dmTitle.textContent=r.name||'Student';
+  dmSub.textContent=[r.course,r.nuDcu,r.mobile].filter(Boolean).join(' · ');
+  const fields=[
+    ['Name',r.name],
+    ['Mobile',r.mobile],
+    ['Email',r.email],
+    ['Course',r.course],
+    ['Sector (NU/DCU)',r.nuDcu],
+    ['Course Price',r.coursePrice?`৳ ${r.coursePrice}`:''],
+    ['Level',r.level],
+    ['Year',r.year],
+    ['Department',r.department],
+    ['Institute',r.institute],
+    ['Address',r.address],
+    ['Requested At',r.enrolledAt]
+  ];
+  dmBody.innerHTML=fields.map(([k,v])=>{
+    const large=k==='Address';
+    return `<div class="detail-item ${large?'full':''}"><div class="k">${esc(k)}</div><div class="v">${v?esc(v):'—'}</div></div>`;
+  }).join('');
   detailModal.classList.remove('hidden');
 }
 function closeDetail(){detailModal.classList.add('hidden')}
@@ -482,13 +528,17 @@ function renderTable(d){
   const q=document.getElementById('panel');
   if(!q)return;
   const enroll=isEnrollTable();
+  const student=isStudentTable();
+  const special=enroll||student;
   const cols=S.cols.map(colName).filter(Boolean);
   S.rows=Array.isArray(d.rows)?d.rows:[];
-  const th=(enroll?ENROLL_HEADS:cols).map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
-  const tb=S.rows.map(r=>enroll
-    ? `<tr onclick="rowClick(event,${Number(r.__rowid)})">${enrollRowCells(r)}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`
-    : `<tr>${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`
-  ).join('');
+  const heads=enroll?ENROLL_HEADS:student?STUDENT_HEADS:cols;
+  const th=heads.map(c=>`<th title="${esc(c)}">${esc(c)}</th>`).join('');
+  const tb=S.rows.map(r=>{
+    if(enroll)return `<tr onclick="rowClick(event,${Number(r.__rowid)})">${enrollRowCells(r)}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`;
+    if(student)return `<tr onclick="rowClick(event,${Number(r.__rowid)})">${studentRowCells(r)}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`;
+    return `<tr>${cols.map(c=>`<td>${renderCell(r[c],c)}</td>`).join('')}<td class="actions-cell"><div class="act">${actionButtons(r)}</div></td></tr>`;
+  }).join('');
   const total=Number(d.total??S.rows.length);
   const offset=Number(d.offset??0);
   const limit=Math.max(1,Number(d.limit??S.limit));
@@ -498,7 +548,7 @@ function renderTable(d){
     <div class="ph">
       <div>
         <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-        <div class="muted small">${enroll?(S.courseFilter?'Filtered: '+esc(S.courseFilter):'All courses'):esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
+        <div class="muted small">${enroll?(S.courseFilter?'Filtered: '+esc(S.courseFilter):'All courses'):student?'Click a row to view full profile':esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
       </div>
       <div class="tools">
         <div class="search-wrap">
@@ -511,7 +561,7 @@ function renderTable(d){
       </div>
     </div>
     <div class="tw">
-      ${S.rows.length?`<table class="tbl${enroll?' enroll-tbl':''}"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
+      ${S.rows.length?`<table class="tbl${special?' enroll-tbl':''}"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
     </div>
     <div class="pager">
       <span>${from}–${to} of ${total}</span>
