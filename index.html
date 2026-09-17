@@ -673,7 +673,7 @@ function editor(id,row){
   dt.textContent=id?'Edit record':'Add record';
   ef.innerHTML=`
     <div class="editor-meta">
-      <b>${esc(P[S.table]?.[1]||S.table)}</b>
+      <b>${esc(isEnrollTable()?[cellValue(row.name).trim(),cellValue(row.course).trim()].filter(Boolean).join(' — ')||P[S.table]?.[1]||S.table:P[S.table]?.[1]||S.table)}</b>
       <span>${id?'Editing row #'+id:'Creating new row'}</span>
     </div>
     <input type="hidden" id="rid" value="${id}">
