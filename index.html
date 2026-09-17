@@ -111,7 +111,8 @@ const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba'
 let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',courseFilter:'',offset:0,limit:100};
 const ENROLL_TABLE='student_enrolled';
 const STUDENT_TABLE='student_login';
-const ENROLL_LOCKED_FIELDS=['course_price','discount','admin'];
+const ENROLL_EDITABLE_FIELDS=['expires_at','paid','next_date'];
+const ENROLL_HIDDEN_FIELDS=['get_wt','blocked'];
 function isEnrollTable(){return S.table===ENROLL_TABLE}
 function isStudentTable(){return S.table===STUDENT_TABLE}
 const pageCache=new Map();
@@ -407,9 +408,9 @@ function actionButtons(row){
   }
   if(S.table==='student_enrolled'){
     const blocked=String(row.blocked??'').trim().toLowerCase()==='true';
-    html+=`<button class="mini ${blocked?'ok':''}" onclick="toggleLock(${id},${blocked})">${blocked?'Unlock':'Lock'}</button>`;
+    html+=`<button class="mini ${blocked?'bad':''}" onclick="toggleLock(${id},${blocked})">${blocked?'Locked':'Lock'}</button>`;
     const wt=String(row.get_wt??'').trim().toLowerCase()==='yes';
-    html+=`<button class="mini" onclick="toggleWt(${id},${wt})">${wt?'WT OFF':'WT ON'}</button>`;
+    html+=`<button class="mini ${wt?'ok':''}" onclick="toggleWt(${id},${wt})">${wt?'WT ON':'WT OFF'}</button>`;
   }
   return html;
 }
@@ -430,7 +431,7 @@ function dueAmount(row){
   const paid=moneyNumber(row.paid)||0;
   return price-discount-paid;
 }
-const ENROLL_HEADS=['Name','Course','Phone','NU/DCU','Course Price','Due','Next Date'];
+const ENROLL_HEADS=['Name','Phone','Course','NU/DCU','Course Price','Due','Next Date'];
 const STUDENT_HEADS=['Name','Level / Year / Session','Department','Mobile','Email'];
 function studentRowCells(r){
   const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
@@ -456,8 +457,8 @@ function enrollRowCells(r){
   const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
   return [
     `<td class="wrap"><b>${cellValue(r.name).trim()?esc(cellValue(r.name).trim()):'—'}</b></td>`,
-    `<td class="wrap">${txt(r.course)}</td>`,
     `<td>${txt(r.mobile)}</td>`,
+    `<td class="wrap">${txt(r.course)}</td>`,
     `<td>${txt(r.nu_dcu)}</td>`,
     `<td>${priceCell}</td>`,
     `<td>${dueCell}</td>`,
@@ -646,6 +647,25 @@ function edit(id){
   const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
   if(r) editor(id,r);
 }
+function enrollDateInputValue(name,v){
+  if(!v)return '';
+  if(name==='expires_at')return v.slice(0,10);
+  const m=/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/.exec(String(v).trim());
+  if(m){
+    const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const monIdx=MO.findIndex(x=>x.toLowerCase()===m[2].toLowerCase());
+    if(monIdx>=0){
+      const pad=n=>String(n).padStart(2,'0');
+      return `${m[3]}-${pad(monIdx+1)}-${pad(Number(m[1]))}`;
+    }
+  }
+  const d=new Date(v);
+  if(!isNaN(d.getTime())){
+    const pad=n=>String(n).padStart(2,'0');
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+  return '';
+}
 function editor(id,row){
   dt.textContent=id?'Edit record':'Add record';
   ef.innerHTML=`
@@ -655,17 +675,19 @@ function editor(id,row){
     </div>
     <input type="hidden" id="rid" value="${id}">
     <div class="grid">
-      ${S.cols.map(c=>{
+      ${S.cols.filter(c=>!(isEnrollTable()&&ENROLL_HIDDEN_FIELDS.includes(colName(c)))).map(c=>{
         const name=colName(c);
         const type=colType(c);
         const v=inputValue(row[name]);
         const secret=isSecretColumn(c);
-        const fieldLocked=isEnrollTable()&&ENROLL_LOCKED_FIELDS.includes(name);
+        const fieldLocked=isEnrollTable()?!ENROLL_EDITABLE_FIELDS.includes(name):false;
         const ro=(secret&&id)||fieldLocked;
         const note=fieldLocked?' <span class="field-note">(uneditable)</span>':(secret&&id?' <span class="field-note">(use Reset PW)</span>':'');
         const large=isLargeColumn(c);
         const bool=/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name);
-        const inputType=secret?'password':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
+        const isEnrollDate=isEnrollTable()&&(name==='expires_at'||name==='next_date');
+        const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
+        const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
         return `<div class="${large?'full':''}">
           <label>${esc(name)} <span class="field-type">${esc(type)}</span>${note}</label>
           ${large
@@ -676,7 +698,7 @@ function editor(id,row){
                    <option value="TRUE" ${/^(true|yes|1)$/i.test(v)?'selected':''}>TRUE</option>
                    <option value="FALSE" ${/^(false|no|0)$/i.test(v)?'selected':''}>FALSE</option>
                  </select>`
-              : `<input data-c="${esc(name)}" value="${esc(v)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''}>`}
+              : `<input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''} ${isEnrollDate?'data-enroll-date="1"':''}>`}
         </div>`;
       }).join('')}
     </div>
@@ -692,6 +714,13 @@ async function save(e){
   const d={};
   document.querySelectorAll('#ef [data-c]').forEach(x=>{
     if(x.disabled||x.readOnly)return;
+    if(x.dataset.enrollDate){
+      if(!x.value){d[x.dataset.c]='';return;}
+      d[x.dataset.c]=x.dataset.c==='next_date'
+        ? fmtDateInput(x.value)
+        : new Date(x.value+'T23:59:59.999Z').toISOString();
+      return;
+    }
     d[x.dataset.c]=x.value;
   });
   try{
