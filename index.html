@@ -114,6 +114,11 @@
   <input id="apDiscount" placeholder="যেমন: 500 (না থাকলে খালি রাখুন)">
   <label>Paid</label>
   <input id="apPaid" placeholder="যেমন: 5500" required>
+  <label>Access Type</label>
+  <select id="apAccessType">
+    <option value="Limited Access">Limited Access</option>
+    <option value="Full Access">Full Access</option>
+  </select>
   <label>Next Due Date</label>
   <input id="apNextDate" type="date">
   <div class="modal-actions">
@@ -137,7 +142,7 @@ const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba'
 let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',courseFilter:'',offset:0,limit:100};
 const ENROLL_TABLE='student_enrolled';
 const STUDENT_TABLE='student_login';
-const ENROLL_EDITABLE_FIELDS=['status','expires_at','paid','next_date'];
+const ENROLL_EDITABLE_FIELDS=['status','expires_at','paid','access_type','next_date'];
 function isEnrollTable(){return S.table===ENROLL_TABLE}
 function isStudentTable(){return S.table===STUDENT_TABLE}
 const pageCache=new Map();
@@ -346,14 +351,14 @@ function fmtDateInput(v){
   if(!v)return '';
   const d=new Date(v+'T00:00:00');
   if(isNaN(d.getTime()))return v;
-  return new Date(v+'T23:59:59.999Z').toISOString();
+  return v.replace(/-/g,'/');
 }
 function approve(id){
   const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
   apStudent.textContent=r?`${r.name} (${r.mobile})`:'';
   apCourse.textContent=r?`${r.course}${r.nuDcu?' — '+r.nuDcu:''}`:'';
   apPrice.textContent=r&&r.coursePrice?`৳ ${r.coursePrice}`:'—';
-  apDiscount.value='';apPaid.value='';apNextDate.value='';
+  apDiscount.value='';apPaid.value='';apAccessType.value='Limited Access';apNextDate.value='';
   approveModal.dataset.id=id;
   approveModal.classList.remove('hidden');
   setTimeout(()=>apPaid.focus(),0);
@@ -363,10 +368,11 @@ async function submitApprove(){
   const id=Number(approveModal.dataset.id);
   const discount=apDiscount.value.trim();
   const paid=apPaid.value.trim();
+  const accessType=apAccessType.value;
   const nextDate=fmtDateInput(apNextDate.value.trim());
   if(!paid){toast('Paid amount আবশ্যক');apPaid.focus();return}
   try{
-    await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',discount,paid,nextDate});
+    await api('approve_enrollment',{id,adminName:S.user?.name||'Admin',discount,paid,accessType,nextDate});
     toast('Enrollment approved');
     closeApproveModal();
     pending();
@@ -400,6 +406,14 @@ function formatDateOnly(value){
   if(!raw) return '';
   const match=/^(\d{4}-\d{2}-\d{2})/.exec(raw);
   return match ? match[1] : raw.split('T')[0];
+}
+function formatNextPaymentDate(value){
+  const raw=String(value??'').trim();
+  if(!raw) return '';
+  const slash=/^(\d{4})\/(\d{2})\/(\d{2})$/.exec(raw);
+  if(slash) return raw;
+  const iso=/^(\d{4})-(\d{2})-(\d{2})/.exec(raw);
+  return iso ? `${iso[1]}/${iso[2]}/${iso[3]}` : raw.split('T')[0].replace(/-/g,'/');
 }
 function shortValue(v,max=180){
   const s=cellValue(v);
@@ -498,7 +512,7 @@ function enrollRowCells(r){
     `<td>${txt(r.nu_dcu)}</td>`,
     `<td>${priceCell}</td>`,
     `<td>${dueCell}</td>`,
-    `<td>${txt(formatDateOnly(r.next_date))}</td>`
+    `<td>${txt(formatNextPaymentDate(r.next_date))}</td>`
   ].join('');
 }
 function rowClick(e,id){
@@ -520,7 +534,7 @@ function openDetail(id){
   const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
   let html=cols.map(c=>{
     const large=isLargeColumn(c);
-    const v=isSecretColumn(c)?'••••••••':(isDateColumn(c)?formatDateOnly(r[c]):cellValue(r[c]).trim());
+    const v=isSecretColumn(c)?'••••••••':(c==='next_date'?formatNextPaymentDate(r[c]):(isDateColumn(c)?formatDateOnly(r[c]):cellValue(r[c]).trim()));
     return `<div class="detail-item ${large?'full':''}">
       <div class="k">${esc(c)}</div>
       <div class="v">${v?esc(v):'—'}</div>
@@ -686,7 +700,11 @@ function edit(id){
 }
 function enrollDateInputValue(name,v){
   if(!v)return '';
-  const d=new Date(v);
+  const raw=String(v).trim();
+  const nextDate=/^(\d{4})\/(\d{2})\/(\d{2})$/.exec(raw);
+  const d=nextDate
+    ? new Date(Number(nextDate[1]),Number(nextDate[2])-1,Number(nextDate[3]))
+    : new Date(raw);
   if(isNaN(d.getTime()))return '';
   return d.toISOString().slice(0,10);
 }
@@ -735,6 +753,11 @@ function editor(id,row){
                  <option value="Expired" ${cur==='Expired'?'selected':''}>Expired</option>
                </select>`;
               })()
+            : (isEnrollTable()&&name==='access_type')
+              ? `<select data-c="${esc(name)}">
+                   <option value="Limited Access" ${/^full access$/i.test(v)?'':'selected'}>Limited Access</option>
+                   <option value="Full Access" ${/^full access$/i.test(v)?'selected':''}>Full Access</option>
+                 </select>`
             : large
               ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
               : bool
@@ -762,7 +785,9 @@ async function save(e){
     if(x.disabled||x.readOnly)return;
     if(x.dataset.enrollDate){
       if(!x.value){d[x.dataset.c]='';return;}
-      d[x.dataset.c]=fmtDateInput(x.value);
+      d[x.dataset.c]=x.dataset.c==='next_date'
+        ? fmtDateInput(x.value)
+        : new Date(x.value+'T23:59:59.999Z').toISOString();
       return;
     }
     d[x.dataset.c]=x.value;
