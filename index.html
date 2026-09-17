@@ -321,7 +321,7 @@ function renderPending(){
         <td>${r.nuDcu?esc(r.nuDcu):'<span class="muted">—</span>'}</td>
         <td>${r.coursePrice?('৳\u00A0'+esc(r.coursePrice)):'<span class="muted">—</span>'}</td>
         <td class="wrap">${[r.level,r.year,r.department].filter(Boolean).map(esc).join(' · ')||'<span class="muted">—</span>'}</td>
-        <td>${esc(r.enrolledAt)}</td>
+        <td>${esc(formatDateOnly(r.enrolledAt))}</td>
         <td class="actions-cell"><button class="mini ok" onclick="event.stopPropagation();approve(${r.id})">Approve</button></td>
       </tr>`).join('')}</tbody></table></div>`
       :`<div class="empty">${S.pendingSearch?'No matching pending requests.':'No pending requests.'}</div>`}
@@ -392,6 +392,15 @@ function cellValue(v){
   }
   return String(v);
 }
+function isDateColumn(name){
+  return /(^|_)(date|timestamp|created_at|updated_at|enrolled_at|expires_at|next_date|last_attempt_at)($|_)/i.test(String(name||''));
+}
+function formatDateOnly(value){
+  const raw=String(value??'').trim();
+  if(!raw) return '';
+  const match=/^(\d{4}-\d{2}-\d{2})/.exec(raw);
+  return match ? match[1] : raw.split('T')[0];
+}
 function shortValue(v,max=180){
   const s=cellValue(v);
   return s.length>max ? s.slice(0,max-1)+'…' : s;
@@ -410,7 +419,8 @@ function renderCell(v,c){
   const name=colName(c);
   if(isSecretColumn(c)) return '<span class="secret">••••••••</span>';
   const previewMax=isLargeColumn(c)?55:180;
-  const s=shortValue(v,previewMax);
+  const raw=shortValue(v,previewMax);
+  const s=isDateColumn(name)?formatDateOnly(raw):raw;
   if(!s) return '<span class="muted">—</span>';
   if(/^https?:\/\//i.test(s)){
     const safe=esc(s);
@@ -420,7 +430,7 @@ function renderCell(v,c){
     const on=/^(true|yes)$/i.test(s.trim());
     return `<span class="badge ${on?'on':'off'}">${esc(s)}</span>`;
   }
-  return `<span title="${esc(cellValue(v))}">${esc(s)}</span>`;
+  return `<span title="${esc(s)}">${esc(s)}</span>`;
 }
 function actionButtons(row){
   const id=Number(row.__rowid);
@@ -488,7 +498,7 @@ function enrollRowCells(r){
     `<td>${txt(r.nu_dcu)}</td>`,
     `<td>${priceCell}</td>`,
     `<td>${dueCell}</td>`,
-    `<td>${txt(r.next_date)}</td>`
+    `<td>${txt(formatDateOnly(r.next_date))}</td>`
   ].join('');
 }
 function rowClick(e,id){
@@ -510,7 +520,7 @@ function openDetail(id){
   const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
   let html=cols.map(c=>{
     const large=isLargeColumn(c);
-    const v=isSecretColumn(c)?'••••••••':cellValue(r[c]).trim();
+    const v=isSecretColumn(c)?'••••••••':(isDateColumn(c)?formatDateOnly(r[c]):cellValue(r[c]).trim());
     return `<div class="detail-item ${large?'full':''}">
       <div class="k">${esc(c)}</div>
       <div class="v">${v?esc(v):'—'}</div>
@@ -541,7 +551,7 @@ function openPendingDetail(id){
     ['Department',r.department],
     ['Institute',r.institute],
     ['Address',r.address],
-    ['Requested At',r.enrolledAt]
+    ['Requested At',formatDateOnly(r.enrolledAt)]
   ];
   dmBody.innerHTML=fields.map(([k,v])=>{
     const large=k==='Address';
