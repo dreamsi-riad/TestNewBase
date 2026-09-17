@@ -534,18 +534,33 @@ function openDetail(id){
   }
   dmTitle.textContent=name;
   dmSub.textContent=subtitleParts.filter(Boolean).join(' · ');
-  const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
-  let html=cols.map(c=>{
-    const large=isLargeColumn(c);
-    const v=isSecretColumn(c)?'••••••••':(c==='next_date'?formatNextPaymentDate(r[c]):(isDateColumn(c)?formatDateOnly(r[c]):cellValue(r[c]).trim()));
-    return `<div class="detail-item ${large?'full':''}">
-      <div class="k">${esc(c)}</div>
-      <div class="v">${v?esc(v):'—'}</div>
-    </div>`;
-  }).join('');
+  const formatDetailValue=c=>isSecretColumn(c)
+    ? '••••••••'
+    : c==='next_date'
+      ? formatNextPaymentDate(r[c])
+      : isDateColumn(c)
+        ? formatDateOnly(r[c])
+        : cellValue(r[c]).trim();
+  const detailItem=c=>`<div class="detail-item">
+    <div class="k">${esc(c)}</div>
+    <div class="v">${formatDetailValue(c)?esc(formatDetailValue(c)):'—'}</div>
+  </div>`;
+  let html='';
   if(isEnrollTable()){
+    const leftFields=['name','mobile','course','nu_dcu','course_price','discount','paid','access_type','next_date','admin'];
+    const rightFields=['enrolled_at','expires_at','status','watch_time','get_wt','blocked','b_comment'];
     const due=dueAmount(r);
-    html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':due>0?esc(fmtMoney(due)):'<span class="due-ok">Paid</span>'}</div></div>`;
+    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'—':due>0?esc(fmtMoney(due)):'<span class="due-ok">Paid</span>'}</div></div>`;
+    const leftItems=leftFields.map(detailItem);
+    leftItems.splice(7,0,dueItem);
+    const right=rightFields.map(detailItem).join('');
+    const maxRows=Math.max(leftItems.length,rightFields.length);
+    for(let i=0;i<maxRows;i++) html+=(leftItems[i]||'')+(rightFields[i]?detailItem(rightFields[i]):'');
+  }else{
+    const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
+    html=cols.map(detailItem).join('');
+  }
+  if(isEnrollTable()){
     html+=payHistoryHtml(r);
   }
   dmBody.innerHTML=html;
