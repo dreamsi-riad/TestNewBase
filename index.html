@@ -77,7 +77,19 @@
 .detail-item .v{font-size:14px;font-weight:600;word-break:break-word}
 .detail-item.full{grid-column:1/-1}
 @media(max-width:560px){.detail-grid{grid-template-columns:1fr}.detail-item.full{grid-column:auto}}
-</style></head><body>
+
+.mini.wide{min-width:88px;padding:6px 14px}
+#paidCurrent{color:#1769df;font-weight:800;font-size:13px;margin-left:6px}
+.pay-history{margin-top:2px}
+.pay-history .ph-title{font-size:12px;font-weight:800;color:#68748d;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.pay-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto;border:1px solid var(--l);border-radius:10px;padding:10px;background:#fafbfc}
+.pay-row{display:flex;align-items:center;gap:10px;font-size:13px;background:#fff;border:1px solid #edf0f4;border-radius:8px;padding:7px 10px}
+.pay-row .p-date{font-weight:800;color:#17233f;min-width:88px}
+.pay-row .p-amt{font-weight:800;color:#0a7a3d}
+.pay-row .p-by{color:#68748d;font-size:12px;margin-left:auto}
+.pay-empty{font-size:12px;color:#8b94a8;text-align:center;padding:6px}
+</style><base target="_blank">
+</head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
 <div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div>
@@ -404,7 +416,7 @@ function renderCell(v,c){
 function actionButtons(row){
   const id=Number(row.__rowid);
   const noDelete=['student_login','student_enrolled'].includes(S.table);
-  let html=`<button class="mini" onclick="edit(${id})">Edit</button>
+  let html=`<button class="mini${isEnrollTable()?' wide':''}" onclick="edit(${id})">Edit</button>
             ${noDelete?'':`<button class="mini bad" onclick="del(${id})">Delete</button>`}`;
   if(S.table==='student_login'){
     html+=`<button class="mini" onclick="pw(${id})">Reset PW</button>`;
@@ -456,7 +468,9 @@ function enrollRowCells(r){
     : `${esc(fmtMoney(price))}${discount?` <span class="dis-note">(dis: ${esc(fmtMoney(discount))})</span>`:''}`;
   const dueCell=due===null
     ? '<span class="muted">—</span>'
-    : `<span class="${due>0?'due-bad':'due-ok'}">${esc(fmtMoney(due))}</span>`;
+    : due>0
+      ? `<span class="due-bad">${esc(fmtMoney(due))}</span>`
+      : '<span class="due-ok">Paid</span>';
   const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
   return [
     `<td class="wrap"><b>${cellValue(r.name).trim()?esc(cellValue(r.name).trim()):'—'}</b></td>`,
@@ -495,7 +509,7 @@ function openDetail(id){
   }).join('');
   if(isEnrollTable()){
     const due=dueAmount(r);
-    html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':esc(fmtMoney(due))}</div></div>`;
+    html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':due>0?esc(fmtMoney(due)):'<span class="due-ok">Paid</span>'}</div></div>`;
   }
   dmBody.innerHTML=html;
   detailModal.classList.remove('hidden');
@@ -669,6 +683,15 @@ function enrollDateInputValue(name,v){
   }
   return '';
 }
+function payHistoryHtml(row){
+  let list=[];
+  try{
+    const raw=cellValue(row?.payment_history).trim();
+    if(raw){const p=JSON.parse(raw);if(Array.isArray(p))list=p;}
+  }catch{}
+  const items=list.map(e=>`<div class="pay-row"><span class="p-date">${esc(e.date||'')}</span><span class="p-amt">৳ ${esc(e.amount||'')}</span><span class="p-by">${esc(e.admin||'')}</span></div>`).join('');
+  return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items||'<div class="pay-empty">এখনো কোনো payment যোগ হয়নি</div>'}</div></div>`;
+}
 function editor(id,row){
   dt.textContent=id?'Edit record':'Add record';
   ef.innerHTML=`
@@ -692,7 +715,7 @@ function editor(id,row){
         const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
         return `<div class="${large?'full':''}">
-          <label>${esc(name)} <span class="field-type">${esc(type)}</span>${note}</label>
+          <label>${esc((isEnrollTable()&&name==='paid')?'Add Payment':name)} <span class="field-type">${esc(type)}</span>${note}${(isEnrollTable()&&name==='paid')?` <span id="paidCurrent">মোট Paid: ৳ ${esc(fmtMoney(moneyNumber(row.paid)||0))}</span>`:''}</label>
           ${isStatusField
             ? (()=>{
                 const cur=/^active$/i.test(v)?'Active':/^expired$/i.test(v)?'Expired':'Pending';
@@ -710,9 +733,10 @@ function editor(id,row){
                      <option value="TRUE" ${/^(true|yes|1)$/i.test(v)?'selected':''}>TRUE</option>
                      <option value="FALSE" ${/^(false|no|0)$/i.test(v)?'selected':''}>FALSE</option>
                    </select>`
-                : `<input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''} ${isEnrollDate?'data-enroll-date="1"':''}>`}
+                : `<input data-c="${esc(name)}" value="${esc((isEnrollTable()&&name==='paid')?'':dateValue)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''} ${isEnrollDate?'data-enroll-date="1"':''} ${(isEnrollTable()&&name==='paid')?'placeholder="যে পরিমাণ যোগ করতে চান লিখুন"':''}>`}
         </div>`;
       }).join('')}
+      ${isEnrollTable()?payHistoryHtml(row):''}
     </div>
     <div class="drawer-actions">
       <button type="button" class="btn ghost" onclick="closeDrawer()">Cancel</button>
@@ -735,6 +759,27 @@ async function save(e){
     }
     d[x.dataset.c]=x.value;
   });
+  if(isEnrollTable()){
+    const ridVal=Number(document.getElementById('rid').value)||0;
+    const oldRow=S.rows.find(x=>Number(x.__rowid)===ridVal);
+    if(oldRow){
+      const addStr=String(d.paid??'').replace(/[^\d.]/g,'').trim();
+      if(addStr&&Number(addStr)>0){
+        const add=Number(addStr);
+        const oldPaid=moneyNumber(oldRow.paid)||0;
+        d.paid=String(oldPaid+add);
+        let hist=[];
+        try{const raw=cellValue(oldRow.payment_history).trim();if(raw){const p=JSON.parse(raw);if(Array.isArray(p))hist=p;}}catch{}
+        const now=new Date();
+        const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const dateStr=String(now.getDate()).padStart(2,'0')+' '+MO[now.getMonth()]+' '+now.getFullYear();
+        hist.push({date:dateStr,amount:add,admin:String(S.user?.name||'Admin').trim()||'Admin'});
+        d.payment_history=JSON.stringify(hist);
+      }else{
+        delete d.paid;
+      }
+    }
+  }
   try{
     await api('admin_save',{table:S.table,rowid:Number(rid.value)||0,data:d});
     pageCache.delete(cacheKey());
