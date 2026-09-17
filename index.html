@@ -676,7 +676,10 @@ function payHistoryHtml(row){
     const raw=cellValue(row?.payment_history).trim();
     if(raw){const p=JSON.parse(raw);if(Array.isArray(p))list=p;}
   }catch{}
-  const items=list.map(e=>`<div class="pay-row"><span class="p-date">${esc(e.date||'')}</span><span class="p-amt">৳ ${esc(e.amount||'')}</span><span class="p-by">${esc(e.admin||'')}</span></div>`).join('');
+  const items=list.map(e=>{
+    const date=String(e.date||'').trim().split('T')[0];
+    return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount||'')}</span><span class="p-by">${esc(e.admin||'')}</span></div>`;
+  }).join('');
   return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items||'<div class="pay-empty">এখনো কোনো payment যোগ হয়নি</div>'}</div></div>`;
 }
 function editor(id,row){
@@ -702,7 +705,7 @@ function editor(id,row){
         const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
         return `<div class="${large?'full':''}">
-          <label>${esc((isEnrollTable()&&name==='paid')?'Add Payment':name)} <span class="field-type">${esc(type)}</span>${note}${(isEnrollTable()&&name==='paid')?` <span id="paidCurrent">মোট Paid: ৳ ${esc(fmtMoney(moneyNumber(row.paid)||0))}</span>`:''}</label>
+          <label>${esc((isEnrollTable()&&name==='paid')?'Add Payment':name)}${note}${(isEnrollTable()&&name==='paid')?` <span id="paidCurrent">মোট Paid: ৳ ${esc(fmtMoney(moneyNumber(row.paid)||0))}</span>`:''}</label>
           ${isStatusField
             ? (()=>{
                 const cur=/^active$/i.test(v)?'Active':/^expired$/i.test(v)?'Expired':'Pending';
