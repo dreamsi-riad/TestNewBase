@@ -336,8 +336,7 @@ function fmtDateInput(v){
   if(!v)return '';
   const d=new Date(v+'T00:00:00');
   if(isNaN(d.getTime()))return v;
-  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return String(d.getDate()).padStart(2,'0')+' '+MO[d.getMonth()]+' '+d.getFullYear();
+  return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
 }
 function approve(id){
   const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
@@ -666,20 +665,11 @@ function edit(id){
 }
 function enrollDateInputValue(name,v){
   if(!v)return '';
-  if(name==='expires_at')return v.slice(0,10);
-  const m=/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/.exec(String(v).trim());
-  if(m){
-    const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const monIdx=MO.findIndex(x=>x.toLowerCase()===m[2].toLowerCase());
-    if(monIdx>=0){
-      const pad=n=>String(n).padStart(2,'0');
-      return `${m[3]}-${pad(monIdx+1)}-${pad(Number(m[1]))}`;
-    }
-  }
-  const d=new Date(v);
-  if(!isNaN(d.getTime())){
+  const raw=String(v).trim();
+  const ddmmyyyy=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(raw);
+  if(ddmmyyyy){
     const pad=n=>String(n).padStart(2,'0');
-    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    return `${ddmmyyyy[3]}-${pad(Number(ddmmyyyy[2]))}-${pad(Number(ddmmyyyy[1]))}`;
   }
   return '';
 }
@@ -752,9 +742,7 @@ async function save(e){
     if(x.disabled||x.readOnly)return;
     if(x.dataset.enrollDate){
       if(!x.value){d[x.dataset.c]='';return;}
-      d[x.dataset.c]=x.dataset.c==='next_date'
-        ? fmtDateInput(x.value)
-        : new Date(x.value+'T23:59:59.999Z').toISOString();
+      d[x.dataset.c]=fmtDateInput(x.value);
       return;
     }
     d[x.dataset.c]=x.value;
