@@ -65,6 +65,24 @@
 .due-ok{color:#20875a;font-weight:800}
 .due-bad{color:#d9534f;font-weight:800}
 
+/* ---- Pending Enrollments: card list ---- */
+.pend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;padding:16px 18px 18px}
+.pend-card{position:relative;background:#fff;border:1px solid var(--l);border-radius:16px;padding:15px 17px 15px 21px;cursor:pointer;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;box-shadow:0 1px 2px #17233f08}
+.pend-card::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--g)}
+.pend-card:hover{border-color:#cbd6ec;box-shadow:0 12px 28px #17233f14;transform:translateY(-2px)}
+.pend-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.pend-status{font-size:10.5px;font-weight:800;letter-spacing:.3px;color:#8a5a00;display:inline-flex;align-items:center;gap:5px}
+.pend-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--g);display:inline-block}
+.pend-date{font-size:11px;color:var(--m);font-weight:600}
+.pend-name{font-size:16.5px;font-weight:800;color:var(--i);line-height:1.3}
+.pend-mobile{font-size:12.5px;color:var(--m);margin-top:2px}
+.pend-divider{height:1px;background:var(--l);margin:11px 0}
+.pend-course{font-size:14.5px;font-weight:700;color:#c0392b;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pend-tag{font-size:10px;font-weight:800;background:#eef5ff;color:#1769df;padding:2px 8px;border-radius:999px;letter-spacing:.2px}
+.pend-meta{font-size:12px;color:var(--m);margin-top:5px}
+.pend-approve{margin-top:14px;width:100%;border:0;border-radius:10px;padding:9px;font-weight:800;font-size:13.5px;background:var(--i);color:#fff;transition:background .15s ease}
+.pend-approve:hover{background:#0d1830}
+
 /* ---- Read-only details modal ---- */
 .detail-box{width:min(620px,100%);max-height:86vh;overflow:auto}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -286,9 +304,21 @@ function renderPending(){
         </div>
       </div>
     </div>
-    <div class="tw">
-      ${rows.length?`<table class="tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Level</th><th>Date</th><th>Action</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br>${esc(r.mobile)}<br>${esc(r.email)}</td><td>${esc(r.course)}</td><td>${esc(r.nuDcu)}</td><td>${esc(r.level)} · ${esc(r.year)}<br>${esc(r.department)}</td><td>${esc(r.enrolledAt)}</td><td><button class="mini ok" onclick="approve(${r.id})">Approve</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">'+(S.pendingSearch?'No matching pending requests.':'No pending requests.')+'</div>'}
-    </div>`;
+    ${rows.length?`<div class="pend-grid">${rows.map(r=>`
+      <div class="pend-card" onclick="approve(${r.id})">
+        <div class="pend-top">
+          <span class="pend-status">Pending</span>
+          <span class="pend-date">${esc(r.enrolledAt)}</span>
+        </div>
+        <div class="pend-name">${esc(r.name)}</div>
+        <div class="pend-mobile">${esc(r.mobile)}${r.email?' · '+esc(r.email):''}</div>
+        <div class="pend-divider"></div>
+        <div class="pend-course">${esc(r.course)}${r.nuDcu?`<span class="pend-tag">${esc(r.nuDcu)}</span>`:''}</div>
+        ${(r.level||r.year||r.department||r.institute)?`<div class="pend-meta">${[r.level,r.year,r.department,r.institute].filter(Boolean).map(esc).join(' · ')}</div>`:''}
+        <button type="button" class="pend-approve" onclick="event.stopPropagation();approve(${r.id})">Approve করুন</button>
+      </div>`).join('')}</div>`
+      :`<div class="empty">${S.pendingSearch?'No matching pending requests.':'No pending requests.'}</div>`}
+    `;
 }
 let pendingSearchTimer=null;
 function pendingLiveSearch(value){
