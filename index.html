@@ -91,7 +91,7 @@
 </style><base target="_blank">
 </head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending">⏳ Pending Enrollments</button><button data-p="enrollments">🎓 Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
 <div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div>
 <div id="approveModal" class="modal-overlay hidden"><div class="modal-box">
   <h3>Enrollment Approve করুন</h3>
@@ -336,7 +336,7 @@ function fmtDateInput(v){
   if(!v)return '';
   const d=new Date(v+'T00:00:00');
   if(isNaN(d.getTime()))return v;
-  return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  return new Date(v+'T23:59:59.999Z').toISOString();
 }
 function approve(id){
   const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
@@ -497,7 +497,7 @@ function openDetail(id){
   }
   dmTitle.textContent=name;
   dmSub.textContent=subtitleParts.filter(Boolean).join(' · ');
-  const cols=S.cols.map(colName).filter(Boolean);
+  const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
   let html=cols.map(c=>{
     const large=isLargeColumn(c);
     const v=isSecretColumn(c)?'••••••••':cellValue(r[c]).trim();
@@ -509,6 +509,7 @@ function openDetail(id){
   if(isEnrollTable()){
     const due=dueAmount(r);
     html+=`<div class="detail-item"><div class="k">Due (calculated)</div><div class="v">${due===null?'—':due>0?esc(fmtMoney(due)):'<span class="due-ok">Paid</span>'}</div></div>`;
+    html+=payHistoryHtml(r);
   }
   dmBody.innerHTML=html;
   detailModal.classList.remove('hidden');
@@ -665,13 +666,9 @@ function edit(id){
 }
 function enrollDateInputValue(name,v){
   if(!v)return '';
-  const raw=String(v).trim();
-  const ddmmyyyy=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(raw);
-  if(ddmmyyyy){
-    const pad=n=>String(n).padStart(2,'0');
-    return `${ddmmyyyy[3]}-${pad(Number(ddmmyyyy[2]))}-${pad(Number(ddmmyyyy[1]))}`;
-  }
-  return '';
+  const d=new Date(v);
+  if(isNaN(d.getTime()))return '';
+  return d.toISOString().slice(0,10);
 }
 function payHistoryHtml(row){
   let list=[];
@@ -759,8 +756,7 @@ async function save(e){
         let hist=[];
         try{const raw=cellValue(oldRow.payment_history).trim();if(raw){const p=JSON.parse(raw);if(Array.isArray(p))hist=p;}}catch{}
         const now=new Date();
-        const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        const dateStr=String(now.getDate()).padStart(2,'0')+' '+MO[now.getMonth()]+' '+now.getFullYear();
+        const dateStr=now.toISOString();
         hist.push({date:dateStr,amount:add,admin:String(S.user?.name||'Admin').trim()||'Admin'});
         d.payment_history=JSON.stringify(hist);
       }else{
