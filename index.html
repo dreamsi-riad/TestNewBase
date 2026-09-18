@@ -354,8 +354,8 @@
     <div>
       <label style="font-size:12.5px;margin-top:0">অ্যাক্সেস টাইপ</label>
       <select id="apAccessType" class="access-spinner" data-val="Limited Access" onchange="this.dataset.val=this.value">
-        <option value="Limited Access">Limited Access (সীমিত অ্যাক্সেস)</option>
-        <option value="Full Access">Full Access (সম্পূর্ণ অ্যাক্সেস)</option>
+        <option value="Limited Access">Limited Access</option>
+        <option value="Full Access">Full Access</option>
       </select>
     </div>
     <div>
@@ -1482,8 +1482,8 @@ function editor(id,row){
               ? (()=>{
                   const cur=/^full access$/i.test(v)?'Full Access':'Limited Access';
                   return `<select class="access-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
-                    <option value="Limited Access" ${cur==='Limited Access'?'selected':''}>Limited Access (সীমিত অ্যাক্সেস)</option>
-                    <option value="Full Access" ${cur==='Full Access'?'selected':''}>Full Access (সম্পূর্ণ অ্যাক্সেস)</option>
+                    <option value="Limited Access" ${cur==='Limited Access'?'selected':''}>Limited Access</option>
+                    <option value="Full Access" ${cur==='Full Access'?'selected':''}>Full Access</option>
                   </select>`;
                 })()
             : large
