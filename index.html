@@ -22,7 +22,13 @@
 .status-spinner{-webkit-appearance:none;appearance:none;width:100%;font-size:15px;font-weight:700;text-align:center;padding:14px 12px;border-radius:999px;border:1.5px solid var(--l);background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%2368748d" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 14px center;cursor:pointer}
 .status-spinner[data-val="Pending"]{color:#a06b00;background-color:#fff6e0;border-color:#f0d38a}
 .status-spinner[data-val="Active"]{color:#0a7a3d;background-color:#e6f7ee;border-color:#8fd6ae}
-.status-spinner[data-val="Expired"]{color:#a3271c;background-color:#fdeceb;border-color:#f0a89f}.field-type{font-size:10px;color:#8a94a8;font-weight:600;margin-left:5px}.field-note{font-size:11px;color:#d9534f}.editor-meta{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f9fc;border-radius:10px;margin-bottom:12px}.editor-meta span{font-size:12px;color:#68748d}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--l)}
+.status-spinner[data-val="Expired"]{color:#a3271c;background-color:#fdeceb;border-color:#f0a89f}
+.access-spinner{-webkit-appearance:none;appearance:none;width:100%;font-size:13.5px;font-weight:700;padding:10px 36px 10px 14px;border-radius:12px;border:1.5px solid #cbd5e1;background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 14px center;color:#0f172a;cursor:pointer;transition:all .2s ease;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+.access-spinner:hover{border-color:#94a3b8}
+.access-spinner:focus{border-color:#3b82f6;background-color:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.15);outline:none}
+.access-spinner[data-val="Limited Access"]{background-color:#fffbeb;border-color:#fcd34d;color:#b45309;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23b45309" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>')}
+.access-spinner[data-val="Full Access"]{background-color:#ecfdf5;border-color:#86efac;color:#047857;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23047857" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>')}
+.field-type{font-size:10px;color:#8a94a8;font-weight:600;margin-left:5px}.field-note{font-size:11px;color:#d9534f}.editor-meta{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f9fc;border-radius:10px;margin-bottom:12px}.editor-meta span{font-size:12px;color:#68748d}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--l)}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -53,11 +59,6 @@
 /* ============================================================
    PREMIUM ENROLLMENTS & STUDENTS TABLE DESIGN SUITE
    ============================================================ */
-.adm-sec-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
-.adm-sec-title-wrap{}
-.adm-sec-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#64748b;margin-bottom:3px}
-.adm-sec-title{font:800 28px/1.1 'Baloo Da 2',sans-serif;color:#0f172a;margin:0;display:flex;align-items:center;gap:10px}
-.adm-sec-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 
 /* Filter bar & Course selector */
 .filter-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0 14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 16px;box-shadow:0 4px 14px rgba(15,23,42,.03)}
@@ -350,9 +351,9 @@
     </div>
     <div>
       <label style="font-size:12.5px;margin-top:0">অ্যাক্সেস টাইপ</label>
-      <select id="apAccessType">
-        <option value="Limited Access">Limited Access</option>
-        <option value="Full Access">Full Access</option>
+      <select id="apAccessType" class="access-spinner" data-val="Limited Access" onchange="this.dataset.val=this.value">
+        <option value="Limited Access">Limited Access (সীমিত অ্যাক্সেস)</option>
+        <option value="Full Access">Full Access (সম্পূর্ণ অ্যাক্সেস)</option>
       </select>
     </div>
     <div>
@@ -532,12 +533,6 @@ nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
 async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';
 if(S.table===ENROLL_TABLE){
   content.innerHTML=`
-    <div class="adm-sec-header">
-      <div class="adm-sec-title-wrap">
-        <div class="adm-sec-eyebrow">ENROLLMENT MANAGEMENT</div>
-        <h1 class="adm-sec-title">🎓 স্টুডেন্ট এনরোলমেন্ট তালিকা</h1>
-      </div>
-    </div>
     <div class="filter-bar">
       <label for="courseFilter">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -549,24 +544,8 @@ if(S.table===ENROLL_TABLE){
       <div class="filter-count" id="enrollFilterCount"></div>
     </div>
     <div id="panel" class="panel"></div>`;
-}else if(S.table===STUDENT_TABLE){
-  content.innerHTML=`
-    <div class="adm-sec-header">
-      <div class="adm-sec-title-wrap">
-        <div class="adm-sec-eyebrow">STUDENT DIRECTORY</div>
-        <h1 class="adm-sec-title">👨‍🎓 শিক্ষার্থীদের প্রোফাইল ও রেজিস্টার্ড ডাটাবেস</h1>
-      </div>
-    </div>
-    <div id="panel" class="panel"></div>`;
 }else{
-  content.innerHTML=`
-    <div class="adm-sec-header">
-      <div class="adm-sec-title-wrap">
-        <div class="adm-sec-eyebrow">DATABASE MANAGER</div>
-        <h1 class="adm-sec-title">${esc(P[p]?.[1]||p)}</h1>
-      </div>
-    </div>
-    <div id="panel" class="panel"></div>`;
+  content.innerHTML=`<div id="panel" class="panel"></div>`;
 }
 refresh()}
 const ICON_PENDING_3D = `<svg width="38" height="38" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -823,14 +802,7 @@ function getInitial(str){
 }
 
 async function pending(){
-  content.innerHTML=`
-    <div class="adm-sec-header">
-      <div class="adm-sec-title-wrap">
-        <div class="adm-sec-eyebrow">VERIFICATION QUEUE</div>
-        <h1 class="adm-sec-title">⏳ পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট</h1>
-      </div>
-    </div>
-    <div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>পেন্ডিং রিকোয়েস্ট লোড হচ্ছে…</div></div></div>`;
+  content.innerHTML=`<div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>পেন্ডিং রিকোয়েস্ট লোড হচ্ছে…</div></div></div>`;
   try{
     let a=(await api('get_pending_requests')).data||[];
     S.pendingRows=a;
@@ -925,7 +897,7 @@ function approve(id){
   apStudent.textContent=r?`${r.name} (${r.mobile})`:'';
   apCourse.textContent=r?`${r.course}${r.nuDcu?' — '+r.nuDcu:''}`:'';
   apPrice.textContent=r&&r.coursePrice?`৳ ${r.coursePrice}`:'—';
-  apDiscount.value='';apPaid.value='';apAccessType.value='Limited Access';apNextDate.value='';
+  apDiscount.value='';apPaid.value='';apAccessType.value='Limited Access';apAccessType.dataset.val='Limited Access';apNextDate.value='';
   approveModal.dataset.id=id;
   approveModal.classList.remove('hidden');
   setTimeout(()=>apPaid.focus(),0);
@@ -1493,10 +1465,13 @@ function editor(id,row){
                </select>`;
               })()
             : (isEnrollTable()&&name==='access_type')
-              ? `<select data-c="${esc(name)}">
-                   <option value="Limited Access" ${/^full access$/i.test(v)?'':'selected'}>Limited Access</option>
-                   <option value="Full Access" ${/^full access$/i.test(v)?'selected':''}>Full Access</option>
-                 </select>`
+              ? (()=>{
+                  const cur=/^full access$/i.test(v)?'Full Access':'Limited Access';
+                  return `<select class="access-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
+                    <option value="Limited Access" ${cur==='Limited Access'?'selected':''}>Limited Access (সীমিত অ্যাক্সেস)</option>
+                    <option value="Full Access" ${cur==='Full Access'?'selected':''}>Full Access (সম্পূর্ণ অ্যাক্সেস)</option>
+                  </select>`;
+                })()
             : large
               ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
               : bool
