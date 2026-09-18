@@ -50,61 +50,181 @@
 .approve-info .row.price .lbl{background:#fdeccb;color:#8a5a00}
 .approve-info .row.price .val{color:#b5760b;font-size:22px;font-family:'Baloo Da 2',sans-serif}
 
-/* ---- Enrollments page: course filter spinner ---- */
-.filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 0}
-.filter-bar label{margin:0;font-size:13px;color:var(--m)}
-.filter-bar select{border:1px solid var(--l);border-radius:10px;padding:9px 12px;background:#fff;min-width:260px;font-weight:600}
-.filter-bar select:focus{border-color:#68748d;box-shadow:0 0 0 3px #17233f10;outline:none}
-.filter-count{font-size:12px;color:#8b94a8}
+/* ============================================================
+   PREMIUM ENROLLMENTS & STUDENTS TABLE DESIGN SUITE
+   ============================================================ */
+.adm-sec-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.adm-sec-title-wrap{}
+.adm-sec-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#64748b;margin-bottom:3px}
+.adm-sec-title{font:800 28px/1.1 'Baloo Da 2',sans-serif;color:#0f172a;margin:0;display:flex;align-items:center;gap:10px}
+.adm-sec-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 
-/* ---- Enrollments page: simplified table ---- */
-.tbl.enroll-tbl{min-width:900px}
+/* Filter bar & Course selector */
+.filter-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0 14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 16px;box-shadow:0 4px 14px rgba(15,23,42,.03)}
+.filter-bar label{margin:0;font-size:13px;font-weight:800;color:#1e293b;display:flex;align-items:center;gap:6px}
+.filter-bar select{border:1.5px solid #cbd5e1;border-radius:10px;padding:8px 14px;background:#f8fafc;color:#0f172a;min-width:280px;font-weight:700;font-size:13.5px;transition:all .2s ease;cursor:pointer}
+.filter-bar select:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.15);outline:none}
+.filter-count{font-size:12.5px;font-weight:700;color:#64748b;margin-left:auto}
+
+/* Elevated Table Card */
+.panel{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 10px 30px -5px rgba(15,23,42,.05),0 2px 6px rgba(15,23,42,.02);overflow:hidden;margin-top:10px}
+.ph{padding:14px 20px;border-bottom:1px solid #edf2f7;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ph-title-wrap{display:flex;align-items:center;gap:10px}
+.ph-title{font:800 19px 'Baloo Da 2',sans-serif;color:#0f172a;margin:0}
+.ph-count-pill{font-size:12px;font-weight:800;padding:2px 10px;border-radius:999px;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe}
+.ph-sub{font-size:12.5px;color:#64748b;margin-top:2px}
+
+/* Modern Search Box */
+.search-wrap{position:relative;min-width:260px}
+.search-wrap input{width:100%;padding:9px 36px 9px 34px;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;font-size:13px;font-weight:600;color:#0f172a;transition:all .2s ease}
+.search-wrap input:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.12);outline:none}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none;display:flex}
+.search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#94a3b8;font-size:16px;line-height:1;padding:4px 6px;border-radius:6px;cursor:pointer;display:none}
+.search-clear:hover{color:#0f172a}
+.search-clear.show{display:block}
+
+/* Header Refresh & Actions */
+.btn-refresh{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #cbd5e1;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:#334155;cursor:pointer;transition:all .2s ease}
+.btn-refresh:hover{background:#f8fafc;border-color:#94a3b8;color:#0f172a;transform:translateY(-1px)}
+.btn-refresh svg{transition:transform .35s ease}
+.btn-refresh:hover svg{transform:rotate(180deg)}
+
+/* Table & Cells */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;min-width:820px}
+.tbl th{background:#f8fafc;color:#475569;font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:12px 14px;border-bottom:1px solid #e2e8f0;white-space:nowrap;position:sticky;top:0;z-index:2}
+.tbl td{padding:12px 14px;border-bottom:1px solid #f1f5f9;font-size:13.5px;color:#1e293b;vertical-align:middle;line-height:1.4}
+.tbl tbody tr{transition:background .15s ease;cursor:pointer}
+.tbl tbody tr:hover{background:#f8faff}
+.tbl tbody tr:last-child td{border-bottom:0}
+
+/* Enrollments Table specific */
+.tbl.enroll-tbl{min-width:980px}
 .tbl.enroll-tbl td,.tbl.enroll-tbl th{max-width:none;width:auto;white-space:nowrap}
-.tbl.enroll-tbl td.wrap{white-space:normal;max-width:210px}
-.tbl.enroll-tbl tbody tr{cursor:pointer}
-.tbl.enroll-tbl tbody tr:hover{background:#f7f9fc}
+.tbl.enroll-tbl td.wrap{white-space:normal;max-width:220px}
 .tbl.enroll-tbl td.actions-cell{cursor:default}
-.dis-note{font-size:11px;color:#8b94a8;font-weight:600}
-#ef input[readonly],#ef textarea[readonly],#ef select:disabled{background:#f1f4f9;color:#7a839a;cursor:not-allowed}
-.due-ok{color:#20875a;font-weight:800}
-.due-bad{color:#d9534f;font-weight:800}
 
-/* ---- Read-only details modal ---- */
-.detail-box{width:min(640px,100%);max-height:88vh;overflow:auto;padding:26px 28px}
-.detail-box h3#dmTitle{font:800 23px 'Baloo Da 2',sans-serif;color:#0f172a;margin:0 0 4px;letter-spacing:-.2px}
-.detail-box p#dmSub{margin:0 0 16px;font-size:13.5px;color:#475569;font-weight:600;padding-bottom:12px;border-bottom:1px solid #edf2f7}
-.detail-box .sub-course{color:#1d4ed8;font-weight:700}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:36px;position:relative}
-.detail-grid::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:#e2e8f0}
-.detail-item{padding:5px 0;border-bottom:0;min-width:0;line-height:1.5}
-.detail-item .k{display:inline;font-size:13px;font-weight:700;color:#2c3e55;letter-spacing:.1px}
-.detail-item .k::after{content:":";margin-right:7px;color:#64748b;font-weight:600}
-.detail-item .v{display:inline;font-size:14px;font-weight:600;color:#0f172a;word-break:break-word}
-.detail-item .v.val-course{color:#1d4ed8;font-weight:800;letter-spacing:.2px}
-.detail-item .v .val-paid{color:#15803d;font-weight:800}
-.detail-item .v .val-price{color:#0f172a;font-weight:800}
-.detail-item .v .val-discount{color:#b45309;font-weight:700}
-.detail-item .v .v-empty{color:#94a3b8;font-weight:400}
-.detail-item .v .val-status{display:inline-flex;align-items:center;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700}
+/* Student Avatar Cell */
+.adm-user-cell{display:flex;align-items:center;gap:11px}
+.adm-avatar-circle{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px;letter-spacing:.5px;flex-shrink:0;box-shadow:0 3px 8px rgba(15,23,42,.12);text-shadow:0 1px 2px rgba(0,0,0,.2)}
+.adm-user-info{min-width:0}
+.adm-user-name{font-weight:800;color:#0f172a;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+.adm-user-sub{font-size:12px;color:#64748b;margin-top:2px}
+.adm-user-sub a{color:#64748b;text-decoration:none}
+.adm-user-sub a:hover{color:#1d4ed8;text-decoration:underline}
+
+/* Course Pill & Sector */
+.adm-course-cell{max-width:260px}
+.adm-course-title{font-weight:800;color:#1e40af;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-sector-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:800;letter-spacing:.3px;line-height:1}
+.adm-sector-pill.nu{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+.adm-sector-pill.dcu{background:#f5f3ff;color:#6d28d9;border:1px solid #ede9fe}
+.adm-sector-pill.other{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+
+/* Price & Discount Pill */
+.adm-price-val{font-weight:800;color:#0f172a;font-size:14px}
+.adm-dis-pill{display:inline-block;font-size:11px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fef3c7;padding:1px 6px;border-radius:5px;margin-top:2px}
+
+/* Due Badges */
+.adm-due-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800;line-height:1}
+.adm-due-badge.due-unpaid{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+.adm-due-badge.due-paid{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.adm-due-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;animation:duePulse 2s infinite}
+@keyframes duePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+
+/* Academic Chips for Students */
+.adm-chips-group{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.adm-chip{display:inline-flex;align-items:center;padding:2.5px 8px;border-radius:7px;font-size:11.5px;font-weight:700;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;white-space:nowrap}
+.adm-chip.level{background:#eff6ff;color:#1e40af;border-color:#dbeafe}
+.adm-chip.year{background:#fdf4ff;color:#86198f;border-color:#f5d0fe}
+.adm-chip.session{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+
+/* Contact Links */
+.adm-contact-link{display:inline-flex;align-items:center;gap:5px;color:#1e293b;text-decoration:none;font-weight:600;font-size:13px;transition:color .15s ease}
+.adm-contact-link:hover{color:#2563eb;text-decoration:underline}
+.adm-contact-link.email{font-family:monospace;font-size:12.5px;color:#475569}
+
+/* Next Date Badge */
+.adm-date-badge{display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:3px 9px;font-size:12px;font-weight:700;color:#334155}
+
+/* Action Buttons */
+.act{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.adm-act-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;color:#334155;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);box-shadow:0 1px 3px rgba(15,23,42,.04);white-space:nowrap}
+.adm-act-btn:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(15,23,42,.08)}
+.adm-act-btn.act-edit:hover{border-color:#3b82f6;color:#1d4ed8;background:#eff6ff}
+.adm-act-btn.act-pw{border-color:#e2e8f0;background:#faf5ff;color:#6b21a8}
+.adm-act-btn.act-pw:hover{border-color:#c084fc;background:#f3e8ff}
+.adm-act-btn.act-lock{border-color:#cbd5e1;color:#475569}
+.adm-act-btn.act-lock:hover{border-color:#94a3b8;background:#f1f5f9}
+.adm-act-btn.act-locked{background:#fef2f2;border-color:#fca5a5;color:#b91c1c}
+.adm-act-btn.act-locked:hover{background:#fee2e2}
+.adm-act-btn.act-wt-on{background:#ecfdf5;border-color:#86efac;color:#047857}
+.adm-act-btn.act-wt-on:hover{background:#d1fae5}
+.adm-act-btn.act-wt-off{background:#f8fafc;border-color:#e2e8f0;color:#64748b}
+.adm-act-btn.act-del{color:#b91c1c;border-color:#fee2e2;background:#fff}
+.adm-act-btn.act-del:hover{background:#fee2e2;border-color:#fca5a5}
+.adm-act-btn.act-approve{background:linear-gradient(135deg,#10b981,#059669);border-color:#059669;color:#fff;font-weight:800;box-shadow:0 3px 10px rgba(5,150,105,.3)}
+.adm-act-btn.act-approve:hover{background:linear-gradient(135deg,#059669,#047857);box-shadow:0 5px 14px rgba(5,150,105,.4)}
+
+/* Pager */
+.pager{padding:12px 20px;border-top:1px solid #edf2f7;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;font-weight:600;color:#64748b}
+.pager-count b{color:#0f172a}
+.pager-btns{display:flex;align-items:center;gap:8px}
+.pager-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:700;color:#334155;cursor:pointer;transition:all .18s ease}
+.pager-btn:hover:not(:disabled){background:#f8fafc;border-color:#94a3b8;transform:translateY(-1px)}
+.pager-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Luxury Detail Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:40;padding:16px;animation:modalFade .2s ease-out}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}
+.detail-box{width:min(700px,100%);max-height:88vh;overflow-y:auto;background:#fff;border-radius:24px;border:1px solid #e2e8f0;padding:28px 30px;box-shadow:0 25px 60px -12px rgba(15,23,42,.25);animation:modalPop .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modalPop{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+
+.detail-header-card{display:flex;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid #edf2f7;position:relative}
+.detail-avatar{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#fff;font:800 24px 'Baloo Da 2',sans-serif;box-shadow:0 8px 18px rgba(15,23,42,.15);flex-shrink:0}
+.detail-head-info{flex:1;min-width:0}
+.detail-head-info h3{font:800 24px/1.2 'Baloo Da 2',sans-serif;color:#0f172a;margin:0 0 4px}
+.detail-head-sub{font-size:13.5px;font-weight:600;color:#475569;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.modal-close-btn{position:absolute;right:0;top:0;background:#f1f5f9;border:0;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;font-size:16px;color:#64748b;cursor:pointer;transition:all .18s ease}
+.modal-close-btn:hover{background:#fee2e2;color:#b91c1c;transform:rotate(90deg)}
+
+/* Financial Mini Stat Banner in Detail Modal */
+.detail-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.detail-stat-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px 14px;text-align:center}
+.detail-stat-box.paid{background:#ecfdf5;border-color:#a7f3d0}
+.detail-stat-box.due{background:#fef2f2;border-color:#fca5a5}
+.detail-stat-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#64748b}
+.detail-stat-box.paid .detail-stat-lbl{color:#047857}
+.detail-stat-box.due .detail-stat-lbl{color:#b91c1c}
+.detail-stat-val{font:800 20px 'Baloo Da 2',sans-serif;color:#0f172a;margin-top:2px}
+.detail-stat-box.paid .detail-stat-val{color:#047857}
+.detail-stat-box.due .detail-stat-val{color:#b91c1c}
+
+/* Detail Grid items */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.detail-item{background:#f8fafc;border:1px solid #edf2f7;border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:3px}
+.detail-item.full{grid-column:1/-1}
+.detail-item .k{font-size:11.5px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.4px}
+.detail-item .v{font-size:14px;font-weight:700;color:#0f172a;word-break:break-word}
+.detail-item .v.val-course{color:#1d4ed8;font-size:14.5px}
+.detail-item .v .val-status{display:inline-flex;align-items:center;padding:2px 8px;border-radius:6px;font-size:11.5px;font-weight:800}
 .detail-item .v .val-status.st-active{color:#15803d;background:#dcfce7;border:1px solid #bbf7d0}
 .detail-item .v .val-status.st-expired{color:#b91c1c;background:#fee2e2;border:1px solid #fecaca}
 .detail-item .v .val-status.st-pending{color:#b45309;background:#fef3c7;border:1px solid #fde68a}
-.detail-item .v .due-bad{color:#dc2626;font-weight:800}
-.detail-item .v .due-ok{color:#15803d;font-weight:800}
-.detail-item.full{display:block;grid-column:1/-1}
-.detail-grid .pay-history{grid-column:1/-1;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1}
-@media(max-width:560px){.detail-grid{grid-template-columns:1fr;column-gap:0}.detail-grid::before{display:none}.detail-item.full,.detail-grid .pay-history{grid-column:auto}}
 
-.mini.wide{min-width:88px;padding:6px 14px}
-#paidCurrent{color:#1769df;font-weight:800;font-size:13px;margin-left:6px}
-.pay-history{margin-top:2px}
-.pay-history .ph-title{font-size:12px;font-weight:800;color:#68748d;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-.pay-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto;border:1px solid var(--l);border-radius:10px;padding:10px;background:#fafbfc}
-.pay-row{display:flex;align-items:center;gap:10px;font-size:13px;background:#fff;border:1px solid #edf0f4;border-radius:8px;padding:7px 10px}
-.pay-row .p-date{font-weight:800;color:#17233f;min-width:88px}
-.pay-row .p-amt{font-weight:800;color:#0a7a3d}
-.pay-row .p-by{color:#68748d;font-size:12px;margin-left:auto}
-.pay-empty{font-size:12px;color:#8b94a8;text-align:center;padding:6px}
+/* Payment History in Modal */
+.pay-history{grid-column:1/-1;margin-top:14px;padding-top:14px;border-top:1px dashed #cbd5e1}
+.pay-history .ph-title{font-size:12px;font-weight:800;color:#475569;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.pay-list{display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:12px;padding:12px;background:#fff}
+.pay-row{display:flex;align-items:center;gap:12px;font-size:13px;background:#f8fafc;border:1px solid #edf2f7;border-radius:10px;padding:8px 12px}
+.pay-row .p-date{font-weight:800;color:#1e293b;min-width:90px}
+.pay-row .p-amt{font-weight:800;color:#059669;font-size:14px}
+.pay-row .p-by{color:#64748b;font-size:12px;margin-left:auto;background:#e2e8f0;padding:2px 8px;border-radius:6px;font-weight:700}
+.pay-empty{font-size:13px;color:#94a3b8;text-align:center;padding:14px}
+
+@media(max-width:600px){
+  .detail-grid{grid-template-columns:1fr}
+  .detail-stat-row{grid-template-columns:1fr}
+}
 </style><style>
 .content{padding:16px 20px}
 .cards{gap:10px}
@@ -205,35 +325,59 @@
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending"><span>⏳ Pending Enrollments</span><span id="navPendingBadge" class="nav-pending-badge hidden"></span></button><button data-p="enrollments">🎓 Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
 <div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div>
-<div id="approveModal" class="modal-overlay hidden"><div class="modal-box">
-  <h3>Enrollment Approve করুন</h3>
-  <div class="approve-info">
+<div id="approveModal" class="modal-overlay hidden"><div class="modal-box detail-box" style="width:min(520px,100%)">
+  <div class="detail-header-card" style="padding-bottom:12px">
+    <div class="detail-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">✓</div>
+    <div class="detail-head-info">
+      <h3 style="margin:0 0 2px">Enrollment Approve করুন</h3>
+      <div class="detail-head-sub" style="font-size:12.5px;color:#64748b">শিক্ষার্থীর অ্যাক্সেস ও পেমেন্ট নির্ধারণ করুন</div>
+    </div>
+    <button type="button" class="modal-close-btn" onclick="closeApproveModal()" aria-label="Close modal">✕</button>
+  </div>
+  <div class="approve-info" style="margin-top:14px">
     <div class="row"><span class="val" id="apStudent"></span></div>
     <div class="row"><span class="val course" id="apCourse"></span></div>
-    <div class="row price"><span class="lbl">Price</span><span class="val" id="apPrice"></span></div>
+    <div class="row price"><span class="lbl">কোর্স ফি</span><span class="val" id="apPrice"></span></div>
   </div>
-  <label>Discount</label>
-  <input id="apDiscount" placeholder="যেমন: 500 (না থাকলে খালি রাখুন)">
-  <label>Paid</label>
-  <input id="apPaid" placeholder="যেমন: 5500" required>
-  <label>Access Type</label>
-  <select id="apAccessType">
-    <option value="Limited Access">Limited Access</option>
-    <option value="Full Access">Full Access</option>
-  </select>
-  <label>Next Due Date</label>
-  <input id="apNextDate" type="date">
-  <div class="modal-actions">
-    <button type="button" class="btn ghost" onclick="closeApproveModal()">Cancel</button>
-    <button type="button" class="btn primary" onclick="submitApprove()">Approve</button>
+  <div class="grid" style="gap:12px">
+    <div>
+      <label style="font-size:12.5px;margin-top:0">ছাড় (Discount)</label>
+      <input id="apDiscount" placeholder="যেমন: 500 (না থাকলে খালি)">
+    </div>
+    <div>
+      <label style="font-size:12.5px;margin-top:0">পরিশোধ (Paid) *</label>
+      <input id="apPaid" placeholder="যেমন: 5500" required>
+    </div>
+    <div>
+      <label style="font-size:12.5px;margin-top:0">অ্যাক্সেস টাইপ</label>
+      <select id="apAccessType">
+        <option value="Limited Access">Limited Access</option>
+        <option value="Full Access">Full Access</option>
+      </select>
+    </div>
+    <div>
+      <label style="font-size:12.5px;margin-top:0">পরবর্তী কিস্তির তারিখ</label>
+      <input id="apNextDate" type="date">
+    </div>
+  </div>
+  <div class="modal-actions" style="margin-top:16px">
+    <button type="button" class="btn ghost" onclick="closeApproveModal()">বাতিল</button>
+    <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="submitApprove()">✓ অনুমোদন করুন (Approve)</button>
   </div>
 </div></div>
 <div id="detailModal" class="modal-overlay hidden"><div class="modal-box detail-box">
-  <h3 id="dmTitle">Enrollment Details</h3>
-  <p class="muted" id="dmSub"></p>
+  <div class="detail-header-card">
+    <div class="detail-avatar" id="dmAvatar">S</div>
+    <div class="detail-head-info">
+      <h3 id="dmTitle">Enrollment Details</h3>
+      <div id="dmSub" class="detail-head-sub"></div>
+    </div>
+    <button type="button" class="modal-close-btn" onclick="closeDetail()" aria-label="Close modal">✕</button>
+  </div>
+  <div id="dmStats" class="detail-stat-row hidden"></div>
   <div id="dmBody" class="detail-grid"></div>
   <div class="modal-actions">
-    <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+    <button type="button" class="btn ghost" onclick="closeDetail()">বন্ধ করুন (Close)</button>
   </div>
 </div></div>
 <div id="toast" class="toast hidden"></div>
@@ -387,16 +531,42 @@ lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim()
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
 async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';
 if(S.table===ENROLL_TABLE){
-  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1>
+  content.innerHTML=`
+    <div class="adm-sec-header">
+      <div class="adm-sec-title-wrap">
+        <div class="adm-sec-eyebrow">ENROLLMENT MANAGEMENT</div>
+        <h1 class="adm-sec-title">🎓 স্টুডেন্ট এনরোলমেন্ট তালিকা</h1>
+      </div>
+    </div>
     <div class="filter-bar">
-      <label for="courseFilter">Course</label>
+      <label for="courseFilter">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span>কোর্স নির্বাচন:</span>
+      </label>
       <select id="courseFilter" onchange="setCourseFilter(this.value)">
         <option value="">সব কোর্স (All Courses)</option>
       </select>
+      <div class="filter-count" id="enrollFilterCount"></div>
+    </div>
+    <div id="panel" class="panel"></div>`;
+}else if(S.table===STUDENT_TABLE){
+  content.innerHTML=`
+    <div class="adm-sec-header">
+      <div class="adm-sec-title-wrap">
+        <div class="adm-sec-eyebrow">STUDENT DIRECTORY</div>
+        <h1 class="adm-sec-title">👨‍🎓 শিক্ষার্থীদের প্রোফাইল ও রেজিস্টার্ড ডাটাবেস</h1>
+      </div>
     </div>
     <div id="panel" class="panel"></div>`;
 }else{
-  content.innerHTML=`<h1 class="title">${esc(P[p][1])}</h1><div id="panel" class="panel"></div>`;
+  content.innerHTML=`
+    <div class="adm-sec-header">
+      <div class="adm-sec-title-wrap">
+        <div class="adm-sec-eyebrow">DATABASE MANAGER</div>
+        <h1 class="adm-sec-title">${esc(P[p]?.[1]||p)}</h1>
+      </div>
+    </div>
+    <div id="panel" class="panel"></div>`;
 }
 refresh()}
 const ICON_PENDING_3D = `<svg width="38" height="38" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -633,7 +803,44 @@ async function dashboard(){
   }
 }
 
-async function pending(){content.innerHTML='<h1 class="title">Pending Enrollments</h1><div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>Loading pending enrollments…</div></div></div>';try{let a=(await api('get_pending_requests')).data||[];S.pendingRows=a;updatePendingBadge(a.length);S.pendingSearch='';renderPending()}catch(e){panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`}}
+function getAvatarBg(str){
+  const colors=[
+    'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+    'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+    'linear-gradient(135deg, #06b6d4, #0891b2)',
+    'linear-gradient(135deg, #10b981, #059669)',
+    'linear-gradient(135deg, #f59e0b, #d97706)',
+    'linear-gradient(135deg, #ec4899, #be185d)',
+    'linear-gradient(135deg, #6366f1, #4338ca)'
+  ];
+  let hash=0;
+  for(let i=0;i<(str||'').length;i++) hash = (hash << 5) - hash + str.charCodeAt(i);
+  return colors[Math.abs(hash) % colors.length];
+}
+function getInitial(str){
+  const s=String(str||'').trim();
+  return s ? s.charAt(0).toUpperCase() : 'S';
+}
+
+async function pending(){
+  content.innerHTML=`
+    <div class="adm-sec-header">
+      <div class="adm-sec-title-wrap">
+        <div class="adm-sec-eyebrow">VERIFICATION QUEUE</div>
+        <h1 class="adm-sec-title">⏳ পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট</h1>
+      </div>
+    </div>
+    <div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>পেন্ডিং রিকোয়েস্ট লোড হচ্ছে…</div></div></div>`;
+  try{
+    let a=(await api('get_pending_requests')).data||[];
+    S.pendingRows=a;
+    updatePendingBadge(a.length);
+    S.pendingSearch='';
+    renderPending();
+  }catch(e){
+    panel.innerHTML=`<div class="empty">${esc(e.message)}</div>`;
+  }
+}
 function filterPendingRows(rows,search){
   const q=String(search??'').trim().toLowerCase();
   if(!q)return rows.slice();
@@ -645,26 +852,51 @@ function renderPending(){
   const rows=filterPendingRows(S.pendingRows||[],S.pendingSearch);
   q.innerHTML=`
     <div class="ph">
-      <div><b>Pending Enrollments · ${rows.length}</b></div>
+      <div class="ph-title-wrap">
+        <h3 class="ph-title">Pending Enrollments</h3>
+        <span class="ph-count-pill">${rows.length} টি রিকোয়েস্ট</span>
+      </div>
       <div class="tools">
         <div class="search-wrap">
+          <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
           <input id="pendingSearch" placeholder="নাম, মোবাইল, কোর্স খুঁজুন…" value="${esc(S.pendingSearch)}"
             oninput="pendingLiveSearch(this.value)" autocomplete="off" aria-label="Search pending enrollments">
-          <button id="pendingSearchClear" class="search-clear ${S.pendingSearch?'show':''}" type="button" onclick="clearPendingSearch()" aria-label="Clear search">×</button>
+          <button id="pendingSearchClear" class="search-clear ${S.pendingSearch?'show':''}" type="button" onclick="clearPendingSearch()" aria-label="Clear search">✕</button>
         </div>
+        <button class="btn-refresh" onclick="pending()" title="রিফ্রেশ করুন">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>Refresh</span>
+        </button>
       </div>
     </div>
-    ${rows.length?`<div class="tw"><table class="tbl enroll-tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Course Price</th><th>Level / Year / Dept</th><th>Date</th><th class="actions-head">Action</th></tr></thead><tbody>${rows.map(r=>`
+    ${rows.length?`<div class="tw"><table class="tbl enroll-tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Course Price</th><th>Level / Year / Dept</th><th>Date</th><th class="actions-head">Action</th></tr></thead><tbody>${rows.map(r=>{
+      const name=r.name||'Student';
+      const sectorClass=String(r.nuDcu||'').toLowerCase()==='nu'?'nu':String(r.nuDcu||'').toLowerCase()==='dcu'?'dcu':'other';
+      return `
       <tr onclick="openPendingDetail(${r.id})">
-        <td class="wrap"><b>${esc(r.name)}</b><br><span class="muted small">${esc(r.mobile)}${r.email?' · '+esc(r.email):''}</span></td>
-        <td class="wrap" style="color:#c0392b;font-weight:700">${esc(r.course)}</td>
-        <td>${r.nuDcu?esc(r.nuDcu):'<span class="muted">—</span>'}</td>
-        <td>${r.coursePrice?('৳\u00A0'+esc(r.coursePrice)):'<span class="muted">—</span>'}</td>
-        <td class="wrap">${[r.level,r.year,r.department].filter(Boolean).map(esc).join(' · ')||'<span class="muted">—</span>'}</td>
-        <td>${esc(formatDateOnly(r.enrolledAt))}</td>
-        <td class="actions-cell"><button class="mini ok" onclick="event.stopPropagation();approve(${r.id})">Approve</button></td>
-      </tr>`).join('')}</tbody></table></div>`
-      :`<div class="empty">${S.pendingSearch?'No matching pending requests.':'No pending requests.'}</div>`}
+        <td>
+          <div class="adm-user-cell">
+            <div class="adm-avatar-circle" style="background:${getAvatarBg(name)}">${getInitial(name)}</div>
+            <div class="adm-user-info">
+              <div class="adm-user-name">${esc(name)}</div>
+              <div class="adm-user-sub">${esc(r.mobile)}${r.email?' · '+esc(r.email):''}</div>
+            </div>
+          </div>
+        </td>
+        <td><div class="adm-course-title" style="color:#d97706">${esc(r.course)}</div></td>
+        <td>${r.nuDcu?`<span class="adm-sector-pill ${sectorClass}">${esc(r.nuDcu)}</span>`:'<span class="muted">—</span>'}</td>
+        <td>${r.coursePrice?`<div class="adm-price-val">৳\u00A0${esc(fmtMoney(r.coursePrice))}</div>`:'<span class="muted">—</span>'}</td>
+        <td class="wrap"><div class="adm-chips-group">${[r.level,r.year,r.department].filter(Boolean).map(x=>`<span class="adm-chip">${esc(x)}</span>`).join('')||'<span class="muted">—</span>'}</div></td>
+        <td><span class="adm-date-badge">🗓\u00A0${esc(formatDateOnly(r.enrolledAt))}</span></td>
+        <td class="actions-cell">
+          <button class="adm-act-btn act-approve" onclick="event.stopPropagation();approve(${r.id})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Approve</span>
+          </button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody></table></div>`
+      :`<div class="empty">${S.pendingSearch?'কোনো পেন্ডিং রিকোয়েস্ট মেলেনি।':'বর্তমানে কোনো পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট নেই।'}</div>`}
     `;
 }
 let pendingSearchTimer=null;
@@ -784,16 +1016,31 @@ function renderCell(v,c){
 function actionButtons(row){
   const id=Number(row.__rowid);
   const noDelete=['student_login','student_enrolled'].includes(S.table);
-  let html=`<button class="mini${isEnrollTable()?' wide':''}" onclick="edit(${id})">Edit</button>
-            ${noDelete?'':`<button class="mini bad" onclick="del(${id})">Delete</button>`}`;
+  let html=`<button class="adm-act-btn act-edit" onclick="edit(${id})" title="তথ্য এডিট করুন">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit</span>
+            </button>
+            ${noDelete?'':`<button class="adm-act-btn act-del" onclick="del(${id})" title="মুছে ফেলুন">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Delete</span>
+            </button>`}`;
   if(S.table==='student_login'){
-    html+=`<button class="mini" onclick="pw(${id})">Reset PW</button>`;
+    html+=`<button class="adm-act-btn act-pw" onclick="pw(${id})" title="পাসওয়ার্ড রিসেট">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>Reset PW</span>
+    </button>`;
   }
   if(S.table==='student_enrolled'){
     const blocked=String(row.blocked??'').trim().toLowerCase()==='true';
-    html+=`<button class="mini ${blocked?'bad':''}" onclick="toggleLock(${id},${blocked})">${blocked?'Locked':'Lock'}</button>`;
+    html+=`<button class="adm-act-btn ${blocked?'act-locked':'act-lock'}" onclick="toggleLock(${id},${blocked})" title="${blocked?'লক খোলা':'লক করা'}">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="${blocked?'M7 11V7a5 5 0 0 1 10 0v4':'M7 11V7a5 5 0 0 1 9.9-1'}"/></svg>
+      <span>${blocked?'Locked':'Lock'}</span>
+    </button>`;
     const wt=String(row.get_wt??'').trim().toLowerCase()==='yes';
-    html+=`<button class="mini ${wt?'ok':''}" onclick="toggleWt(${id},${wt})">${wt?'WT ON':'WT OFF'}</button>`;
+    html+=`<button class="adm-act-btn ${wt?'act-wt-on':'act-wt-off'}" onclick="toggleWt(${id},${wt})" title="ওয়াচ টাইম গেট">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="${wt?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>${wt?'WT ON':'WT OFF'}</span>
+    </button>`;
   }
   return html;
 }
@@ -814,40 +1061,83 @@ function dueAmount(row){
   const paid=moneyNumber(row.paid)||0;
   return price-discount-paid;
 }
-const ENROLL_HEADS=['Name','Phone','Course','NU/DCU','Course Price','Due','Next Date'];
-const STUDENT_HEADS=['Name','Level / Year / Session','Department','Mobile','Email'];
+const ENROLL_HEADS=['Student','Phone','Course','NU/DCU','Course Price','Due Status','Next Date'];
+const STUDENT_HEADS=['Student','Level / Year / Session','Department','Mobile','Email'];
 function studentRowCells(r){
-  const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
-  const lys=[cellValue(r.level).trim(),cellValue(r.year).trim(),cellValue(r.session).trim()].filter(Boolean).join(' · ');
+  const name=cellValue(r.name).trim()||'Student';
+  const institute=cellValue(r.institute).trim();
+  const mobile=cellValue(r.mobile).trim();
+  const email=cellValue(r.email).trim();
+  const dept=cellValue(r.department).trim();
+  const level=cellValue(r.level).trim();
+  const year=cellValue(r.year).trim();
+  const session=cellValue(r.session).trim();
+  
+  const chipsHtml=[
+    level?`<span class="adm-chip level">${esc(level)}</span>`:'',
+    year?`<span class="adm-chip year">${esc(year)}</span>`:'',
+    session?`<span class="adm-chip session">${esc(session)}</span>`:''
+  ].filter(Boolean).join('');
+
   return [
-    `<td class="wrap"><b>${txt(r.name)}</b></td>`,
-    `<td class="wrap">${lys?esc(lys):'<span class="muted">—</span>'}</td>`,
-    `<td class="wrap">${txt(r.department)}</td>`,
-    `<td>${txt(r.mobile)}</td>`,
-    `<td class="wrap">${txt(r.email)}</td>`
+    `<td>
+      <div class="adm-user-cell">
+        <div class="adm-avatar-circle" style="background:${getAvatarBg(name)}">${getInitial(name)}</div>
+        <div class="adm-user-info">
+          <div class="adm-user-name">${esc(name)}</div>
+          <div class="adm-user-sub">${institute?esc(institute):mobile?esc(mobile):'Student'}</div>
+        </div>
+      </div>
+    </td>`,
+    `<td><div class="adm-chips-group">${chipsHtml||'<span class="muted">—</span>'}</div></td>`,
+    `<td class="wrap"><div style="font-weight:700;color:#1e293b">${dept?esc(dept):'<span class="muted">—</span>'}</div></td>`,
+    `<td>${mobile?`<a href="tel:${esc(mobile)}" class="adm-contact-link" onclick="event.stopPropagation()">📞 ${esc(mobile)}</a>`:'<span class="muted">—</span>'}</td>`,
+    `<td class="wrap">${email?`<a href="mailto:${esc(email)}" class="adm-contact-link email" onclick="event.stopPropagation()">✉ ${esc(email)}</a>`:'<span class="muted">—</span>'}</td>`
   ].join('');
 }
 function enrollRowCells(r){
+  const name=cellValue(r.name).trim()||'Student';
+  const mobile=cellValue(r.mobile).trim();
+  const course=cellValue(r.course).trim();
+  const nuDcu=cellValue(r.nu_dcu).trim();
   const price=moneyNumber(r.course_price);
   const discount=moneyNumber(r.discount);
   const due=dueAmount(r);
+  const nextDate=formatNextPaymentDate(r.next_date);
+
+  const sectorClass=nuDcu.toLowerCase()==='nu'?'nu':nuDcu.toLowerCase()==='dcu'?'dcu':'other';
+  const sectorBadge=nuDcu?`<span class="adm-sector-pill ${sectorClass}">${esc(nuDcu)}</span>`:'<span class="muted">—</span>';
+
   const priceCell=price===null
     ? '<span class="muted">—</span>'
-    : `${esc(fmtMoney(price))}${discount?` <span class="dis-note">(dis: ${esc(fmtMoney(discount))})</span>`:''}`;
+    : `<div class="adm-price-val">৳\u00A0${esc(fmtMoney(price))}</div>${discount?`<div class="adm-dis-pill">৳\u00A0${esc(fmtMoney(discount))} ছাড়</div>`:''}`;
+
   const dueCell=due===null
     ? '<span class="muted">—</span>'
     : due>0
-      ? `<span class="due-bad">${esc(fmtMoney(due))}</span>`
-      : '<span class="due-ok">Paid</span>';
-  const txt=v=>{const s=cellValue(v).trim();return s?esc(s):'<span class="muted">—</span>'};
+      ? `<div class="adm-due-badge due-unpaid"><span class="adm-due-dot"></span>৳\u00A0${esc(fmtMoney(due))} বকেয়া</div>`
+      : '<div class="adm-due-badge due-paid"><span>✓</span> পরিশোধিত</div>';
+
+  const dateBadge=nextDate&&nextDate!=='—'
+    ? `<span class="adm-date-badge">🗓\u00A0${esc(nextDate)}</span>`
+    : '<span class="muted">—</span>';
+
   return [
-    `<td class="wrap"><b>${cellValue(r.name).trim()?esc(cellValue(r.name).trim()):'—'}</b></td>`,
-    `<td>${txt(r.mobile)}</td>`,
-    `<td class="wrap">${txt(r.course)}</td>`,
-    `<td>${txt(r.nu_dcu)}</td>`,
+    `<td>
+      <div class="adm-user-cell">
+        <div class="adm-avatar-circle" style="background:${getAvatarBg(name)}">${getInitial(name)}</div>
+        <div class="adm-user-info">
+          <div class="adm-user-name">${esc(name)}</div>
+          <div class="adm-user-sub">${mobile?`<a href="tel:${esc(mobile)}" onclick="event.stopPropagation()">📞 ${esc(mobile)}</a>`:'Student'}</div>
+        </div>
+      </div>
+    </td>`,
+    `<td>${mobile?`<a href="tel:${esc(mobile)}" class="adm-contact-link" onclick="event.stopPropagation()">📞 ${esc(mobile)}</a>`:'<span class="muted">—</span>'}</td>`,
+    `<td><div class="adm-course-title">${course?esc(course):'<span class="muted">—</span>'}</div></td>`,
+    `<td>${sectorBadge}</td>`,
     `<td>${priceCell}</td>`,
     `<td>${dueCell}</td>`,
-    `<td>${txt(formatNextPaymentDate(r.next_date))}</td>`
+    `<td>${dateBadge}</td>`
   ].join('');
 }
 function rowClick(e,id){
@@ -858,17 +1148,49 @@ function openDetail(id){
   const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
   if(!r)return;
   const name=cellValue(r.name).trim()||(isStudentTable()?'Student':'Record');
+  if(dmAvatar){
+    dmAvatar.style.background=getAvatarBg(name);
+    dmAvatar.textContent=getInitial(name);
+  }
   if(isEnrollTable()){
     const cCourse=cellValue(r.course).trim();
     const cNu=cellValue(r.nu_dcu).trim();
     const cMob=cellValue(r.mobile).trim();
-    dmSub.innerHTML=`${cCourse?`<span class="sub-course">${esc(cCourse)}</span>`:''}${cNu?(cCourse?' · ':'')+esc(cNu):''}${cMob?(cCourse||cNu?' · ':'')+esc(cMob):''}`;
+    const sectorClass=cNu.toLowerCase()==='nu'?'nu':cNu.toLowerCase()==='dcu'?'dcu':'other';
+    dmSub.innerHTML=`${cCourse?`<span class="adm-course-title" style="font-size:14px">${esc(cCourse)}</span>`:''}${cNu?` <span class="adm-sector-pill ${sectorClass}">${esc(cNu)}</span>`:''}${cMob?` <a href="tel:${esc(cMob)}" class="adm-contact-link" style="color:#64748b">📞 ${esc(cMob)}</a>`:''}`;
   }else if(isStudentTable()){
-    dmSub.textContent=[cellValue(r.mobile).trim(),cellValue(r.email).trim(),cellValue(r.institute).trim()].filter(Boolean).join(' · ');
+    const cMob=cellValue(r.mobile).trim();
+    const cEmail=cellValue(r.email).trim();
+    const cInst=cellValue(r.institute).trim();
+    dmSub.innerHTML=`${cMob?`<a href="tel:${esc(cMob)}" class="adm-contact-link">📞 ${esc(cMob)}</a>`:''}${cEmail?` · <a href="mailto:${esc(cEmail)}" class="adm-contact-link email">✉ ${esc(cEmail)}</a>`:''}${cInst?` · <span style="color:#64748b">${esc(cInst)}</span>`:''}`;
   }else{
     dmSub.textContent='';
   }
   dmTitle.textContent=name;
+
+  if(isEnrollTable() && dmStats){
+    const price=moneyNumber(r.course_price);
+    const paid=moneyNumber(r.paid)||0;
+    const due=dueAmount(r);
+    dmStats.classList.remove('hidden');
+    dmStats.innerHTML=`
+      <div class="detail-stat-box">
+        <div class="detail-stat-lbl">কোর্স ফি (Price)</div>
+        <div class="detail-stat-val">${price!==null?`৳ ${fmtMoney(price)}`:'—'}</div>
+      </div>
+      <div class="detail-stat-box paid">
+        <div class="detail-stat-lbl">পরিশোধ (Paid)</div>
+        <div class="detail-stat-val">৳ ${fmtMoney(paid)}</div>
+      </div>
+      <div class="detail-stat-box ${due>0?'due':'paid'}">
+        <div class="detail-stat-lbl">${due>0?'বকেয়া (Due)':'পেমেন্ট স্ট্যাটাস'}</div>
+        <div class="detail-stat-val">${due===null?'—':due>0?`৳ ${fmtMoney(due)}`:'পরিশোধিত ✓'}</div>
+      </div>
+    `;
+  }else if(dmStats){
+    dmStats.classList.add('hidden');
+  }
+
   const formatDetailValue=c=>isSecretColumn(c)
     ? '••••••••'
     : c==='next_date'
@@ -880,7 +1202,8 @@ function openDetail(id){
     name:'Name',mobile:'Mobile',course:'Course',nu_dcu:'Sector (NU/DCU)',
     course_price:'Course Price',discount:'Discount',paid:'Paid',access_type:'Access Type',
     next_date:'Next Due Date',admin:'Admin',enrolled_at:'Enrolled At',expires_at:'Expires At',
-    status:'Status',watch_time:'Watch Time',get_wt:'Get WT',blocked:'Blocked',b_comment:'Block Reason'
+    status:'Status',watch_time:'Watch Time',get_wt:'Get WT',blocked:'Blocked',b_comment:'Block Reason',
+    email:'Email',department:'Department',institute:'Institute',level:'Level',year:'Year',session:'Session'
   };
   const detailItem=c=>{
     const rawVal=formatDetailValue(c);
@@ -893,7 +1216,7 @@ function openDetail(id){
     let extraClass='';
     let valHtml='';
     if(!rawVal||rawVal==='—'){
-      valHtml='<span class="v-empty">—</span>';
+      valHtml='<span class="v-empty muted">—</span>';
     }else if(isCourse){
       extraClass='val-course';
       valHtml=esc(rawVal);
@@ -902,11 +1225,15 @@ function openDetail(id){
       const sClass=s==='active'?'st-active':(s==='expired'?'st-expired':'st-pending');
       valHtml=`<span class="val-status ${sClass}">${esc(rawVal)}</span>`;
     }else if(isPaid){
-      valHtml=`<span class="val-paid">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
+      valHtml=`<span class="val-paid" style="color:#059669;font-weight:800">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
     }else if(isPrice){
-      valHtml=`<span class="val-price">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
+      valHtml=`<span class="val-price" style="color:#0f172a;font-weight:800">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
     }else if(isDiscount&&moneyNumber(rawVal)>0){
-      valHtml=`<span class="val-discount">৳ ${esc(fmtMoney(moneyNumber(rawVal)))}</span>`;
+      valHtml=`<span class="val-discount" style="color:#b45309;font-weight:800">৳ ${esc(fmtMoney(moneyNumber(rawVal)))}</span>`;
+    }else if(c==='mobile'){
+      valHtml=`<a href="tel:${esc(rawVal)}" class="adm-contact-link">📞 ${esc(rawVal)}</a>`;
+    }else if(c==='email'){
+      valHtml=`<a href="mailto:${esc(rawVal)}" class="adm-contact-link email">✉ ${esc(rawVal)}</a>`;
     }else{
       valHtml=esc(rawVal);
     }
@@ -920,7 +1247,7 @@ function openDetail(id){
     const leftFields=['name','mobile','course','nu_dcu','course_price','discount','paid','access_type','next_date','admin'];
     const rightFields=['enrolled_at','expires_at','status','watch_time','get_wt','blocked','b_comment'];
     const due=dueAmount(r);
-    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'<span class="v-empty">—</span>':due>0?`<span class="due-bad">৳ ${esc(fmtMoney(due))}</span>`:'<span class="due-ok">Paid</span>'}</div></div>`;
+    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'<span class="v-empty muted">—</span>':due>0?`<span class="due-bad" style="color:#dc2626;font-weight:800">৳ ${esc(fmtMoney(due))}</span>`:'<span class="due-ok" style="color:#059669;font-weight:800">পরিশোধিত ✓</span>'}</div></div>`;
     const leftItems=leftFields.map(detailItem);
     leftItems.splice(7,0,dueItem);
     const right=rightFields.map(detailItem).join('');
@@ -939,8 +1266,14 @@ function openDetail(id){
 function openPendingDetail(id){
   const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
   if(!r)return;
-  dmTitle.textContent=r.name||'Student';
-  dmSub.innerHTML=`<span class="sub-course">${esc(r.course||'')}</span>${r.nuDcu?' · '+esc(r.nuDcu):''}${r.mobile?' · '+esc(r.mobile):''}`;
+  const name=r.name||'Student';
+  if(dmAvatar){
+    dmAvatar.style.background=getAvatarBg(name);
+    dmAvatar.textContent=getInitial(name);
+  }
+  if(dmStats) dmStats.classList.add('hidden');
+  dmTitle.textContent=name;
+  dmSub.innerHTML=`<span class="adm-course-title" style="color:#d97706;font-size:14px">${esc(r.course||'')}</span>${r.nuDcu?' · <span class="adm-sector-pill nu">'+esc(r.nuDcu)+'</span>':''}${r.mobile?' · 📞 '+esc(r.mobile):''}`;
   const fields=[
     ['Name',r.name],
     ['Mobile',r.mobile],
@@ -958,7 +1291,9 @@ function openPendingDetail(id){
   dmBody.innerHTML=fields.map(([k,v])=>{
     const large=k==='Address';
     const isCourse=(k==='Course');
-    const valHtml=v?esc(v):'<span class="v-empty">—</span>';
+    let valHtml=v?esc(v):'<span class="v-empty muted">—</span>';
+    if(k==='Mobile'&&v) valHtml=`<a href="tel:${esc(v)}" class="adm-contact-link">📞 ${esc(v)}</a>`;
+    if(k==='Email'&&v) valHtml=`<a href="mailto:${esc(v)}" class="adm-contact-link email">✉ ${esc(v)}</a>`;
     return `<div class="detail-item ${large?'full':''}"><div class="k">${esc(k)}</div><div class="v ${isCourse?'val-course':''}">${valHtml}</div></div>`;
   }).join('');
   detailModal.classList.remove('hidden');
@@ -986,31 +1321,45 @@ function renderTable(d){
   const limit=Math.max(1,Number(d.limit??S.limit));
   const from=total?offset+1:0;
   const to=Math.min(offset+limit,total);
+
+  // Update filter count if present
+  const fcEl=document.getElementById('enrollFilterCount');
+  if(fcEl){
+    fcEl.textContent = S.courseFilter ? `ফিল্টারকৃত: ${total} জন` : `মোট শিক্ষার্থী: ${total} জন`;
+  }
+
   q.innerHTML=`
     <div class="ph">
       <div>
-        <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-        <div class="muted small">${enroll?(S.courseFilter?'Filtered: '+esc(S.courseFilter):'All courses'):student?'Click a row to view full profile':esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
+        <div class="ph-title-wrap">
+          <h3 class="ph-title">${esc(d.label||P[S.table]?.[1]||S.table)}</h3>
+          <span class="ph-count-pill">${total} টি রেকর্ড</span>
+        </div>
+        <div class="ph-sub">${enroll?(S.courseFilter?'কোর্স ফিল্টার: '+esc(S.courseFilter):'সব কোর্স অন্তর্ভুক্ত'):student?'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন':esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
       </div>
       <div class="tools">
         <div class="search-wrap">
-          <input id="search" placeholder="Search all fields…" value="${esc(S.search)}"
+          <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input id="search" placeholder="খুঁজুন (নাম, মোবাইল, ইত্যাদি)…" value="${esc(S.search)}"
             oninput="liveSearch(this.value)" autocomplete="off" aria-label="Search all fields">
-          <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">×</button>
+          <button id="searchClear" class="search-clear ${S.search?'show':''}" type="button" onclick="clearSearch()" aria-label="Clear search">✕</button>
         </div>
         ${['student_login','student_enrolled'].includes(S.table) ? '' : '<button class="btn gold" onclick="newR()">＋ Add</button>'}
-        <button class="btn ghost" onclick="refresh(true)">↻ Refresh</button>
+        <button class="btn-refresh" onclick="refresh(true)" title="নতুন করে ডাটা রিলোড করুন">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span>Refresh</span>
+        </button>
       </div>
     </div>
     <div class="tw">
-      ${S.rows.length?`<table class="tbl${special?' enroll-tbl':''}"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">No records found.</div>'}
+      ${S.rows.length?`<table class="tbl${special?' enroll-tbl':''}"><thead><tr>${th}<th class="actions-head">Actions</th></tr></thead><tbody>${tb}</tbody></table>`:'<div class="empty">কোনো ডাটা রেকর্ড খুঁজে পাওয়া যায়নি।</div>'}
     </div>
     <div class="pager">
-      <span>${from}–${to} of ${total}</span>
-      <span>
-        <button class="mini" ${offset<=0?'disabled':''} onclick="localPage(-1)">← Previous</button>
-        <button class="mini" ${offset+limit>=total?'disabled':''} onclick="localPage(1)">Next →</button>
-      </span>
+      <div class="pager-count">মোট <b>${total}</b> টির মধ্যে <b>${from}–${to}</b> টি দেখানো হচ্ছে</div>
+      <div class="pager-btns">
+        <button class="pager-btn" ${offset<=0?'disabled':''} onclick="localPage(-1)">← পূর্ববর্তী</button>
+        <button class="pager-btn" ${offset+limit>=total?'disabled':''} onclick="localPage(1)">পরবর্তী →</button>
+      </div>
     </div>`;
 }
 async function refresh(force=false){
