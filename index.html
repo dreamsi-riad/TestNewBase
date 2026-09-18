@@ -618,7 +618,6 @@ function renderTable(d){
     <div class="ph">
       <div>
         <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
-        ${student ? '' : `<div class="muted small">${enroll ? (S.courseFilter ? 'Filtered: ' + esc(S.courseFilter) : 'All courses') : esc(S.table) + ' · ' + cols.length + ' fields'}${d.local ? ' · Local cache' : ''}</div>`}
       </div>
       <div class="tools">
         <div class="search-wrap">
