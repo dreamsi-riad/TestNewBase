@@ -70,15 +70,29 @@
 .due-bad{color:#d9534f;font-weight:800}
 
 /* ---- Read-only details modal ---- */
-.detail-box{width:min(620px,100%);max-height:86vh;overflow:auto}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;position:relative;padding:4px 0}
-.detail-grid::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;background:#c5ccd8}
-.detail-item{padding:5px 0;border-bottom:1px solid #e4e8ef;min-width:0;line-height:1.55}
-.detail-item .k{display:inline;font-size:13px;font-weight:800;color:#52617a;letter-spacing:.25px}
-.detail-item .k::after{content:":";margin-right:6px}
-.detail-item .v{display:inline;font-size:14.5px;font-weight:700;color:#17233f;word-break:break-word}
+.detail-box{width:min(640px,100%);max-height:88vh;overflow:auto;padding:26px 28px}
+.detail-box h3#dmTitle{font:800 23px 'Baloo Da 2',sans-serif;color:#0f172a;margin:0 0 4px;letter-spacing:-.2px}
+.detail-box p#dmSub{margin:0 0 16px;font-size:13.5px;color:#475569;font-weight:600;padding-bottom:12px;border-bottom:1px solid #edf2f7}
+.detail-box .sub-course{color:#1d4ed8;font-weight:700}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:36px;position:relative}
+.detail-grid::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:#e2e8f0}
+.detail-item{padding:5px 0;border-bottom:0;min-width:0;line-height:1.5}
+.detail-item .k{display:inline;font-size:13px;font-weight:700;color:#2c3e55;letter-spacing:.1px}
+.detail-item .k::after{content:":";margin-right:7px;color:#64748b;font-weight:600}
+.detail-item .v{display:inline;font-size:14px;font-weight:600;color:#0f172a;word-break:break-word}
+.detail-item .v.val-course{color:#1d4ed8;font-weight:800;letter-spacing:.2px}
+.detail-item .v .val-paid{color:#15803d;font-weight:800}
+.detail-item .v .val-price{color:#0f172a;font-weight:800}
+.detail-item .v .val-discount{color:#b45309;font-weight:700}
+.detail-item .v .v-empty{color:#94a3b8;font-weight:400}
+.detail-item .v .val-status{display:inline-flex;align-items:center;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700}
+.detail-item .v .val-status.st-active{color:#15803d;background:#dcfce7;border:1px solid #bbf7d0}
+.detail-item .v .val-status.st-expired{color:#b91c1c;background:#fee2e2;border:1px solid #fecaca}
+.detail-item .v .val-status.st-pending{color:#b45309;background:#fef3c7;border:1px solid #fde68a}
+.detail-item .v .due-bad{color:#dc2626;font-weight:800}
+.detail-item .v .due-ok{color:#15803d;font-weight:800}
 .detail-item.full{display:block;grid-column:1/-1}
-.detail-grid .pay-history{grid-column:1/-1}
+.detail-grid .pay-history{grid-column:1/-1;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1}
 @media(max-width:560px){.detail-grid{grid-template-columns:1fr;column-gap:0}.detail-grid::before{display:none}.detail-item.full,.detail-grid .pay-history{grid-column:auto}}
 
 .mini.wide{min-width:88px;padding:6px 14px}
@@ -526,14 +540,17 @@ function openDetail(id){
   const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
   if(!r)return;
   const name=cellValue(r.name).trim()||(isStudentTable()?'Student':'Record');
-  let subtitleParts=[];
   if(isEnrollTable()){
-    subtitleParts=[cellValue(r.course).trim(),cellValue(r.nu_dcu).trim(),cellValue(r.mobile).trim()];
+    const cCourse=cellValue(r.course).trim();
+    const cNu=cellValue(r.nu_dcu).trim();
+    const cMob=cellValue(r.mobile).trim();
+    dmSub.innerHTML=`${cCourse?`<span class="sub-course">${esc(cCourse)}</span>`:''}${cNu?(cCourse?' · ':'')+esc(cNu):''}${cMob?(cCourse||cNu?' · ':'')+esc(cMob):''}`;
   }else if(isStudentTable()){
-    subtitleParts=[cellValue(r.mobile).trim(),cellValue(r.email).trim(),cellValue(r.institute).trim()];
+    dmSub.textContent=[cellValue(r.mobile).trim(),cellValue(r.email).trim(),cellValue(r.institute).trim()].filter(Boolean).join(' · ');
+  }else{
+    dmSub.textContent='';
   }
   dmTitle.textContent=name;
-  dmSub.textContent=subtitleParts.filter(Boolean).join(' · ');
   const formatDetailValue=c=>isSecretColumn(c)
     ? '••••••••'
     : c==='next_date'
@@ -541,16 +558,51 @@ function openDetail(id){
       : isDateColumn(c)
         ? formatDateOnly(r[c])
         : cellValue(r[c]).trim();
-  const detailItem=c=>`<div class="detail-item">
-    <div class="k">${esc(c)}</div>
-    <div class="v">${formatDetailValue(c)?esc(formatDetailValue(c)):'—'}</div>
-  </div>`;
+  const LABEL_MAP={
+    name:'Name',mobile:'Mobile',course:'Course',nu_dcu:'Sector (NU/DCU)',
+    course_price:'Course Price',discount:'Discount',paid:'Paid',access_type:'Access Type',
+    next_date:'Next Due Date',admin:'Admin',enrolled_at:'Enrolled At',expires_at:'Expires At',
+    status:'Status',watch_time:'Watch Time',get_wt:'Get WT',blocked:'Blocked',b_comment:'Block Reason'
+  };
+  const detailItem=c=>{
+    const rawVal=formatDetailValue(c);
+    const label=LABEL_MAP[c]||c;
+    const isCourse=(c==='course');
+    const isStatus=(c==='status');
+    const isPaid=(c==='paid');
+    const isPrice=(c==='course_price');
+    const isDiscount=(c==='discount');
+    let extraClass='';
+    let valHtml='';
+    if(!rawVal||rawVal==='—'){
+      valHtml='<span class="v-empty">—</span>';
+    }else if(isCourse){
+      extraClass='val-course';
+      valHtml=esc(rawVal);
+    }else if(isStatus){
+      const s=rawVal.trim().toLowerCase();
+      const sClass=s==='active'?'st-active':(s==='expired'?'st-expired':'st-pending');
+      valHtml=`<span class="val-status ${sClass}">${esc(rawVal)}</span>`;
+    }else if(isPaid){
+      valHtml=`<span class="val-paid">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
+    }else if(isPrice){
+      valHtml=`<span class="val-price">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
+    }else if(isDiscount&&moneyNumber(rawVal)>0){
+      valHtml=`<span class="val-discount">৳ ${esc(fmtMoney(moneyNumber(rawVal)))}</span>`;
+    }else{
+      valHtml=esc(rawVal);
+    }
+    return `<div class="detail-item">
+      <div class="k">${esc(label)}</div>
+      <div class="v ${extraClass}">${valHtml}</div>
+    </div>`;
+  };
   let html='';
   if(isEnrollTable()){
     const leftFields=['name','mobile','course','nu_dcu','course_price','discount','paid','access_type','next_date','admin'];
     const rightFields=['enrolled_at','expires_at','status','watch_time','get_wt','blocked','b_comment'];
     const due=dueAmount(r);
-    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'—':due>0?esc(fmtMoney(due)):'<span class="due-ok">Paid</span>'}</div></div>`;
+    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'<span class="v-empty">—</span>':due>0?`<span class="due-bad">৳ ${esc(fmtMoney(due))}</span>`:'<span class="due-ok">Paid</span>'}</div></div>`;
     const leftItems=leftFields.map(detailItem);
     leftItems.splice(7,0,dueItem);
     const right=rightFields.map(detailItem).join('');
@@ -570,14 +622,14 @@ function openPendingDetail(id){
   const r=(S.pendingRows||[]).find(x=>Number(x.id)===Number(id));
   if(!r)return;
   dmTitle.textContent=r.name||'Student';
-  dmSub.textContent=[r.course,r.nuDcu,r.mobile].filter(Boolean).join(' · ');
+  dmSub.innerHTML=`<span class="sub-course">${esc(r.course||'')}</span>${r.nuDcu?' · '+esc(r.nuDcu):''}${r.mobile?' · '+esc(r.mobile):''}`;
   const fields=[
     ['Name',r.name],
     ['Mobile',r.mobile],
     ['Email',r.email],
     ['Course',r.course],
     ['Sector (NU/DCU)',r.nuDcu],
-    ['Course Price',r.coursePrice?`৳ ${r.coursePrice}`:''],
+    ['Course Price',r.coursePrice?`৳ ${fmtMoney(r.coursePrice)}`:r.coursePrice],
     ['Level',r.level],
     ['Year',r.year],
     ['Department',r.department],
@@ -587,7 +639,9 @@ function openPendingDetail(id){
   ];
   dmBody.innerHTML=fields.map(([k,v])=>{
     const large=k==='Address';
-    return `<div class="detail-item ${large?'full':''}"><div class="k">${esc(k)}</div><div class="v">${v?esc(v):'—'}</div></div>`;
+    const isCourse=(k==='Course');
+    const valHtml=v?esc(v):'<span class="v-empty">—</span>';
+    return `<div class="detail-item ${large?'full':''}"><div class="k">${esc(k)}</div><div class="v ${isCourse?'val-course':''}">${valHtml}</div></div>`;
   }).join('');
   detailModal.classList.remove('hidden');
 }
@@ -618,6 +672,7 @@ function renderTable(d){
     <div class="ph">
       <div>
         <b>${esc(d.label||P[S.table]?.[1]||S.table)} · ${total}</b>
+        <div class="muted small">${enroll?(S.courseFilter?'Filtered: '+esc(S.courseFilter):'All courses'):student?'Click a row to view full profile':esc(S.table)+' · '+cols.length+' fields'}${d.local?' · Local cache':''}</div>
       </div>
       <div class="tools">
         <div class="search-wrap">
