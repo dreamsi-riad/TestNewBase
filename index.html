@@ -321,8 +321,50 @@
 .side nav button{display:flex;align-items:center;justify-content:space-between}
 .nav-pending-badge{background:#ef4444;color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;box-shadow:0 2px 8px rgba(239,68,68,.5);line-height:1.2}
 
-@media(max-width:1200px){.dash-cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.dash-cards{grid-template-columns:1fr}.dash-header{flex-direction:column;align-items:flex-start}.dash-alert-banner{flex-direction:column;align-items:flex-start}}
+/* ============================================================
+   COURSE CONTENT STUDIO — LEVEL TABS & CASCADING DYNAMIC FORM
+   ============================================================ */
+.cc-studio-wrap{display:flex;flex-direction:column;gap:16px;animation:contentIn .25s ease-out}
+.cc-level-bar{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+.cc-level-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 17px;border-radius:999px;border:1.5px solid #cbd5e1;background:#fff;color:#334155;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap;transition:all .18s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 6px rgba(15,23,42,.03)}
+.cc-level-btn:hover{border-color:#94a3b8;background:#f8fafc;color:#0f172a;transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,23,42,.08)}
+.cc-level-btn.active{background:linear-gradient(135deg,#1e40af 0%,#1d4ed8 100%);color:#fff;border-color:#1e40af;box-shadow:0 8px 20px -4px rgba(37,99,235,.45);transform:translateY(-2px)}
+.cc-level-btn.active .cc-badge-count{background:rgba(255,255,255,0.22);color:#fff;border-color:rgba(255,255,255,0.3)}
+.cc-badge-count{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:800;background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0}
+.cc-banner{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 6px 20px -4px rgba(15,23,42,.04)}
+.cc-banner-left{display:flex;align-items:center;gap:14px}
+.cc-banner-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:23px;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:1px solid #bfdbfe;flex-shrink:0}
+.cc-banner-title{font:800 21px 'Baloo Da 2',sans-serif;color:#0f172a;margin:0 0 2px}
+.cc-banner-sub{font-size:12.5px;color:#64748b;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cc-banner-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cc-stat-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;font-weight:700;color:#334155}
+.cc-stat-chip b{color:#1e40af}
+.cc-form-card{background:#fff;border:1.5px solid #dbeafe;border-radius:18px;padding:20px 22px;box-shadow:0 10px 30px -5px rgba(37,99,235,.06),0 2px 8px rgba(15,23,42,.02);display:flex;flex-direction:column;gap:14px}
+.cc-form-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #edf2f7;padding-bottom:12px}
+.cc-form-title{font:800 18px 'Baloo Da 2',sans-serif;color:#0f172a;margin:0;display:flex;align-items:center;gap:8px}
+.cc-pill-tag{font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.cc-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cc-grid-class{display:grid;grid-template-columns:1.2fr 1.4fr 1.4fr;gap:14px}
+@media(max-width:900px){.cc-grid-3,.cc-grid-class{grid-template-columns:1fr}}
+.cc-field{display:flex;flex-direction:column;gap:5px}
+.cc-field-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.cc-field-label{font-size:12.5px;font-weight:800;color:#1e293b}
+.cc-toggle-btn{background:transparent;border:0;color:#2563eb;font-size:11.5px;font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
+.cc-toggle-btn:hover{color:#1d4ed8}
+.cc-input,.cc-select{width:100%;border:1.5px solid #cbd5e1;border-radius:10px;padding:9px 12px;background:#f8fafc;color:#0f172a;font-size:13px;font-weight:600;transition:all .2s ease}
+.cc-input:focus,.cc-select:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.12);outline:none}
+.cc-actions-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px dashed #e2e8f0}
+.cc-btn-save-next{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;border:0;border-radius:10px;padding:10px 22px;font-size:13.5px;font-weight:800;cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 14px rgba(16,185,129,.35)}
+.cc-btn-save-next:hover{background:linear-gradient(135deg,#059669 0%,#047857 100%);transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,185,129,.45)}
+.cc-btn-reset{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#64748b;border:1.5px solid #cbd5e1;border-radius:10px;padding:9px 16px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .18s ease}
+.cc-btn-reset:hover{background:#f8fafc;color:#0f172a;border-color:#94a3b8}
+.cc-filter-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cc-filter-wrap select{border:1.5px solid #cbd5e1;border-radius:9px;padding:6px 10px;background:#f8fafc;font-size:12.5px;font-weight:700;color:#1e293b}
+.cc-link-btn{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:11.5px;font-weight:700;text-decoration:none;transition:all .15s ease}
+.cc-link-video{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+.cc-link-video:hover{background:#fecaca;color:#991b1b}
+.cc-link-pdf{background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe}
+.cc-link-pdf:hover{background:#dbeafe;color:#1e40af}
 </style><base target="_blank">
 </head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
@@ -382,6 +424,49 @@
   <div class="modal-actions">
     <button type="button" class="btn ghost" onclick="closeDetail()">বন্ধ করুন (Close)</button>
   </div>
+</div></div>
+<div id="ccEditModal" class="modal-overlay hidden"><div class="modal-box detail-box" style="width:min(580px,100%)">
+  <div class="detail-header-card" style="padding-bottom:12px">
+    <div class="detail-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">✏</div>
+    <div class="detail-head-info">
+      <h3 style="margin:0 0 2px">ক্লাস এডিট করুন (Edit Class)</h3>
+      <div class="detail-head-sub" id="ccEditSub" style="font-size:12.5px;color:#64748b">তথ্য সংশোধন করে সেভ করুন</div>
+    </div>
+    <button type="button" class="modal-close-btn" onclick="closeCcEditModal()" aria-label="Close modal">✕</button>
+  </div>
+  <form id="ccEditForm" onsubmit="submitCcEdit(event)" style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+    <input type="hidden" id="ccEditRowId">
+    <div>
+      <label style="font-size:12px;margin:0 0 4px">কোর্সের নাম (Course Name) *</label>
+      <input id="ccEditCourse" class="cc-input" required>
+    </div>
+    <div class="grid" style="gap:10px">
+      <div>
+        <label style="font-size:12px;margin:0 0 4px">সাবজেক্টের নাম (Subject) *</label>
+        <input id="ccEditSubject" class="cc-input" required>
+      </div>
+      <div>
+        <label style="font-size:12px;margin:0 0 4px">চ্যাপ্টারের নাম (Chapter) *</label>
+        <input id="ccEditChapter" class="cc-input" required>
+      </div>
+    </div>
+    <div>
+      <label style="font-size:12px;margin:0 0 4px">ক্লাসের নাম (Class Name) *</label>
+      <input id="ccEditClassName" class="cc-input" required>
+    </div>
+    <div>
+      <label style="font-size:12px;margin:0 0 4px">ভিডিও URL (YouTube / Video Link) *</label>
+      <input id="ccEditUrl" class="cc-input" required>
+    </div>
+    <div>
+      <label style="font-size:12px;margin:0 0 4px">লেকচার শিট PDF URL (Google Drive)</label>
+      <input id="ccEditPdfUrl" class="cc-input" placeholder="Google Drive PDF লিংক (ঐচ্ছিক)">
+    </div>
+    <div class="modal-actions" style="margin-top:10px">
+      <button type="button" class="btn ghost" onclick="closeCcEditModal()">বাতিল</button>
+      <button type="submit" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8">✓ সেভ করুন (Save Changes)</button>
+    </div>
+  </form>
 </div></div>
 <div id="toast" class="toast hidden"></div>
 <script>
@@ -1595,5 +1680,752 @@ async function toggleWt(id,isOn){
   }catch(e){toast(e.message||'Update failed')}
 }
 
+/* ============================================================
+   COURSE CONTENT STUDIO — LEVEL TABS & CASCADING DYNAMIC FORM
+   ============================================================ */
+
+const CC_LEVELS = [
+  { id: 'course_data_bba_dcu', name: 'BBA DCU', icon: '🎓' },
+  { id: 'course_data_bba_nu', name: 'BBA NU', icon: '🎓' },
+  { id: 'course_data_bba_professional', name: 'BBA Professional', icon: '💼' },
+  { id: 'course_data_bbs', name: 'BBS', icon: '🏛' },
+  { id: 'course_data_mba', name: 'MBA', icon: '🎖' },
+  { id: 'course_data_hsc', name: 'HSC', icon: '📚' },
+  { id: 'course_data_ssc', name: 'SSC', icon: '🎒' }
+];
+
+const ccState = {
+  activeTable: 'course_data_bba_dcu',
+  rows: [],
+  loading: false,
+  course: '',
+  subject: '',
+  chapter: '',
+  isNewCourse: false,
+  isNewSubject: false,
+  isNewChapter: false,
+  filterCourse: '',
+  filterSubject: '',
+  filterChapter: '',
+  search: ''
+};
+
+function closeCcEditModal(){
+  const m = document.getElementById('ccEditModal');
+  if(m) m.classList.add('hidden');
+}
+
+function openCcEditModal(rowid){
+  const row = ccState.rows.find(r => Number(r.__rowid) === Number(rowid));
+  if(!row) return;
+  const m = document.getElementById('ccEditModal');
+  if(!m) return;
+  document.getElementById('ccEditRowId').value = rowid;
+  document.getElementById('ccEditCourse').value = row.course_name || '';
+  document.getElementById('ccEditSubject').value = row.subject || '';
+  document.getElementById('ccEditChapter').value = row.chapter || '';
+  document.getElementById('ccEditClassName').value = row.class_name || '';
+  document.getElementById('ccEditUrl').value = row.url || '';
+  document.getElementById('ccEditPdfUrl').value = row.pdf_url || '';
+  document.getElementById('ccEditSub').textContent = `ID #${rowid} · ${ccCurrentLevelName()}`;
+  m.classList.remove('hidden');
+}
+
+async function submitCcEdit(e){
+  e.preventDefault();
+  const rowid = Number(document.getElementById('ccEditRowId').value);
+  if(!rowid) return;
+  const data = {
+    course_name: document.getElementById('ccEditCourse').value.trim(),
+    subject: document.getElementById('ccEditSubject').value.trim(),
+    chapter: document.getElementById('ccEditChapter').value.trim(),
+    class_name: document.getElementById('ccEditClassName').value.trim(),
+    url: document.getElementById('ccEditUrl').value.trim(),
+    pdf_url: document.getElementById('ccEditPdfUrl').value.trim()
+  };
+  try{
+    await api('admin_save', { table: ccState.activeTable, rowid, data });
+    const idx = ccState.rows.findIndex(r => Number(r.__rowid) === rowid);
+    if(idx !== -1){
+      ccState.rows[idx] = { ...ccState.rows[idx], ...data };
+    }
+    pageCache.delete(ccState.activeTable);
+    toast('✅ ক্লাস সফলভাবে আপডেট হয়েছে!');
+    closeCcEditModal();
+    ccPopulateDropdowns();
+    ccRenderTable();
+    ccUpdateStats();
+  }catch(err){
+    toast(err.message || 'আপডেট ব্যর্থ হয়েছে');
+  }
+}
+
+async function deleteCcClass(rowid){
+  if(!confirm(`এই ক্লাসটি (#${rowid}) কি নিশ্চিতভাবে মুছে ফেলতে চান?\n\nএটি ফিরিয়ে আনা যাবে না।`)) return;
+  try{
+    await api('admin_delete', { table: ccState.activeTable, rowid });
+    ccState.rows = ccState.rows.filter(r => Number(r.__rowid) !== Number(rowid));
+    pageCache.delete(ccState.activeTable);
+    toast('🗑 ক্লাস সফলভাবে ডিলিট করা হয়েছে');
+    ccPopulateDropdowns();
+    ccRenderTable();
+    ccUpdateStats();
+  }catch(err){
+    toast(err.message || 'ডিলিট ব্যর্থ হয়েছে');
+  }
+}
+
+function ccCurrentLevelName(){
+  const found = CC_LEVELS.find(l => l.id === ccState.activeTable);
+  return found ? found.name : ccState.activeTable;
+}
+
+function ccCurrentLevelIcon(){
+  const found = CC_LEVELS.find(l => l.id === ccState.activeTable);
+  return found ? found.icon : '📚';
+}
+
+function ccGetUniqueCourses(){
+  const s = new Set();
+  (ccState.rows || []).forEach(r => {
+    const v = String(r.course_name || '').trim();
+    if(v) s.add(v);
+  });
+  return Array.from(s).sort((a,b) => a.localeCompare(b));
+}
+
+function ccGetUniqueSubjects(courseName){
+  const s = new Set();
+  const target = String(courseName || '').trim().toLowerCase();
+  (ccState.rows || []).forEach(r => {
+    if(target && String(r.course_name || '').trim().toLowerCase() !== target) return;
+    const v = String(r.subject || '').trim();
+    if(v) s.add(v);
+  });
+  return Array.from(s).sort((a,b) => a.localeCompare(b));
+}
+
+function ccGetUniqueChapters(courseName, subjectName){
+  const s = new Set();
+  const targetC = String(courseName || '').trim().toLowerCase();
+  const targetS = String(subjectName || '').trim().toLowerCase();
+  (ccState.rows || []).forEach(r => {
+    if(targetC && String(r.course_name || '').trim().toLowerCase() !== targetC) return;
+    if(targetS && String(r.subject || '').trim().toLowerCase() !== targetS) return;
+    const v = String(r.chapter || '').trim();
+    if(v) s.add(v);
+  });
+  return Array.from(s).sort((a,b) => a.localeCompare(b));
+}
+
+function ccToggleNewCourse(){
+  ccState.isNewCourse = !ccState.isNewCourse;
+  const sel = document.getElementById('ccCourseSelect');
+  const inp = document.getElementById('ccCourseInput');
+  const btn = document.getElementById('ccBtnNewCourse');
+  if(ccState.isNewCourse){
+    sel.classList.add('hidden');
+    inp.classList.remove('hidden');
+    inp.focus();
+    btn.textContent = '◀ বিদ্যমান কোর্স থেকে বাছুন';
+  }else{
+    inp.classList.add('hidden');
+    sel.classList.remove('hidden');
+    btn.textContent = '➕ নতুন কোর্স লিখুন';
+  }
+}
+
+function ccToggleNewSubject(){
+  ccState.isNewSubject = !ccState.isNewSubject;
+  const sel = document.getElementById('ccSubjectSelect');
+  const inp = document.getElementById('ccSubjectInput');
+  const btn = document.getElementById('ccBtnNewSubject');
+  if(ccState.isNewSubject){
+    sel.classList.add('hidden');
+    inp.classList.remove('hidden');
+    inp.focus();
+    btn.textContent = '◀ বিদ্যমান সাবজেক্ট বাছুন';
+  }else{
+    inp.classList.add('hidden');
+    sel.classList.remove('hidden');
+    btn.textContent = '➕ নতুন সাবজেক্ট লিখুন';
+  }
+}
+
+function ccToggleNewChapter(){
+  ccState.isNewChapter = !ccState.isNewChapter;
+  const sel = document.getElementById('ccChapterSelect');
+  const inp = document.getElementById('ccChapterInput');
+  const btn = document.getElementById('ccBtnNewChapter');
+  if(ccState.isNewChapter){
+    sel.classList.add('hidden');
+    inp.classList.remove('hidden');
+    inp.focus();
+    btn.textContent = '◀ বিদ্যমান চ্যাপ্টার বাছুন';
+  }else{
+    inp.classList.add('hidden');
+    sel.classList.remove('hidden');
+    btn.textContent = '➕ নতুন চ্যাপ্টার লিখুন';
+  }
+}
+
+function ccOnCourseChange(val){
+  ccState.course = String(val || '').trim();
+  ccPopulateSubjects();
+  ccPopulateChapters();
+  ccUpdateTableFilters();
+  ccRenderTable();
+}
+
+function ccOnSubjectChange(val){
+  ccState.subject = String(val || '').trim();
+  ccPopulateChapters();
+  ccUpdateTableFilters();
+  ccRenderTable();
+}
+
+function ccOnChapterChange(val){
+  ccState.chapter = String(val || '').trim();
+  ccUpdateTableFilters();
+  ccRenderTable();
+}
+
+function ccPopulateDropdowns(){
+  // 1. Courses
+  const courses = ccGetUniqueCourses();
+  const selC = document.getElementById('ccCourseSelect');
+  if(selC){
+    let opt = '<option value="">-- কোর্স সিলেক্ট করুন --</option>';
+    courses.forEach(c => {
+      opt += `<option value="${esc(c)}" ${c === ccState.course ? 'selected' : ''}>${esc(c)}</option>`;
+    });
+    selC.innerHTML = opt;
+    if(ccState.course && !courses.includes(ccState.course)){
+      // If previous course still valid keep it, else select first
+      if(courses.length > 0 && !ccState.isNewCourse){
+        ccState.course = courses[0];
+        selC.value = ccState.course;
+      }
+    }else if(!ccState.course && courses.length > 0 && !ccState.isNewCourse){
+      ccState.course = courses[0];
+      selC.value = ccState.course;
+    }
+  }
+  ccPopulateSubjects();
+  ccPopulateChapters();
+  ccUpdateTableFilters();
+}
+
+function ccPopulateSubjects(){
+  const activeCourse = ccState.isNewCourse ? (document.getElementById('ccCourseInput')?.value.trim() || '') : ccState.course;
+  const subjects = ccGetUniqueSubjects(activeCourse);
+  const selS = document.getElementById('ccSubjectSelect');
+  if(selS){
+    let opt = '<option value="">-- সাবজেক্ট সিলেক্ট করুন --</option>';
+    subjects.forEach(s => {
+      opt += `<option value="${esc(s)}" ${s === ccState.subject ? 'selected' : ''}>${esc(s)}</option>`;
+    });
+    selS.innerHTML = opt;
+    if(ccState.subject && !subjects.includes(ccState.subject)){
+      if(subjects.length > 0 && !ccState.isNewSubject){
+        ccState.subject = subjects[0];
+        selS.value = ccState.subject;
+      }
+    }else if(!ccState.subject && subjects.length > 0 && !ccState.isNewSubject){
+      ccState.subject = subjects[0];
+      selS.value = ccState.subject;
+    }
+  }
+}
+
+function ccPopulateChapters(){
+  const activeCourse = ccState.isNewCourse ? (document.getElementById('ccCourseInput')?.value.trim() || '') : ccState.course;
+  const activeSubject = ccState.isNewSubject ? (document.getElementById('ccSubjectInput')?.value.trim() || '') : ccState.subject;
+  const chapters = ccGetUniqueChapters(activeCourse, activeSubject);
+  const selCh = document.getElementById('ccChapterSelect');
+  if(selCh){
+    let opt = '<option value="">-- চ্যাপ্টার সিলেক্ট করুন --</option>';
+    chapters.forEach(ch => {
+      opt += `<option value="${esc(ch)}" ${ch === ccState.chapter ? 'selected' : ''}>${esc(ch)}</option>`;
+    });
+    selCh.innerHTML = opt;
+    if(ccState.chapter && !chapters.includes(ccState.chapter)){
+      if(chapters.length > 0 && !ccState.isNewChapter){
+        ccState.chapter = chapters[0];
+        selCh.value = ccState.chapter;
+      }
+    }else if(!ccState.chapter && chapters.length > 0 && !ccState.isNewChapter){
+      ccState.chapter = chapters[0];
+      selCh.value = ccState.chapter;
+    }
+  }
+}
+
+function ccUpdateTableFilters(){
+  const selC = document.getElementById('ccFilterCourse');
+  const selS = document.getElementById('ccFilterSubject');
+  const selCh = document.getElementById('ccFilterChapter');
+  if(!selC || !selS || !selCh) return;
+
+  const courses = ccGetUniqueCourses();
+  selC.innerHTML = '<option value="">সব কোর্স (All Courses)</option>' +
+    courses.map(c => `<option value="${esc(c)}" ${c===ccState.filterCourse?'selected':''}>${esc(c)}</option>`).join('');
+
+  const subjects = ccGetUniqueSubjects(ccState.filterCourse);
+  selS.innerHTML = '<option value="">সব সাবজেক্ট (All Subjects)</option>' +
+    subjects.map(s => `<option value="${esc(s)}" ${s===ccState.filterSubject?'selected':''}>${esc(s)}</option>`).join('');
+
+  const chapters = ccGetUniqueChapters(ccState.filterCourse, ccState.filterSubject);
+  selCh.innerHTML = '<option value="">সব চ্যাপ্টার (All Chapters)</option>' +
+    chapters.map(ch => `<option value="${esc(ch)}" ${ch===ccState.filterChapter?'selected':''}>${esc(ch)}</option>`).join('');
+}
+
+function ccOnTableFilterChange(){
+  ccState.filterCourse = document.getElementById('ccFilterCourse')?.value || '';
+  ccState.filterSubject = document.getElementById('ccFilterSubject')?.value || '';
+  ccState.filterChapter = document.getElementById('ccFilterChapter')?.value || '';
+  ccUpdateTableFilters();
+  ccRenderTable();
+}
+
+function ccOnTableSearch(val){
+  ccState.search = String(val || '').trim().toLowerCase();
+  ccRenderTable();
+}
+
+function ccUpdateStats(){
+  const total = ccState.rows.length;
+  const courses = ccGetUniqueCourses().length;
+  const subjects = ccGetUniqueSubjects('').length;
+
+  const tEl = document.getElementById('ccStatTotal');
+  const cEl = document.getElementById('ccStatCourses');
+  const sEl = document.getElementById('ccStatSubjects');
+  const bTitle = document.getElementById('ccBannerTitle');
+  const bIcon = document.getElementById('ccBannerIcon');
+  const bSub = document.getElementById('ccBannerSub');
+
+  if(tEl) tEl.textContent = total;
+  if(cEl) cEl.textContent = courses;
+  if(sEl) sEl.textContent = subjects;
+  if(bTitle) bTitle.textContent = `${ccCurrentLevelName()} — কোর্স কনটেন্ট স্টুডিও`;
+  if(bIcon) bIcon.textContent = ccCurrentLevelIcon();
+  if(bSub) bSub.innerHTML = `টেবিল: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:monospace;color:#1e40af">${ccState.activeTable}</code> · Cloudflare D1 লাইভ কানেক্টেড`;
+
+  // Update badge count on active level tab
+  const activeBtn = document.querySelector(`.cc-level-btn[data-table="${ccState.activeTable}"] .cc-badge-count`);
+  if(activeBtn) activeBtn.textContent = total;
+}
+
+function ccResetForm(){
+  document.getElementById('ccClassName').value = '';
+  document.getElementById('ccUrl').value = '';
+  document.getElementById('ccPdfUrl').value = '';
+  if(ccState.isNewCourse) ccToggleNewCourse();
+  if(ccState.isNewSubject) ccToggleNewSubject();
+  if(ccState.isNewChapter) ccToggleNewChapter();
+  document.getElementById('ccClassName')?.focus();
+  toast('ফরম রিসেট করা হয়েছে');
+}
+
+async function ccSaveClass(andNext = true){
+  const course = ccState.isNewCourse
+    ? (document.getElementById('ccCourseInput')?.value.trim() || '')
+    : (document.getElementById('ccCourseSelect')?.value.trim() || '');
+
+  const subject = ccState.isNewSubject
+    ? (document.getElementById('ccSubjectInput')?.value.trim() || '')
+    : (document.getElementById('ccSubjectSelect')?.value.trim() || '');
+
+  const chapter = ccState.isNewChapter
+    ? (document.getElementById('ccChapterInput')?.value.trim() || '')
+    : (document.getElementById('ccChapterSelect')?.value.trim() || '');
+
+  const className = document.getElementById('ccClassName')?.value.trim() || '';
+  const url = document.getElementById('ccUrl')?.value.trim() || '';
+  const pdfUrl = document.getElementById('ccPdfUrl')?.value.trim() || '';
+
+  if(!course){
+    toast('অনুগ্রহ করে কোর্সের নাম দিন');
+    if(ccState.isNewCourse) document.getElementById('ccCourseInput')?.focus();
+    else document.getElementById('ccCourseSelect')?.focus();
+    return;
+  }
+  if(!subject){
+    toast('অনুগ্রহ করে সাবজেক্টের নাম দিন');
+    if(ccState.isNewSubject) document.getElementById('ccSubjectInput')?.focus();
+    else document.getElementById('ccSubjectSelect')?.focus();
+    return;
+  }
+  if(!chapter){
+    toast('অনুগ্রহ করে চ্যাপ্টারের নাম দিন');
+    if(ccState.isNewChapter) document.getElementById('ccChapterInput')?.focus();
+    else document.getElementById('ccChapterSelect')?.focus();
+    return;
+  }
+  if(!className){
+    toast('অনুগ্রহ করে ক্লাসের নাম দিন (যেমন: 1st class DCU)');
+    document.getElementById('ccClassName')?.focus();
+    return;
+  }
+  if(!url){
+    toast('অনুগ্রহ করে ভিডিও লিংক দিন (YouTube / Video URL)');
+    document.getElementById('ccUrl')?.focus();
+    return;
+  }
+
+  const btn = document.getElementById('ccBtnSaveNext');
+  const prevText = btn ? btn.innerHTML : '';
+  if(btn){
+    btn.disabled = true;
+    btn.innerHTML = 'সেভ হচ্ছে…';
+  }
+
+  try{
+    const res = await api('admin_save', {
+      table: ccState.activeTable,
+      rowid: 0,
+      data: {
+        course_name: course,
+        subject: subject,
+        chapter: chapter,
+        class_name: className,
+        url: url,
+        pdf_url: pdfUrl
+      }
+    });
+
+    const newRowId = res.rowid || Date.now();
+    const newRow = {
+      __rowid: newRowId,
+      course_name: course,
+      subject: subject,
+      chapter: chapter,
+      class_name: className,
+      url: url,
+      pdf_url: pdfUrl
+    };
+
+    // Add to local state (at beginning so it is immediately visible)
+    ccState.rows.unshift(newRow);
+    pageCache.delete(ccState.activeTable);
+
+    // Ensure selected state
+    ccState.course = course;
+    ccState.subject = subject;
+    ccState.chapter = chapter;
+
+    // Reset new-mode flags if newly typed
+    if(ccState.isNewCourse) ccToggleNewCourse();
+    if(ccState.isNewSubject) ccToggleNewSubject();
+    if(ccState.isNewChapter) ccToggleNewChapter();
+
+    ccPopulateDropdowns();
+    ccUpdateStats();
+    ccRenderTable();
+
+    // Clear class inputs
+    document.getElementById('ccClassName').value = '';
+    document.getElementById('ccUrl').value = '';
+    document.getElementById('ccPdfUrl').value = '';
+
+    if(andNext){
+      toast('✅ ক্লাস সেভ হয়েছে! পরবর্তী ক্লাস দিন।');
+      document.getElementById('ccClassName')?.focus();
+    }else{
+      toast('✅ ক্লাস সফলভাবে সেভ হয়েছে!');
+    }
+  }catch(err){
+    toast(err.message || 'ক্লাস সেভ করতে সমস্যা হয়েছে');
+  }finally{
+    if(btn){
+      btn.disabled = false;
+      btn.innerHTML = prevText;
+    }
+  }
+}
+
+function ccRenderTable(){
+  const body = document.getElementById('ccTableBody');
+  const countEl = document.getElementById('ccVisibleCount');
+  if(!body) return;
+
+  const targetCourse = String(ccState.filterCourse || '').trim().toLowerCase();
+  const targetSubject = String(ccState.filterSubject || '').trim().toLowerCase();
+  const targetChapter = String(ccState.filterChapter || '').trim().toLowerCase();
+  const q = String(ccState.search || '').trim().toLowerCase();
+
+  const filtered = ccState.rows.filter(r => {
+    if(targetCourse && String(r.course_name || '').trim().toLowerCase() !== targetCourse) return false;
+    if(targetSubject && String(r.subject || '').trim().toLowerCase() !== targetSubject) return false;
+    if(targetChapter && String(r.chapter || '').trim().toLowerCase() !== targetChapter) return false;
+    if(q){
+      const match = [r.course_name, r.subject, r.chapter, r.class_name, r.url, r.pdf_url]
+        .some(val => String(val || '').toLowerCase().includes(q));
+      if(!match) return false;
+    }
+    return true;
+  });
+
+  if(countEl) countEl.textContent = `প্রদর্শিত ক্লাস: ${filtered.length} টি`;
+
+  if(!filtered.length){
+    body.innerHTML = `<tr><td colspan="7" class="empty">কোনো ক্লাস পাওয়া যায়নি। উপরে ফরম ব্যবহার করে দ্রুত ক্লাস যোগ করুন।</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = filtered.map((r, i) => {
+    const rowId = r.__rowid || r.rowid || r.id;
+    const url = String(r.url || '').trim();
+    const pdf = String(r.pdf_url || '').trim();
+
+    const videoBtn = url
+      ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="cc-link-btn cc-link-video" title="${esc(url)}">▶ ভিডিও দেখুন ↗</a>`
+      : `<span class="muted">—</span>`;
+
+    const pdfBtn = pdf
+      ? `<a href="${esc(pdf)}" target="_blank" rel="noopener" class="cc-link-btn cc-link-pdf" title="${esc(pdf)}">📄 শিট / PDF ↗</a>`
+      : `<span class="muted">—</span>`;
+
+    return `<tr>
+      <td style="font-weight:800;color:#64748b;font-size:12px">#${i + 1}</td>
+      <td><div style="font-weight:700;color:#1e40af;font-size:13px">${esc(r.course_name || '—')}</div></td>
+      <td><div style="font-weight:700;color:#0f172a">${esc(r.subject || '—')}</div></td>
+      <td><span style="font-weight:600;color:#475569;background:#f1f5f9;padding:2px 8px;border-radius:6px;font-size:12px">${esc(r.chapter || '—')}</span></td>
+      <td><div style="font-weight:800;color:#0f172a;font-size:13.5px">${esc(r.class_name || '—')}</div></td>
+      <td>${videoBtn}</td>
+      <td>${pdfBtn}</td>
+      <td class="actions-cell">
+        <div class="act">
+          <button type="button" class="adm-act-btn act-edit" onclick="openCcEditModal(${rowId})" title="এডিট করুন">✏ Edit</button>
+          <button type="button" class="adm-act-btn act-del" onclick="deleteCcClass(${rowId})" title="ডিলিট করুন">🗑 Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function ccSwitchLevel(tableId){
+  ccState.activeTable = tableId;
+  ccState.course = '';
+  ccState.subject = '';
+  ccState.chapter = '';
+  ccState.filterCourse = '';
+  ccState.filterSubject = '';
+  ccState.filterChapter = '';
+  ccState.search = '';
+
+  // Update active button state
+  document.querySelectorAll('.cc-level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.table === tableId);
+  });
+
+  const tableBody = document.getElementById('ccTableBody');
+  if(tableBody){
+    tableBody.innerHTML = `<tr><td colspan="7" class="smooth-loading"><div class="spinner"></div><div>${ccCurrentLevelName()} এর ক্লাস ডাটাবেজ লোড হচ্ছে…</div></td></tr>`;
+  }
+
+  try{
+    const res = await api('admin_rows', {
+      table: tableId,
+      search: '',
+      offset: 0,
+      limit: 1000000
+    });
+    const d = res.data || {};
+    ccState.rows = Array.isArray(d.rows) ? d.rows : [];
+    pageCache.set(tableId, { allRows: ccState.rows, loadedAt: Date.now() });
+  }catch(err){
+    toast(`ডাটাবেজ লোড ব্যর্থ: ${err.message || err}`);
+    ccState.rows = [];
+  }
+
+  ccUpdateStats();
+  ccPopulateDropdowns();
+  ccRenderTable();
+}
+
+async function contentPage(){
+  const currentIcon = ccCurrentLevelIcon();
+  const currentTitle = ccCurrentLevelName();
+
+  content.innerHTML = `
+    <div class="cc-studio-wrap">
+      <!-- 1. Level Navigation Tabs -->
+      <div>
+        <div style="font-size:11.5px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">
+          লেভেল নির্বাচন করুন (Select Academic Level):
+        </div>
+        <div class="cc-level-bar" id="ccLevelBar">
+          ${CC_LEVELS.map(l => `
+            <button type="button" class="cc-level-btn ${l.id === ccState.activeTable ? 'active' : ''}" data-table="${l.id}" onclick="ccSwitchLevel('${l.id}')">
+              <span>${l.icon}</span>
+              <span>${esc(l.name)}</span>
+              <span class="cc-badge-count">…</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 2. Studio Header Banner -->
+      <div class="cc-banner">
+        <div class="cc-banner-left">
+          <div class="cc-banner-icon" id="ccBannerIcon">${currentIcon}</div>
+          <div>
+            <h1 class="cc-banner-title" id="ccBannerTitle">${esc(currentTitle)} — কোর্স কনটেন্ট স্টুডিও</h1>
+            <div class="cc-banner-sub" id="ccBannerSub">
+              টেবিল: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:monospace;color:#1e40af">${esc(ccState.activeTable)}</code> · Cloudflare D1 লাইভ কানেক্টেড
+            </div>
+          </div>
+        </div>
+        <div class="cc-banner-stats">
+          <div class="cc-stat-chip">📚 কোর্স: <b id="ccStatCourses">0</b></div>
+          <div class="cc-stat-chip">📘 সাবজেক্ট: <b id="ccStatSubjects">0</b></div>
+          <div class="cc-stat-chip">🎥 মোট ক্লাস: <b id="ccStatTotal">0</b></div>
+          <button type="button" class="btn-refresh" onclick="ccSwitchLevel(ccState.activeTable)" title="ডাটাবেজ রিফ্রেশ করুন">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            <span>রিফ্রেশ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Cascading Dynamic Input Form (Smart Sticky Form) -->
+      <div class="cc-form-card">
+        <div class="cc-form-head">
+          <h2 class="cc-form-title">
+            <span>➕ দ্রুত ক্লাস যোগ করুন (Add New Class)</span>
+            <span class="cc-pill-tag">স্টিকি অটো-মেমোরি ফরম</span>
+          </h2>
+          <span style="font-size:12px;color:#64748b">কোর্স, সাবজেক্ট ও চ্যাপ্টার সিলেক্ট করে পরপর ক্লাস যোগ করুন</span>
+        </div>
+
+        <!-- 3 Cascading Selectors -->
+        <div class="cc-grid-3">
+          <!-- Course Selector -->
+          <div class="cc-field">
+            <div class="cc-field-label-row">
+              <span class="cc-field-label">১. কোর্স (Course Name) *</span>
+              <button type="button" class="cc-toggle-btn" id="ccBtnNewCourse" onclick="ccToggleNewCourse()">➕ নতুন কোর্স লিখুন</button>
+            </div>
+            <select id="ccCourseSelect" class="cc-select" onchange="ccOnCourseChange(this.value)">
+              <option value="">-- কোর্স সিলেক্ট করুন --</option>
+            </select>
+            <input id="ccCourseInput" class="cc-input hidden" placeholder="যেমন: Accounting Dept-1st Year" oninput="ccOnCourseChange(this.value)">
+          </div>
+
+          <!-- Subject Selector -->
+          <div class="cc-field">
+            <div class="cc-field-label-row">
+              <span class="cc-field-label">২. সাবজেক্ট (Subject Name) *</span>
+              <button type="button" class="cc-toggle-btn" id="ccBtnNewSubject" onclick="ccToggleNewSubject()">➕ নতুন সাবজেক্ট লিখুন</button>
+            </div>
+            <select id="ccSubjectSelect" class="cc-select" onchange="ccOnSubjectChange(this.value)">
+              <option value="">-- সাবজেক্ট সিলেক্ট করুন --</option>
+            </select>
+            <input id="ccSubjectInput" class="cc-input hidden" placeholder="যেমন: Principle of Accounting" oninput="ccOnSubjectChange(this.value)">
+          </div>
+
+          <!-- Chapter Selector -->
+          <div class="cc-field">
+            <div class="cc-field-label-row">
+              <span class="cc-field-label">৩. চ্যাপ্টার (Chapter Name) *</span>
+              <button type="button" class="cc-toggle-btn" id="ccBtnNewChapter" onclick="ccToggleNewChapter()">➕ নতুন চ্যাপ্টার লিখুন</button>
+            </div>
+            <select id="ccChapterSelect" class="cc-select" onchange="ccOnChapterChange(this.value)">
+              <option value="">-- চ্যাপ্টার সিলেক্ট করুন --</option>
+            </select>
+            <input id="ccChapterInput" class="cc-input hidden" placeholder="যেমন: 2nd chapter" oninput="ccOnChapterChange(this.value)">
+          </div>
+        </div>
+
+        <!-- Class Details Inputs -->
+        <div class="cc-grid-class">
+          <div class="cc-field">
+            <div class="cc-field-label">৪. ক্লাসের নাম (Class Name) *</div>
+            <input id="ccClassName" class="cc-input" placeholder="যেমন: 1st class DCU বা লেকচার ০১" required>
+          </div>
+          <div class="cc-field">
+            <div class="cc-field-label">৫. ভিডিও URL (YouTube Link) *</div>
+            <input id="ccUrl" class="cc-input" placeholder="https://www.youtube.com/watch?v=..." required>
+          </div>
+          <div class="cc-field">
+            <div class="cc-field-label">৬. লেকচার শিট PDF (Google Drive)</div>
+            <input id="ccPdfUrl" class="cc-input" placeholder="https://drive.google.com/... (ঐচ্ছিক)">
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="cc-actions-bar">
+          <div style="font-size:12.5px;color:#059669;font-weight:700;display:flex;align-items:center;gap:6px">
+            <span>💡</span>
+            <span><b>Save & Add Next</b> চাপলে কোর্স/সাবজেক্ট/চ্যাপ্টার মেমোরিতে ধরে রেখে পরের ক্লাসের জন্য প্রস্তুত হবে।</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" class="cc-btn-reset" onclick="ccResetForm()">↺ ফরম ক্লিয়ার</button>
+            <button type="button" class="btn primary" style="background:#1e293b;border-color:#0f172a" onclick="ccSaveClass(false)">✓ সেভ করুন</button>
+            <button type="button" id="ccBtnSaveNext" class="cc-btn-save-next" onclick="ccSaveClass(true)">
+              <span>💾 সেভ ও পরবর্তী ক্লাস (Save & Add Next)</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Live Classes Management Table Card -->
+      <div class="panel" style="margin-top:0">
+        <div class="ph">
+          <div class="ph-title-wrap">
+            <h3 class="ph-title">ক্লাস তালিকা (Live Classes List)</h3>
+            <span class="ph-count-pill" id="ccVisibleCount">প্রদর্শিত ক্লাস: 0 টি</span>
+          </div>
+          <div class="tools">
+            <div class="cc-filter-wrap">
+              <select id="ccFilterCourse" onchange="ccOnTableFilterChange()">
+                <option value="">সব কোর্স (All Courses)</option>
+              </select>
+              <select id="ccFilterSubject" onchange="ccOnTableFilterChange()">
+                <option value="">সব সাবজেক্ট (All Subjects)</option>
+              </select>
+              <select id="ccFilterChapter" onchange="ccOnTableFilterChange()">
+                <option value="">সব চ্যাপ্টার (All Chapters)</option>
+              </select>
+            </div>
+            <div class="search-wrap">
+              <span class="search-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input id="ccSearch" placeholder="ক্লাস / সাবজেক্ট খুঁজুন…" oninput="ccOnTableSearch(this.value)">
+            </div>
+          </div>
+        </div>
+
+        <div class="tw">
+          <table class="tbl" style="min-width:960px">
+            <thead>
+              <tr>
+                <th style="width:50px">#</th>
+                <th style="width:200px">কোর্স (Course)</th>
+                <th style="width:200px">সাবজেক্ট (Subject)</th>
+                <th style="width:140px">চ্যাপ্টার (Chapter)</th>
+                <th>ক্লাসের নাম (Class Name)</th>
+                <th style="width:130px">ভিডিও (Video)</th>
+                <th style="width:130px">নোট / শিট (PDF)</th>
+                <th class="actions-head" style="width:140px">অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="ccTableBody">
+              <tr><td colspan="7" class="smooth-loading"><div class="spinner"></div><div>ক্লাস লোড হচ্ছে…</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Start by loading the active level table
+  await ccSwitchLevel(ccState.activeTable);
+}
+
 if(S.token&&S.user)show();
+
 </script></body></html>
