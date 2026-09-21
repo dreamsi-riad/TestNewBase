@@ -1107,7 +1107,7 @@ function applyRoleVisibility(){
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
-async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';S.dueFilter='';S.enrolledDateFilter='';S.nextDateFilter='';
+async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';S.dueFilter='';S.enrolledDateFilter='';S.nextDateFilter='';if(S.table!==ENROLL_TABLE){S.rawEnrollRows=[];S.lastRawData=null;}
 if(S.table===ENROLL_TABLE){
   content.innerHTML=`
     <div class="filter-bar">
@@ -1560,7 +1560,7 @@ async function submitApprove(){
   }catch(e){toast(e.message)}
 }
 async function contentPage(){content.innerHTML='<h1 class="title">Course Content</h1><div class="cards">'+CT.map(x=>`<button class="stat" onclick="openT('${x[0]}','${x[1]}')"><div class="n">→</div><div class="muted">${x[1]}<br><b>${x[0]}</b></div></button>`).join('')+'</div>'}
-async function openT(t,l){S.table=t;S.offset=0;S.search='';content.innerHTML=`<h1 class="title">${esc(l)}</h1><div id="panel" class="panel"></div>`;refresh()}
+async function openT(t,l){S.table=t;S.offset=0;S.search='';if(S.table!==ENROLL_TABLE){S.rawEnrollRows=[];S.lastRawData=null;}content.innerHTML=`<h1 class="title">${esc(l)}</h1><div id="panel" class="panel"></div>`;refresh()}
 
 function colName(c){
   if(typeof c==='string') return c;
@@ -1769,7 +1769,8 @@ function rowClick(e,id){
   openDetail(id);
 }
 function openDetail(id){
-  const r=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===Number(id));
+  const pool=isEnrollTable()?(S.rawEnrollRows?.length?S.rawEnrollRows:S.rows):S.rows;
+  const r=(pool||[]).find(x=>Number(x.__rowid)===Number(id));
   if(!r)return;
   const name=cellValue(r.name).trim()||(isStudentTable()?'Student':'Record');
   if(dmAvatar){
@@ -2138,7 +2139,8 @@ function changePageLimit(val){
 function newR(){editor(0,{})}
 function edit(id){
   if(S.table==='student_login') return openDetail(id);
-  const r=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===Number(id));
+  const pool=isEnrollTable()?(S.rawEnrollRows?.length?S.rawEnrollRows:S.rows):S.rows;
+  const r=(pool||[]).find(x=>Number(x.__rowid)===Number(id));
   if(r) editor(id,r);
 }
 function enrollDateInputValue(name,v){
