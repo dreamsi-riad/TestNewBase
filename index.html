@@ -53,6 +53,7 @@
 .fin-stat-card.settled .fin-stat-val{color:#15803d;font-size:16px}
 .expires-readable-badge{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;border-radius:6px;padding:2px 8.5px;font-size:11.5px;font-weight:700;letter-spacing:0;text-transform:none;box-shadow:0 1px 2px rgba(29,78,216,.06);vertical-align:middle}
 .expires-readable-badge.red{background:#fef2f2;color:#dc2626;border-color:#fecaca;box-shadow:0 1px 2px rgba(220,38,38,.08)}
+.expires-readable-badge.green{background:#ecfdf5;color:#047857;border-color:#a7f3d0;box-shadow:0 1px 2px rgba(4,120,87,.08)}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -92,14 +93,15 @@
 .filter-bar select{border:1.5px solid #cbd5e1;border-radius:10px;padding:7px 12px;background:#f8fafc;color:#0f172a;font-weight:700;font-size:13px;transition:all .2s ease;cursor:pointer}
 .filter-bar select:hover{border-color:#94a3b8;background:#fff}
 .filter-bar select:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.15);outline:none}
-#courseFilter{min-width:190px}
-#dueFilter{min-width:150px}
-#nextDateFilter{min-width:185px}
-.next-date-select-wrap{position:relative;display:flex;align-items:center;gap:6px}
-.next-date-hidden-picker{position:absolute;opacity:0;pointer-events:none;width:0;height:0;visibility:hidden}
-.next-date-cal-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#2563eb;cursor:pointer;transition:all .2s ease;padding:0;flex-shrink:0}
-.next-date-cal-btn:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 2px 8px rgba(59,130,246,.18)}
-.next-date-cal-btn:active{transform:scale(.96)}
+#courseFilter{min-width:170px}
+#dueFilter{min-width:140px}
+#enrolledDateFilter{min-width:165px}
+#nextDateFilter{min-width:165px}
+.enrolled-date-select-wrap, .next-date-select-wrap{position:relative;display:flex;align-items:center;gap:6px}
+.enrolled-date-hidden-picker, .next-date-hidden-picker{position:absolute;opacity:0;pointer-events:none;width:0;height:0;visibility:hidden}
+.enrolled-date-cal-btn, .next-date-cal-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#2563eb;cursor:pointer;transition:all .2s ease;padding:0;flex-shrink:0}
+.enrolled-date-cal-btn:hover, .next-date-cal-btn:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 2px 8px rgba(59,130,246,.18)}
+.enrolled-date-cal-btn:active, .next-date-cal-btn:active{transform:scale(.96)}
 .filter-reset-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border:1px dashed #cbd5e1;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease}
 .filter-reset-btn:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
 .filter-reset-btn.hidden{display:none}
@@ -108,8 +110,8 @@
   .filter-bar{gap:10px}
   .filter-field{width:100%}
   .filter-bar select{width:100%;min-width:0 !important}
-  .next-date-select-wrap{width:100%}
-  .next-date-select-wrap select{flex:1}
+  .enrolled-date-select-wrap, .next-date-select-wrap{width:100%}
+  .enrolled-date-select-wrap select, .next-date-select-wrap select{flex:1}
   .filter-count{margin-left:0;width:100%}
 }
 
@@ -538,10 +540,10 @@
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
-let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],rawEnrollRows:[],lastRawData:null,search:'',courseFilter:'',dueFilter:'',nextDateFilter:'',offset:0,limit:50,total:0};
+let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],rawEnrollRows:[],lastRawData:null,search:'',courseFilter:'',dueFilter:'',enrolledDateFilter:'',nextDateFilter:'',offset:0,limit:50,total:0};
 const ENROLL_TABLE='student_enrolled';
 const STUDENT_TABLE='student_login';
-const ENROLL_EDITABLE_FIELDS=['status','expires_at','paid','access_type','next_date'];
+const ENROLL_EDITABLE_FIELDS=['expires_at','next_date','paid','access_type'];
 function isEnrollTable(){return S.table===ENROLL_TABLE}
 function isStudentTable(){return S.table===STUDENT_TABLE}
 const pageCache=new Map();
@@ -624,6 +626,23 @@ function matchesNextDateFilter(r, filterVal){
   if(filterVal.startsWith('date:')) return iso === filterVal.slice(5);
   return true;
 }
+function matchesEnrolledDateFilter(r, filterVal){
+  if(!filterVal) return true;
+  const raw = String(r.enrolled_at || '').trim();
+  const iso = parseNextDateToIso(raw);
+  if(!iso) return false;
+
+  const todayIso = getTodayIso();
+  if(filterVal === 'today') return iso === todayIso;
+  if(filterVal === 'last7' || filterVal === 'next7'){
+    const pastIso = getFutureIso(-7);
+    const futIso = getFutureIso(1);
+    return iso >= pastIso && iso <= futIso;
+  }
+  if(filterVal === 'thisMonth') return iso.slice(0, 7) === todayIso.slice(0, 7);
+  if(filterVal.startsWith('date:')) return iso === filterVal.slice(5);
+  return true;
+}
 function populateCourseFilter(courses){
   const sel=document.getElementById('courseFilter');
   if(!sel||!Array.isArray(courses))return;
@@ -635,6 +654,82 @@ function populateCourseFilter(courses){
     names.map(n=>`<option value="${esc(n)}" ${n===S.courseFilter?'selected':''}>${esc(n)}</option>`).join('');
   sel.value=S.courseFilter||'';
 }
+function populateEnrolledDateFilter(rows){
+  const sel=document.getElementById('enrolledDateFilter');
+  if(!sel)return;
+
+  let customPickedOption = '';
+  if(S.enrolledDateFilter && S.enrolledDateFilter.startsWith('date:')){
+    const isoVal = S.enrolledDateFilter.slice(5);
+    const disp = formatReadableDate(isoVal) || isoVal;
+    customPickedOption = `<optgroup label="Custom Date">
+      <option value="${esc(S.enrolledDateFilter)}" selected>📅 ${esc(disp)} (Custom)</option>
+    </optgroup>`;
+  }
+
+  const calendarOption = `
+    <optgroup label="Calendar">
+      <option value="__custom_picker__">📅 Pick from Calendar (Custom)...</option>
+    </optgroup>`;
+
+  sel.innerHTML = `
+    <option value="" ${!S.enrolledDateFilter ? 'selected' : ''}>All Dates</option>
+    <option value="today" ${S.enrolledDateFilter === 'today' ? 'selected' : ''}>Today</option>
+    <option value="last7" ${S.enrolledDateFilter === 'last7' ? 'selected' : ''}>Last 7 Days</option>
+    <option value="thisMonth" ${S.enrolledDateFilter === 'thisMonth' ? 'selected' : ''}>This Month</option>
+    ${customPickedOption}
+    ${calendarOption}
+  `;
+  sel.value = S.enrolledDateFilter || '';
+}
+
+function openEnrolledDateCalendar(){
+  const sel = document.getElementById('enrolledDateFilter');
+  if(sel && sel.value === '__custom_picker__'){
+    sel.value = S.enrolledDateFilter || '';
+  }
+  const inp = document.getElementById('enrolledDateCustomInput');
+  if(!inp) return;
+  if(S.enrolledDateFilter && S.enrolledDateFilter.startsWith('date:')){
+    inp.value = S.enrolledDateFilter.slice(5);
+  } else {
+    inp.value = getTodayIso();
+  }
+  try{
+    if(typeof inp.showPicker === 'function'){
+      inp.showPicker();
+    } else {
+      inp.focus();
+      inp.click();
+    }
+  }catch(e){
+    inp.focus();
+    inp.click();
+  }
+}
+
+function onCustomEnrolledDatePicked(pickedVal){
+  if(!pickedVal){
+    const sel = document.getElementById('enrolledDateFilter');
+    if(sel) sel.value = S.enrolledDateFilter || '';
+    return;
+  }
+  const iso = parseNextDateToIso(pickedVal);
+  if(!iso) return;
+  S.enrolledDateFilter = 'date:' + iso;
+  populateEnrolledDateFilter(S.rawEnrollRows || []);
+  applyEnrollFiltersAndRender();
+}
+
+function setEnrolledDateFilter(value){
+  if(value === '__custom_picker__'){
+    openEnrolledDateCalendar();
+    return;
+  }
+  S.enrolledDateFilter=String(value||'');
+  applyEnrollFiltersAndRender();
+}
+
 function populateNextDateFilter(rows){
   const sel=document.getElementById('nextDateFilter');
   if(!sel)return;
@@ -642,7 +737,7 @@ function populateNextDateFilter(rows){
   let customPickedOption = '';
   if(S.nextDateFilter && S.nextDateFilter.startsWith('date:')){
     const isoVal = S.nextDateFilter.slice(5);
-    const disp = formatNextPaymentDate(isoVal) || isoVal;
+    const disp = formatReadableDate(isoVal) || isoVal;
     customPickedOption = `<optgroup label="Custom Date">
       <option value="${esc(S.nextDateFilter)}" selected>📅 ${esc(disp)} (Custom)</option>
     </optgroup>`;
@@ -706,7 +801,7 @@ function onCustomDatePicked(pickedVal){
 function updateFilterResetButton(){
   const resetBtn = document.getElementById('enrollFilterReset');
   if(!resetBtn) return;
-  const hasActiveFilter = !!(S.courseFilter || S.dueFilter || S.nextDateFilter);
+  const hasActiveFilter = !!(S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter);
   resetBtn.classList.toggle('hidden', !hasActiveFilter);
 }
 function applyEnrollFiltersAndRender(){
@@ -718,6 +813,9 @@ function applyEnrollFiltersAndRender(){
 
   if(S.dueFilter){
     filtered = filtered.filter(r => matchesDueFilter(r, S.dueFilter));
+  }
+  if(S.enrolledDateFilter){
+    filtered = filtered.filter(r => matchesEnrolledDateFilter(r, S.enrolledDateFilter));
   }
   if(S.nextDateFilter){
     filtered = filtered.filter(r => matchesNextDateFilter(r, S.nextDateFilter));
@@ -754,15 +852,21 @@ function setNextDateFilter(value){
 function resetEnrollFilters(){
   S.courseFilter = '';
   S.dueFilter = '';
+  S.enrolledDateFilter = '';
   S.nextDateFilter = '';
   const courseSel = document.getElementById('courseFilter');
   if(courseSel) courseSel.value = '';
   const dueSel = document.getElementById('dueFilter');
   if(dueSel) dueSel.value = '';
+  const enrolledDateSel = document.getElementById('enrolledDateFilter');
+  if(enrolledDateSel) enrolledDateSel.value = '';
+  const enrolledCustomInp = document.getElementById('enrolledDateCustomInput');
+  if(enrolledCustomInp) enrolledCustomInp.value = '';
   const nextDateSel = document.getElementById('nextDateFilter');
   if(nextDateSel) nextDateSel.value = '';
   const customInp = document.getElementById('nextDateCustomInput');
   if(customInp) customInp.value = '';
+  populateEnrolledDateFilter(S.rawEnrollRows || []);
   populateNextDateFilter(S.rawEnrollRows || []);
   S.offset = 0;
   fetchRows();
@@ -858,8 +962,16 @@ function updateExpiresReadable(input){
   const badge=document.getElementById('expiresReadableBadge');
   if(!badge) return;
   const readable=formatReadableDate(input.value);
-  badge.textContent=readable ? readable : '';
-  badge.style.display=readable ? 'inline-flex' : 'none';
+  if(!readable){
+    badge.textContent='';
+    badge.style.display='none';
+    return;
+  }
+  const iso=parseNextDateToIso(input.value);
+  const isExp=iso ? (iso < getTodayIso()) : false;
+  badge.className=`expires-readable-badge ${isExp?'red':'green'}`;
+  badge.textContent=`${readable} (${isExp?'Expired':'Active'})`;
+  badge.style.display='inline-flex';
 }
 function updateNextDateReadable(input){
   const badge=document.getElementById('nextDateReadableBadge');
@@ -914,7 +1026,7 @@ function applyRoleVisibility(){
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
-async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';S.dueFilter='';S.nextDateFilter='';
+async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';S.dueFilter='';S.enrolledDateFilter='';S.nextDateFilter='';
 if(S.table===ENROLL_TABLE){
   content.innerHTML=`
     <div class="filter-bar">
@@ -938,6 +1050,25 @@ if(S.table===ENROLL_TABLE){
           <option value="due">Due Only</option>
           <option value="paid">Paid Only</option>
         </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="enrolledDateFilter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Enrolled Date:</span>
+        </label>
+        <div class="enrolled-date-select-wrap">
+          <select id="enrolledDateFilter" onchange="setEnrolledDateFilter(this.value)">
+            <option value="">All Dates</option>
+            <option value="today">Today</option>
+            <option value="last7">Last 7 Days</option>
+            <option value="thisMonth">This Month</option>
+          </select>
+          <input type="date" id="enrolledDateCustomInput" class="enrolled-date-hidden-picker" onchange="onCustomEnrolledDatePicked(this.value)" aria-label="Choose custom enrolled date">
+          <button type="button" class="enrolled-date-cal-btn" onclick="openEnrolledDateCalendar()" title="Pick custom enrolled date from calendar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+        </div>
       </div>
 
       <div class="filter-field">
@@ -1526,8 +1657,8 @@ function enrollRowCells(r){
   const dueCell=due===null
     ? '<span class="muted">—</span>'
     : due>0
-      ? `<div class="adm-due-badge due-unpaid"><span class="adm-due-dot"></span>৳\u00A0${esc(fmtMoney(due))} বকেয়া</div>`
-      : '<div class="adm-due-badge due-paid"><span>✓</span> পরিশোধিত</div>';
+      ? `<div class="adm-due-badge due-unpaid"><span class="adm-due-dot"></span>৳\u00A0${esc(fmtMoney(due))}</div>`
+      : '<div class="adm-due-badge due-paid"><span>✓</span> Paid</div>';
 
   const dateBadge=nextDate&&nextDate!=='—'
     ? `<span class="adm-date-badge">🗓\u00A0${esc(nextDate)}</span>`
@@ -1539,7 +1670,6 @@ function enrollRowCells(r){
         <div class="adm-avatar-circle" style="background:${getAvatarBg(name)}">${getInitial(name)}</div>
         <div class="adm-user-info">
           <div class="adm-user-name">${esc(name)}</div>
-          <div class="adm-user-sub">${mobile?`<a href="tel:${esc(mobile)}" onclick="event.stopPropagation()">📞 ${esc(mobile)}</a>`:'Student'}</div>
         </div>
       </div>
     </td>`,
@@ -1594,8 +1724,8 @@ function openDetail(id){
         <div class="detail-stat-val">৳ ${fmtMoney(paid)}</div>
       </div>
       <div class="detail-stat-box ${due>0?'due':'paid'}">
-        <div class="detail-stat-lbl">${due>0?'বকেয়া (Due)':'পেমেন্ট স্ট্যাটাস'}</div>
-        <div class="detail-stat-val">${due===null?'—':due>0?`৳ ${fmtMoney(due)}`:'পরিশোধিত ✓'}</div>
+        <div class="detail-stat-lbl">${due>0?'Due':'Payment Status'}</div>
+        <div class="detail-stat-val">${due===null?'—':due>0?`৳ ${fmtMoney(due)}`:'Paid ✓'}</div>
       </div>
     `;
   }else if(dmStats){
@@ -1632,9 +1762,16 @@ function openDetail(id){
       extraClass='val-course';
       valHtml=esc(rawVal);
     }else if(isStatus){
-      const s=rawVal.trim().toLowerCase();
+      let s=rawVal.trim().toLowerCase();
+      if(isEnrollTable() && r.expires_at){
+        const expIso=parseNextDateToIso(r.expires_at);
+        if(expIso){
+          s = (expIso < getTodayIso()) ? 'expired' : 'active';
+        }
+      }
       const sClass=s==='active'?'st-active':(s==='expired'?'st-expired':'st-pending');
-      valHtml=`<span class="val-status ${sClass}">${esc(rawVal)}</span>`;
+      const dispStatus = s ? (s.charAt(0).toUpperCase() + s.slice(1)) : rawVal;
+      valHtml=`<span class="val-status ${sClass}">${esc(dispStatus)}</span>`;
     }else if(isPaid){
       valHtml=`<span class="val-paid" style="color:#059669;font-weight:800">৳ ${esc(fmtMoney(moneyNumber(rawVal)||rawVal))}</span>`;
     }else if(isPrice){
@@ -1658,7 +1795,7 @@ function openDetail(id){
     const leftFields=['name','mobile','course','nu_dcu','course_price','discount','paid','access_type','next_date','admin'];
     const rightFields=['enrolled_at','expires_at','status','watch_time','get_wt','blocked','b_comment'];
     const due=dueAmount(r);
-    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'<span class="v-empty muted">—</span>':due>0?`<span class="due-bad" style="color:#dc2626;font-weight:800">৳ ${esc(fmtMoney(due))}</span>`:'<span class="due-ok" style="color:#059669;font-weight:800">পরিশোধিত ✓</span>'}</div></div>`;
+    const dueItem=`<div class="detail-item"><div class="k">Due</div><div class="v">${due===null?'<span class="v-empty muted">—</span>':due>0?`<span class="due-bad" style="color:#dc2626;font-weight:800">৳ ${esc(fmtMoney(due))}</span>`:'<span class="due-ok" style="color:#059669;font-weight:800">Paid ✓</span>'}</div></div>`;
     const leftItems=leftFields.map(detailItem);
     leftItems.splice(7,0,dueItem);
     const right=rightFields.map(detailItem).join('');
@@ -1737,7 +1874,7 @@ function renderTable(d){
   const fcEl=document.getElementById('enrollFilterCount');
   if(fcEl){
     const totalRaw = Array.isArray(S.rawEnrollRows) ? S.rawEnrollRows.length : total;
-    const isFiltered = !!(S.courseFilter || S.dueFilter || S.nextDateFilter || S.search);
+    const isFiltered = !!(S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter || S.search);
     if(isFiltered && total !== totalRaw){
       fcEl.textContent = `ফিল্টারকৃত: ${total} জন (মোট ${totalRaw} জন)`;
     } else {
@@ -1752,10 +1889,13 @@ function renderTable(d){
   const selEnd = isSearchActive && searchEl ? searchEl.selectionEnd : 0;
 
   const enrollFilterSub = [
-    S.courseFilter ? `কোর্স: ${esc(S.courseFilter)}` : '',
-    S.dueFilter ? (S.dueFilter==='due' ? 'বকেয়া শিক্ষার্থী' : 'পরিশোধিত শিক্ষার্থী') : '',
-    S.nextDateFilter ? 'Next Date ফিল্টার' : ''
+    S.courseFilter ? `Course: ${esc(S.courseFilter)}` : '',
+    S.dueFilter ? (S.dueFilter==='due' ? 'Due Only' : 'Paid Only') : '',
+    S.enrolledDateFilter ? 'Enrolled Date Filter' : '',
+    S.nextDateFilter ? 'Next Date Filter' : ''
   ].filter(Boolean).join(' · ');
+
+  const subText = enroll ? enrollFilterSub : student ? 'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন' : `${esc(S.table)} · ${cols.length} fields`;
 
   q.innerHTML=`
     <div class="ph">
@@ -1764,7 +1904,7 @@ function renderTable(d){
           <h3 class="ph-title">${esc(d.label||P[S.table]?.[1]||S.table)}</h3>
           <span class="ph-count-pill">${total} টি রেকর্ড</span>
         </div>
-        <div class="ph-sub">${enroll?(enrollFilterSub||'সব কোর্স অন্তর্ভুক্ত'):student?'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন':esc(S.table)+' · '+cols.length+' fields'}</div>
+        ${subText ? `<div class="ph-sub">${subText}</div>` : ''}
       </div>
       <div class="tools">
         <div class="search-wrap">
@@ -1829,6 +1969,7 @@ async function fetchRows(isTyping=false){
       limit:S.limit,
       course:S.courseFilter||'',
       due:S.dueFilter||'',
+      enrolledDate:S.enrolledDateFilter||'',
       nextDate:S.nextDateFilter||''
     });
     if(requestId!==refreshSeq)return;
@@ -1843,6 +1984,7 @@ async function fetchRows(isTyping=false){
       if(Array.isArray(d.courses)){
         populateCourseFilter(d.courses);
       }
+      populateEnrolledDateFilter(S.rawEnrollRows);
       populateNextDateFilter(S.rawEnrollRows);
       applyEnrollFiltersAndRender();
     }else{
@@ -1936,14 +2078,17 @@ function editor(id,row){
           <span class="fin-stat-val">৳\u00A0${esc(fmtMoney(enrollPaid))}</span>
         </div>
         <div class="fin-stat-card ${enrollDue>0?'due':'settled'}">
-          <span class="fin-stat-lbl">${enrollDue>0?'Due (বাকি)':'Status'}</span>
-          <span class="fin-stat-val">${enrollDue===null?'—':enrollDue>0?`৳\u00A0${esc(fmtMoney(enrollDue))}`:'পরিশোধিত ✓'}</span>
+          <span class="fin-stat-lbl">${enrollDue>0?'Due':'Payment Status'}</span>
+          <span class="fin-stat-val">${enrollDue===null?'—':enrollDue>0?`৳\u00A0${esc(fmtMoney(enrollDue))}`:'Paid ✓'}</span>
         </div>
       </div>
     `:''}
     <input type="hidden" id="rid" value="${id}">
     <div class="grid">
-      ${S.cols.filter(c=>!isEnroll||ENROLL_EDITABLE_FIELDS.includes(colName(c))).map(c=>{
+      ${(isEnroll
+        ? ENROLL_EDITABLE_FIELDS.map(f=>S.cols.find(c=>colName(c)===f)).filter(Boolean)
+        : S.cols
+      ).map(c=>{
         const name=colName(c);
         const type=colType(c);
         const v=inputValue(row[name]);
@@ -1960,11 +2105,15 @@ function editor(id,row){
         const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
         if(isExpiresField){
+          const expIso=parseNextDateToIso(v||dateValue);
+          const isExp=expIso ? (expIso < getTodayIso()) : false;
           const readableDate=formatReadableDate(v||dateValue);
+          const badgeText=readableDate ? `${readableDate} (${isExp?'Expired':'Active'})` : '';
+          const badgeClass=isExp ? 'red' : 'green';
           return `<div class="${large?'full':''}">
             <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
               <span>${esc(name)}</span>
-              <span id="expiresReadableBadge" class="expires-readable-badge red" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
+              <span id="expiresReadableBadge" class="expires-readable-badge ${badgeClass}" style="${badgeText?'':'display:none'}">${esc(badgeText)}</span>
             </label>
             <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateExpiresReadable(this)">
           </div>`;
@@ -2041,6 +2190,15 @@ async function save(e){
   if(isEnrollTable()){
     const ridVal=Number(document.getElementById('rid').value)||0;
     const oldRow=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===ridVal);
+    // Automatic Status sync: check date first, then set status column
+    const expVal = (d.expires_at !== undefined && d.expires_at !== '') ? d.expires_at : oldRow?.expires_at;
+    if(expVal){
+      const expIso = parseNextDateToIso(expVal);
+      if(expIso){
+        const todayIso = getTodayIso();
+        d.status = (expIso < todayIso) ? 'Expired' : 'Active';
+      }
+    }
     if(oldRow){
       const addStr=String(d.paid??'').replace(/[^\d.]/g,'').trim();
       if(addStr&&Number(addStr)>0){
