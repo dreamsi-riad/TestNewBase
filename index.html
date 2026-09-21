@@ -13,12 +13,12 @@
 .tbl th:nth-child(10){min-width:150px}
 .compact-link{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:#eef5ff;color:#1769df;text-decoration:none;font-size:17px;font-weight:800}
 .compact-link:hover{background:#dfeeff}
-.tbl .actions-cell{vertical-align:middle}.tbl th{background:#fafbfc}.mini{border:1px solid var(--l);background:#fff;border-radius:8px;padding:5px 8px;font-weight:700}.mini.ok{background:#eaf8f0;color:var(--ok)}.mini.bad{background:#fff0ef;color:var(--r)}.empty{padding:40px;text-align:center;color:var(--m)}.pager{padding:11px 15px;display:flex;justify-content:space-between}.drawer{position:fixed;inset:0;background:#0b1428aa;display:flex;justify-content:flex-end;z-index:20}.drawer>div{width:min(680px,100%);height:100%;overflow:auto;background:#fff;padding:20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.toast{position:fixed;right:20px;bottom:20px;background:var(--i);color:#fff;padding:10px 14px;border-radius:9px;z-index:30}@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.side nav{display:flex;overflow:auto}.side nav button{min-width:max-content}.content{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto}}@media(max-width:520px){.cards{grid-template-columns:1fr}}
+.tbl .actions-cell{vertical-align:middle}.tbl th{background:#fafbfc}.mini{border:1px solid var(--l);background:#fff;border-radius:8px;padding:5px 8px;font-weight:700}.mini.ok{background:#eaf8f0;color:var(--ok)}.mini.bad{background:#fff0ef;color:var(--r)}.empty{padding:40px;text-align:center;color:var(--m)}.pager{padding:11px 15px;display:flex;justify-content:space-between}.drawer{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(8px);display:flex;justify-content:flex-end;z-index:45;animation:modalFade .2s ease-out}.drawer>div{width:min(680px,100%);height:100%;overflow:auto;background:#fff;padding:26px 28px;box-shadow:-10px 0 40px rgba(15,23,42,.22);display:flex;flex-direction:column}.drawer-inner{display:flex;flex-direction:column;min-height:100%}.drawer form{display:flex;flex-direction:column;flex:1}.drawer label{font-size:13px;font-weight:700;color:#1e293b;margin:0 0 5px}.drawer input:not([type="checkbox"]):not([type="radio"]),.drawer textarea,.drawer select{width:100%;font-family:inherit;font-size:14px;font-weight:600;color:#0f172a;padding:10px 14px;border-radius:12px;border:1.5px solid #cbd5e1;background-color:#f8fafc;transition:all .2s ease;box-shadow:0 1px 3px rgba(15,23,42,.04)}.drawer input:not([type="checkbox"]):not([type="radio"]):hover,.drawer textarea:hover,.drawer select:hover{border-color:#94a3b8;background-color:#fff;box-shadow:0 2px 8px rgba(15,23,42,.06)}.drawer input:not([type="checkbox"]):not([type="radio"]):focus,.drawer textarea:focus,.drawer select:focus{border-color:#3b82f6;background-color:#fff;box-shadow:0 0 0 3.5px rgba(59,130,246,.18);outline:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.toast{position:fixed;right:20px;bottom:20px;background:var(--i);color:#fff;padding:10px 14px;border-radius:9px;z-index:30}@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.app{grid-template-columns:1fr}.side{height:auto;position:relative}.side nav{display:flex;overflow:auto}.side nav button{min-width:max-content}.content{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto}}@media(max-width:520px){.cards{grid-template-columns:1fr}}
 
 .small{font-size:12px}.secret{letter-spacing:2px;color:#8b94a8}.cell-link{color:#1c63d5;text-decoration:none;font-weight:600}.cell-link:hover{text-decoration:underline}
 .badge{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#f1f3f6;color:#68748d}.badge.on{background:#eaf8f0;color:#20875a}.badge.off{background:#fff0ef;color:#d9534f}
 .tbl th{position:sticky;top:0;z-index:2;white-space:nowrap}.tbl td{line-height:1.25}.actions-head,.actions-cell{min-width:190px;position:sticky;right:0;background:#fff;z-index:3}.tbl th.actions-head{background:#fafbfc}.act{min-width:180px}.mini:disabled{opacity:.45;cursor:not-allowed}.error-box{color:#d9534f;background:#fff8f8;border:1px solid #ffd6d3;margin:16px;border-radius:12px}
-.drawer select{width:100%;border:1px solid var(--l);border-radius:10px;padding:10px 12px;background-color:#fff}
+.drawer select{width:100%;border:1.5px solid #cbd5e1;border-radius:12px;padding:10px 14px;background-color:#f8fafc}
 .status-spinner{-webkit-appearance:none;appearance:none;width:100%;font-size:15px;font-weight:700;text-align:center;padding:14px 12px;border-radius:999px;border:1.5px solid var(--l);background-color:#fff;background-repeat:no-repeat !important;background-position:right 14px center !important;background-size:14px 14px !important;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%2368748d" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');cursor:pointer}
 .status-spinner[data-val="Pending"]{color:#a06b00;background-color:#fff6e0;border-color:#f0d38a}
 .status-spinner[data-val="Active"]{color:#0a7a3d;background-color:#e6f7ee;border-color:#8fd6ae}
@@ -444,60 +444,75 @@
 </head><body>
 <div id="login" class="login"><form id="lf" class="box"><div class="brand">VISION <span>ADMIN</span></div><p class="muted">Database Control Center · Full CRUD + Course Controls</p><label>Admin Mobile</label><input id="lm" required autocomplete="username" placeholder="Admin mobile number"><label>Password</label><input id="lp" type="password" required autocomplete="current-password" placeholder="Admin password"><button class="btn primary" style="width:100%;margin-top:15px">Secure Login</button><p id="le" class="muted"></p></form></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">VISION <span>ADMIN</span></div><p id="who" class="muted"></p><nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending"><span>⏳ Pending Enrollments</span><span id="navPendingBadge" class="nav-pending-badge hidden"></span></button><button data-p="enrollments">🎓 Enrollments</button><button data-p="students">👨‍🎓 Students</button><button data-p="courses" class="master-only">📚 Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers" class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free Classes</button><button data-p="gallery" class="master-only">🖼 Gallery / Reviews</button><button data-p="shop" class="master-only">🛍 Shop Products</button><button data-p="orders" class="master-only">📦 Orders</button><button data-p="admins" class="master-only">⚙ Admin Accounts</button></nav></aside><main class="main"><header class="top"><b>VISION Academics</b><button class="btn ghost" onclick="logout()">Logout</button></header><section id="content" class="content"></section></main></div>
-<div id="drawer" class="drawer hidden"><div><div style="display:flex;justify-content:space-between"><h2 id="dt" class="title" style="font-size:24px"></h2><button class="btn ghost" onclick="closeDrawer()">✕</button></div><form id="ef"></form></div></div>
+<div id="drawer" class="drawer hidden">
+  <div class="drawer-inner">
+    <div class="detail-header-card" style="padding-bottom:14px;margin-bottom:14px">
+      <div class="detail-avatar" id="drawerAvatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">✏</div>
+      <div class="detail-head-info">
+        <h3 id="dt" style="margin:0 0 2px;font:800 22px 'Baloo Da 2'">Edit Record</h3>
+        <div class="detail-head-sub" id="drawerSub" style="font-size:12.5px;color:#64748b">Update information and save changes</div>
+      </div>
+      <button type="button" class="modal-close-btn" onclick="closeDrawer()" aria-label="Close drawer">✕</button>
+    </div>
+    <form id="ef"></form>
+  </div>
+</div>
 <div id="approveModal" class="modal-overlay hidden"><div class="modal-box detail-box" style="width:min(520px,100%)">
   <div class="detail-header-card" style="padding-bottom:12px">
     <div class="detail-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">✓</div>
     <div class="detail-head-info">
-      <h3 style="margin:0 0 2px">Enrollment Approve করুন</h3>
-      <div class="detail-head-sub" style="font-size:12.5px;color:#64748b">শিক্ষার্থীর অ্যাক্সেস ও পেমেন্ট নির্ধারণ করুন</div>
+      <h3 style="margin:0 0 2px">Approve Enrollment</h3>
+      <div class="detail-head-sub" style="font-size:12.5px;color:#64748b">Set student access and payment schedule</div>
     </div>
     <button type="button" class="modal-close-btn" onclick="closeApproveModal()" aria-label="Close modal">✕</button>
   </div>
   <div class="approve-info" style="margin-top:14px">
     <div class="row"><span class="val" id="apStudent"></span></div>
     <div class="row"><span class="val course" id="apCourse"></span></div>
-    <div class="row price"><span class="lbl">কোর্স ফি</span><span class="val" id="apPrice"></span></div>
+    <div class="row price"><span class="lbl">Course Price</span><span class="val" id="apPrice"></span></div>
   </div>
   <div class="grid" style="gap:12px">
     <div>
-      <label style="font-size:12.5px;margin-top:0">ছাড় (Discount)</label>
-      <input id="apDiscount" placeholder="যেমন: 500 (না থাকলে খালি)">
+      <label style="font-size:13px;font-weight:700;margin:0 0 5px">Discount</label>
+      <input id="apDiscount" class="adm-enroll-num-input" placeholder="e.g. 500 (Optional)">
     </div>
     <div>
-      <label style="font-size:12.5px;margin-top:0">পরিশোধ (Paid) *</label>
-      <input id="apPaid" placeholder="যেমন: 5500" required>
+      <label style="font-size:13px;font-weight:700;margin:0 0 5px">Paid Amount *</label>
+      <input id="apPaid" class="adm-enroll-num-input" placeholder="e.g. 5500" required>
     </div>
     <div>
-      <label style="font-size:12.5px;margin-top:0">অ্যাক্সেস টাইপ</label>
+      <label style="font-size:13px;font-weight:700;margin:0 0 5px">Access Type</label>
       <select id="apAccessType" class="access-spinner" data-val="Limited Access" onchange="this.dataset.val=this.value">
         <option value="Limited Access">Limited Access</option>
         <option value="Full Access">Full Access</option>
       </select>
     </div>
     <div>
-      <label style="font-size:12.5px;margin-top:0">পরবর্তী কিস্তির তারিখ</label>
-      <input id="apNextDate" type="date">
+      <label style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;margin:0 0 5px">
+        <span>Next Payment Date</span>
+        <span id="apNextDateBadge" class="expires-readable-badge" style="display:none"></span>
+      </label>
+      <input id="apNextDate" type="date" class="adm-enroll-date-input" onclick="openDatePicker(this)" onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}" oninput="updateApNextDateBadge(this)">
     </div>
   </div>
   <div class="modal-actions" style="margin-top:16px">
-    <button type="button" class="btn ghost" onclick="closeApproveModal()">বাতিল</button>
-    <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="submitApprove()">✓ অনুমোদন করুন (Approve)</button>
+    <button type="button" class="btn ghost" onclick="closeApproveModal()">Cancel</button>
+    <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="submitApprove()">✓ Approve Enrollment</button>
   </div>
 </div></div>
 <div id="detailModal" class="modal-overlay hidden"><div class="modal-box detail-box">
   <div class="detail-header-card">
     <div class="detail-avatar" id="dmAvatar">S</div>
     <div class="detail-head-info">
-      <h3 id="dmTitle">Enrollment Details</h3>
+      <h3 id="dmTitle">Details</h3>
       <div id="dmSub" class="detail-head-sub"></div>
     </div>
     <button type="button" class="modal-close-btn" onclick="closeDetail()" aria-label="Close modal">✕</button>
   </div>
   <div id="dmStats" class="detail-stat-row hidden"></div>
   <div id="dmBody" class="detail-grid"></div>
-  <div class="modal-actions">
-    <button type="button" class="btn ghost" onclick="closeDetail()">বন্ধ করুন (Close)</button>
+  <div id="dmActions" class="modal-actions">
+    <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
   </div>
 </div></div>
 <div id="ccEditModal" class="modal-overlay hidden"><div class="modal-box detail-box" style="width:min(580px,100%)">
@@ -988,6 +1003,13 @@ function updateNextDateReadable(input){
   badge.textContent=readable ? readable : '';
   badge.style.display=readable ? 'inline-flex' : 'none';
 }
+function updateApNextDateBadge(input){
+  const badge=document.getElementById('apNextDateBadge');
+  if(!badge) return;
+  const readable=formatReadableDate(input.value);
+  badge.textContent=readable ? readable : '';
+  badge.style.display=readable ? 'inline-flex' : 'none';
+}
 function openDatePicker(input){
   if(!input) return;
   try{
@@ -997,6 +1019,47 @@ function openDatePicker(input){
       input.focus();
     }
   }catch(e){}
+}
+const FIELD_LABEL_MAP={
+  name:'Name',
+  mobile:'Mobile',
+  email:'Email',
+  course:'Course',
+  nu_dcu:'Sector (NU/DCU)',
+  course_price:'Course Price',
+  discount:'Discount',
+  paid:'Total Paid',
+  due:'Due',
+  access_type:'Access Type',
+  next_date:'Next Payment Date',
+  next_payment_date:'Next Payment Date',
+  admin:'Admin',
+  enrolled_at:'Enrolled Date',
+  expires_at:'Expires At',
+  status:'Status',
+  watch_time:'Watch Time',
+  get_wt:'Get WT',
+  blocked:'Blocked',
+  b_comment:'Block Reason',
+  department:'Department',
+  institute:'Institute',
+  level:'Level',
+  year:'Year',
+  session:'Session',
+  address:'Address',
+  password:'Password',
+  created_at:'Created At',
+  updated_at:'Updated At',
+  requested_at:'Requested At',
+  fail_count:'Failed Attempts',
+  locked_until:'Locked Until',
+  last_attempt_at:'Last Attempt'
+};
+function formatFieldLabel(name){
+  if(!name) return '';
+  const key=String(name).trim();
+  if(FIELD_LABEL_MAP[key]) return FIELD_LABEL_MAP[key];
+  return key.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
 }
 async function api(action,o={}){
   const actionMap={
@@ -1475,6 +1538,8 @@ function approve(id){
   apCourse.textContent=r?`${r.course}${r.nuDcu?' — '+r.nuDcu:''}`:'';
   apPrice.textContent=r&&r.coursePrice?`৳ ${r.coursePrice}`:'—';
   apDiscount.value='';apPaid.value='';apAccessType.value='Limited Access';apAccessType.dataset.val='Limited Access';apNextDate.value='';
+  const apBadge=document.getElementById('apNextDateBadge');
+  if(apBadge){apBadge.textContent='';apBadge.style.display='none';}
   approveModal.dataset.id=id;
   approveModal.classList.remove('hidden');
   setTimeout(()=>apPaid.focus(),0);
@@ -1568,12 +1633,16 @@ function actionButtons(row){
   const noDelete=['student_login','student_enrolled'].includes(S.table);
   let html='';
   if(isStudent){
-    html+=`<button class="adm-act-btn act-view" onclick="openDetail(${id})" title="প্রোফাইল ও বিবরণ দেখুন">
+    html+=`<button class="adm-act-btn act-view" onclick="openDetail(${id})" title="View Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             <span>View</span>
           </button>`;
+    html+=`<button class="adm-act-btn act-edit" onclick="edit(${id})" title="Edit Student">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span>Edit</span>
+          </button>`;
   }else{
-    html+=`<button class="adm-act-btn act-edit" onclick="edit(${id})" title="তথ্য এডিট করুন">
+    html+=`<button class="adm-act-btn act-edit" onclick="edit(${id})" title="Edit Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             <span>Edit</span>
           </button>`;
@@ -1734,11 +1803,11 @@ function openDetail(id){
     dmStats.classList.remove('hidden');
     dmStats.innerHTML=`
       <div class="detail-stat-box">
-        <div class="detail-stat-lbl">কোর্স ফি (Price)</div>
+        <div class="detail-stat-lbl">Course Price</div>
         <div class="detail-stat-val">${price!==null?`৳ ${fmtMoney(price)}`:'—'}</div>
       </div>
       <div class="detail-stat-box paid">
-        <div class="detail-stat-lbl">পরিশোধ (Paid)</div>
+        <div class="detail-stat-lbl">Total Paid</div>
         <div class="detail-stat-val">৳ ${fmtMoney(paid)}</div>
       </div>
       <div class="detail-stat-box ${due>0?'due':'paid'}">
@@ -1752,21 +1821,15 @@ function openDetail(id){
 
   const formatDetailValue=c=>isSecretColumn(c)
     ? '••••••••'
-    : c==='next_date'
+    : (c==='next_date'||c==='next_payment_date')
       ? formatNextPaymentDate(r[c])
       : isDateColumn(c)
         ? formatDateOnly(r[c])
         : cellValue(r[c]).trim();
-  const LABEL_MAP={
-    name:'Name',mobile:'Mobile',course:'Course',nu_dcu:'Sector (NU/DCU)',
-    course_price:'Course Price',discount:'Discount',paid:'Paid',access_type:'Access Type',
-    next_date:'Next Due Date',admin:'Admin',enrolled_at:'Enrolled At',expires_at:'Expires At',
-    status:'Status',watch_time:'Watch Time',get_wt:'Get WT',blocked:'Blocked',b_comment:'Block Reason',
-    email:'Email',department:'Department',institute:'Institute',level:'Level',year:'Year',session:'Session'
-  };
+
   const detailItem=c=>{
     const rawVal=formatDetailValue(c);
-    const label=LABEL_MAP[c]||c;
+    const label=formatFieldLabel(c);
     const isCourse=(c==='course');
     const isStatus=(c==='status');
     const isPaid=(c==='paid');
@@ -1800,10 +1863,13 @@ function openDetail(id){
       valHtml=`<div class="adm-phone-field"><a href="tel:${esc(rawVal)}" class="adm-contact-link">📞 ${esc(rawVal)}</a>${renderCopyPhoneBtn(rawVal)}</div>`;
     }else if(c==='email'){
       valHtml=`<a href="mailto:${esc(rawVal)}" class="adm-contact-link email">✉ ${esc(rawVal)}</a>`;
+    }else if(c==='address'){
+      extraClass='full';
+      valHtml=esc(rawVal);
     }else{
       valHtml=esc(rawVal);
     }
-    return `<div class="detail-item">
+    return `<div class="detail-item ${c==='address'?'full':''}">
       <div class="k">${esc(label)}</div>
       <div class="v ${extraClass}">${valHtml}</div>
     </div>`;
@@ -1819,14 +1885,37 @@ function openDetail(id){
     const right=rightFields.map(detailItem).join('');
     const maxRows=Math.max(leftItems.length,rightFields.length);
     for(let i=0;i<maxRows;i++) html+=(leftItems[i]||'')+(rightFields[i]?detailItem(rightFields[i]):'');
+    html+=payHistoryHtml(r);
+  }else if(isStudentTable()){
+    const studentCols=['name','mobile','email','department','institute','level','year','session','address','created_at','updated_at'];
+    html=studentCols.map(detailItem).join('');
   }else{
     const cols=S.cols.map(colName).filter(c=>c&&c!=='payment_history');
     html=cols.map(detailItem).join('');
   }
-  if(isEnrollTable()){
-    html+=payHistoryHtml(r);
-  }
   dmBody.innerHTML=html;
+
+  const dmActions=document.getElementById('dmActions');
+  if(dmActions){
+    if(isEnrollTable()){
+      dmActions.innerHTML=`
+        <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+        <button type="button" class="btn primary" onclick="closeDetail();edit(${id})">✏ Edit Enrollment</button>
+      `;
+    }else if(isStudentTable()){
+      dmActions.innerHTML=`
+        <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+        <button type="button" class="btn ghost" onclick="pw(${id})" style="color:#b45309;border-color:#fde68a;background:#fffbeb;font-weight:800">🔑 Reset Password</button>
+        <button type="button" class="btn primary" onclick="closeDetail();edit(${id})">✏ Edit Student</button>
+      `;
+    }else{
+      dmActions.innerHTML=`
+        <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+        <button type="button" class="btn primary" onclick="closeDetail();edit(${id})">✏ Edit Record</button>
+      `;
+    }
+  }
+
   detailModal.classList.remove('hidden');
 }
 function openPendingDetail(id){
@@ -1857,16 +1946,28 @@ function openPendingDetail(id){
   dmBody.innerHTML=fields.map(([k,v])=>{
     const large=k==='Address';
     const isCourse=(k==='Course');
+    const isPrice=(k==='Course Price');
     let valHtml=v?esc(v):'<span class="v-empty muted">—</span>';
     if(k==='Mobile'&&v) valHtml=`<div class="adm-phone-field"><a href="tel:${esc(v)}" class="adm-contact-link">📞 ${esc(v)}</a>${renderCopyPhoneBtn(v)}</div>`;
     if(k==='Email'&&v) valHtml=`<a href="mailto:${esc(v)}" class="adm-contact-link email">✉ ${esc(v)}</a>`;
+    if(isPrice&&v) valHtml=`<span class="val-price" style="color:#0f172a;font-weight:800">${esc(v)}</span>`;
     return `<div class="detail-item ${large?'full':''}"><div class="k">${esc(k)}</div><div class="v ${isCourse?'val-course':''}">${valHtml}</div></div>`;
   }).join('');
+
+  const dmActions=document.getElementById('dmActions');
+  if(dmActions){
+    dmActions.innerHTML=`
+      <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+      <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="closeDetail();approve(${r.id})">✓ Approve Enrollment</button>
+    `;
+  }
   detailModal.classList.remove('hidden');
 }
 function closeDetail(){detailModal.classList.add('hidden')}
 detailModal.addEventListener('click',e=>{if(e.target===detailModal)closeDetail()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail()});
+drawer.addEventListener('click',e=>{if(e.target===drawer)closeDrawer()});
+approveModal.addEventListener('click',e=>{if(e.target===approveModal)closeApproveModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetail();closeDrawer();closeApproveModal();}});
 function renderTable(d){
   const q=document.getElementById('panel');
   if(!q)return;
@@ -2041,7 +2142,6 @@ function changePageLimit(val){
 }
 function newR(){editor(0,{})}
 function edit(id){
-  if(S.table==='student_login') return openDetail(id);
   const r=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===Number(id));
   if(r) editor(id,r);
 }
@@ -2065,22 +2165,63 @@ function payHistoryHtml(row){
     const date=String(e.date||'').trim().split('T')[0];
     return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount||'')}</span><span class="p-by">${esc(e.admin||'')}</span></div>`;
   }).join('');
-  return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items||'<div class="pay-empty">এখনো কোনো payment যোগ হয়নি</div>'}</div></div>`;
+  return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items||'<div class="pay-empty">No payment history yet</div>'}</div></div>`;
 }
 function editor(id,row){
-  dt.textContent=id?'Edit record':'Add record';
   const isEnroll=isEnrollTable();
+  const isStudent=isStudentTable();
+  const studentName=cellValue(row.name).trim();
+  const courseName=cellValue(row.course).trim();
+  const studentMobile=cellValue(row.mobile).trim();
+  const studentEmail=cellValue(row.email).trim();
+  const studentNu=cellValue(row.nu_dcu).trim();
+
+  const drawerAvatar=document.getElementById('drawerAvatar');
+  const drawerSub=document.getElementById('drawerSub');
+
+  if(isEnroll){
+    dt.textContent='Edit Enrollment';
+    if(drawerAvatar){
+      drawerAvatar.style.background='linear-gradient(135deg,#3b82f6,#1d4ed8)';
+      drawerAvatar.textContent=getInitial(studentName||'E');
+    }
+    if(drawerSub){
+      drawerSub.innerHTML=`${studentName?`<b style="color:#0f172a">${esc(studentName)}</b> · `:''}<span class="adm-course-title" style="font-size:13px">${esc(courseName||'')}</span>${studentNu?` <span class="adm-sector-pill nu">${esc(studentNu)}</span>`:''}${studentMobile?` · <span style="color:#64748b">📞 ${esc(studentMobile)}</span>`:''}`;
+    }
+  }else if(isStudent){
+    dt.textContent='Edit Student';
+    if(drawerAvatar){
+      drawerAvatar.style.background=getAvatarBg(studentName||'Student');
+      drawerAvatar.textContent=getInitial(studentName||'S');
+    }
+    if(drawerSub){
+      drawerSub.innerHTML=`<b style="color:#0f172a">${esc(studentName||'Student')}</b>${studentMobile?` · <span style="color:#64748b">📞 ${esc(studentMobile)}</span>`:''}${studentEmail?` · <span style="color:#64748b">${esc(studentEmail)}</span>`:''}`;
+    }
+  }else{
+    dt.textContent=id?'Edit Record':'Add Record';
+    if(drawerAvatar){
+      drawerAvatar.style.background='linear-gradient(135deg,#64748b,#475569)';
+      drawerAvatar.textContent='✎';
+    }
+    if(drawerSub){
+      drawerSub.textContent=id?'Editing row #'+id:'Creating new row';
+    }
+  }
+
   const enrollPrice=isEnroll?moneyNumber(row.course_price):null;
   const enrollDiscount=isEnroll?(moneyNumber(row.discount)||0):0;
   const enrollPaid=isEnroll?(moneyNumber(row.paid)||0):0;
   const enrollDue=isEnroll?dueAmount(row):null;
-  const enrollNet=enrollPrice!==null?Math.max(0,enrollPrice-enrollDiscount):null;
+
+  const STUDENT_EDITABLE_FIELDS=['name','mobile','email','department','institute','level','year','session','address'];
+
+  const fieldsToRender=isEnroll
+    ? ENROLL_EDITABLE_FIELDS.map(f=>S.cols.find(c=>colName(c)===f)).filter(Boolean)
+    : isStudent
+      ? STUDENT_EDITABLE_FIELDS.map(f=>S.cols.find(c=>colName(c)===f)).filter(Boolean)
+      : S.cols.filter(c=>!['password','fail_count','locked_until','last_attempt_at'].includes(colName(c)));
 
   ef.innerHTML=`
-    <div class="editor-meta">
-      <b>${esc(isEnroll?[cellValue(row.name).trim(),cellValue(row.course).trim()].filter(Boolean).join(' — ')||P[S.table]?.[1]||S.table:P[S.table]?.[1]||S.table)}</b>
-      ${isEnroll ? '' : `<span>${id?'Editing row #'+id:'Creating new row'}</span>`}
-    </div>
     ${isEnroll?`
       <div class="enroll-edit-fin-summary">
         <div class="fin-stat-card price">
@@ -2103,10 +2244,7 @@ function editor(id,row){
     `:''}
     <input type="hidden" id="rid" value="${id}">
     <div class="grid">
-      ${(isEnroll
-        ? ENROLL_EDITABLE_FIELDS.map(f=>S.cols.find(c=>colName(c)===f)).filter(Boolean)
-        : S.cols
-      ).map(c=>{
+      ${fieldsToRender.map(c=>{
         const name=colName(c);
         const type=colType(c);
         const v=inputValue(row[name]);
@@ -2114,14 +2252,17 @@ function editor(id,row){
         const isStatusField=isEnroll&&name==='status';
         const isPaidField=isEnroll&&name==='paid';
         const isExpiresField=name==='expires_at';
-        const isNextDateField=isEnroll&&(name==='next_date'||name==='next_payment_date');
+        const isNextDateField=(name==='next_date'||name==='next_payment_date');
         const ro=(secret&&id);
         const note=(secret&&id)?' <span class="field-note">(use Reset PW)</span>':'';
-        const large=isLargeColumn(c);
+        const large=isLargeColumn(c)||(name==='address');
         const bool=!isStatusField&&(/BOOL/i.test(type)||/^(blocked|get_wt|top_this|active)$/i.test(name));
-        const isEnrollDate=isEnroll&&(name==='expires_at'||name==='next_date');
-        const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
+        const isEnrollDate=name==='expires_at'||name==='next_date'||name==='next_payment_date';
+        const isDateCol=isEnrollDate||isDateColumn(name);
+        const inputType=secret?'password':isDateCol?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
+        const fieldLabel=formatFieldLabel(name);
+
         if(isExpiresField){
           const expIso=parseNextDateToIso(v||dateValue);
           const isExp=expIso ? (expIso < getTodayIso()) : false;
@@ -2130,7 +2271,7 @@ function editor(id,row){
           const badgeClass=isExp ? 'red' : 'green';
           return `<div class="${large?'full':''}">
             <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
-              <span>${esc(name)}</span>
+              <span>${fieldLabel}</span>
               <span id="expiresReadableBadge" class="expires-readable-badge ${badgeClass}" style="${badgeText?'':'display:none'}">${esc(badgeText)}</span>
             </label>
             <input class="adm-enroll-date-input" data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateExpiresReadable(this)" onclick="openDatePicker(this)" onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
@@ -2140,7 +2281,7 @@ function editor(id,row){
           const readableDate=formatReadableDate(v||dateValue);
           return `<div class="${large?'full':''}">
             <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
-              <span>next_payment_date</span>
+              <span>${fieldLabel}</span>
               <span id="nextDateReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
             </label>
             <input class="adm-enroll-date-input" data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateNextDateReadable(this)" onclick="openDatePicker(this)" onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
@@ -2149,44 +2290,43 @@ function editor(id,row){
         if(isPaidField){
           return `<div class="${large?'full':''}">
             <label>Add Payment</label>
-            <input class="adm-enroll-num-input" data-c="paid" value="" type="number" step="any" placeholder="যে পরিমাণ যোগ করতে চান লিখুন">
+            <input class="adm-enroll-num-input" data-c="paid" value="" type="number" step="any" placeholder="Enter amount to add, e.g. 500">
+          </div>`;
+        }
+        if(name==='access_type'){
+          const cur=/^full access$/i.test(v)?'Full Access':'Limited Access';
+          return `<div class="${large?'full':''}">
+            <label>${fieldLabel}</label>
+            <select class="access-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
+              <option value="Limited Access" ${cur==='Limited Access'?'selected':''}>Limited Access</option>
+              <option value="Full Access" ${cur==='Full Access'?'selected':''}>Full Access</option>
+            </select>
+          </div>`;
+        }
+        if(isDateCol){
+          return `<div class="${large?'full':''}">
+            <label>${fieldLabel}${note}</label>
+            <input class="adm-enroll-date-input" data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="date" onclick="openDatePicker(this)" onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
           </div>`;
         }
         return `<div class="${large?'full':''}">
-          <label>${esc(name)}${note}</label>
-          ${isStatusField
-            ? (()=>{
-                const cur=/^active$/i.test(v)?'Active':/^expired$/i.test(v)?'Expired':'Pending';
-                return `<select class="status-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
-                 <option value="Pending" ${cur==='Pending'?'selected':''}>Pending</option>
-                 <option value="Active" ${cur==='Active'?'selected':''}>Active</option>
-                 <option value="Expired" ${cur==='Expired'?'selected':''}>Expired</option>
-               </select>`;
-              })()
-            : (isEnroll&&name==='access_type')
-              ? (()=>{
-                  const cur=/^full access$/i.test(v)?'Full Access':'Limited Access';
-                  return `<select class="access-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
-                    <option value="Limited Access" ${cur==='Limited Access'?'selected':''}>Limited Access</option>
-                    <option value="Full Access" ${cur==='Full Access'?'selected':''}>Full Access</option>
-                  </select>`;
-                })()
-            : large
-              ? `<textarea rows="5" data-c="${esc(name)}" ${ro?'readonly':''}>${esc(v)}</textarea>`
-              : bool
-                ? `<select data-c="${esc(name)}" ${ro?'disabled':''}>
-                     <option value="">NULL / Empty</option>
-                     <option value="TRUE" ${/^(true|yes|1)$/i.test(v)?'selected':''}>TRUE</option>
-                     <option value="FALSE" ${/^(false|no|0)$/i.test(v)?'selected':''}>FALSE</option>
-                   </select>`
-                : `<input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any"':''} ${isEnrollDate?'data-enroll-date="1"':''}>`}
+          <label>${fieldLabel}${note}</label>
+          ${large
+            ? `<textarea rows="${name==='address'?3:5}" data-c="${esc(name)}" ${ro?'readonly':''} placeholder="${name==='address'?'Full address':''}">${esc(v)}</textarea>`
+            : bool
+              ? `<select data-c="${esc(name)}" ${ro?'disabled':''}>
+                   <option value="">NULL / Empty</option>
+                   <option value="TRUE" ${/^(true|yes|1)$/i.test(v)?'selected':''}>TRUE</option>
+                   <option value="FALSE" ${/^(false|no|0)$/i.test(v)?'selected':''}>FALSE</option>
+                 </select>`
+              : `<input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${inputType==='number'?'step="any" class="adm-enroll-num-input"':''} placeholder="${name==='name'?'Student full name':name==='mobile'?'017xxxxxxxx':name==='email'?'student@example.com':''}">`}
         </div>`;
       }).join('')}
       ${isEnroll?payHistoryHtml(row):''}
     </div>
     <div class="drawer-actions">
       <button type="button" class="btn ghost" onclick="closeDrawer()">Cancel</button>
-      <button class="btn primary" type="submit">Save Changes</button>
+      <button class="btn primary" type="submit" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8">Save Changes</button>
     </div>`;
   ef.onsubmit=save;
   drawer.classList.remove('hidden');
