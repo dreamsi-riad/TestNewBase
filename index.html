@@ -51,6 +51,7 @@
 .fin-stat-card.settled{background:#f0fdf4;border-color:#bbf7d0}
 .fin-stat-card.settled .fin-stat-lbl{color:#15803d}
 .fin-stat-card.settled .fin-stat-val{color:#15803d;font-size:16px}
+.expires-readable-badge{display:inline-flex;align-items:center;gap:4px;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;border-radius:6px;padding:1.5px 7.5px;font-size:11.5px;font-weight:700;letter-spacing:0;text-transform:none;box-shadow:0 1px 2px rgba(29,78,216,.06);vertical-align:middle}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -623,6 +624,31 @@ function renderCopyPhoneBtn(phone, label='Copy'){
   const p=String(phone||'').trim();
   if(!p||p==='—')return '';
   return `<button type="button" class="adm-copy-phone-btn" data-phone="${esc(p)}" onclick="copyStudentNumber(this,event)" title="মোবাইল নম্বর কপি করুন"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>${esc(label)}</span></button>`;
+}
+function formatReadableDate(v){
+  if(!v) return '';
+  const raw=String(v).trim();
+  if(!raw||raw==='—') return '';
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const m=/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/.exec(raw);
+  if(m){
+    const year=parseInt(m[1],10);
+    const month=parseInt(m[2],10)-1;
+    const day=parseInt(m[3],10);
+    if(month>=0&&month<12){
+      return `${day} ${months[month]} ${year}`;
+    }
+  }
+  const d=new Date(raw);
+  if(isNaN(d.getTime())) return '';
+  return `${d.getUTCDate()} ${months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+function updateExpiresReadable(input){
+  const badge=document.getElementById('expiresReadableBadge');
+  if(!badge) return;
+  const readable=formatReadableDate(input.value);
+  badge.textContent=readable ? `🗓 ${readable}` : '';
+  badge.style.display=readable ? 'inline-flex' : 'none';
 }
 async function api(action,o={}){
   const actionMap={
@@ -1645,6 +1671,7 @@ function editor(id,row){
         const secret=isSecretColumn(c);
         const isStatusField=isEnroll&&name==='status';
         const isPaidField=isEnroll&&name==='paid';
+        const isExpiresField=name==='expires_at';
         const ro=(secret&&id);
         const note=(secret&&id)?' <span class="field-note">(use Reset PW)</span>':'';
         const large=isLargeColumn(c);
@@ -1652,6 +1679,16 @@ function editor(id,row){
         const isEnrollDate=isEnroll&&(name==='expires_at'||name==='next_date');
         const inputType=secret?'password':isEnrollDate?'date':/INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type)?'number':'text';
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
+        if(isExpiresField){
+          const readableDate=formatReadableDate(v||dateValue);
+          return `<div class="${large?'full':''}">
+            <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span>${esc(name)}</span>
+              <span id="expiresReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">🗓 ${esc(readableDate)}</span>
+            </label>
+            <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateExpiresReadable(this)">
+          </div>`;
+        }
         if(isPaidField){
           return `<div class="${large?'full':''}">
             <label>Add Payment</label>
