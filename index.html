@@ -30,12 +30,12 @@
 .access-spinner[data-val="Full Access"]{background-color:#ecfdf5 !important;border-color:#86efac !important;color:#047857 !important;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%23047857" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>') !important}
 .field-type{font-size:10px;color:#8a94a8;font-weight:600;margin-left:5px}.field-note{font-size:11px;color:#d9534f}.editor-meta{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#f7f9fc;border-radius:10px;margin-bottom:12px}.editor-meta span{font-size:12px;color:#68748d}.drawer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--l)}
 /* Financial Stat Summary for Enrollment Edit Drawer */
-.enroll-edit-fin-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 16px}
+.enroll-edit-fin-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 12px}
 @media(max-width:600px){.enroll-edit-fin-summary{grid-template-columns:repeat(2,1fr)}}
-.fin-stat-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;transition:all .18s ease}
-.fin-stat-card:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(15,23,42,.05)}
-.fin-stat-card .fin-stat-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#64748b}
-.fin-stat-card .fin-stat-val{font-family:'Baloo Da 2',sans-serif;font-size:18px;font-weight:800;color:#0f172a}
+.fin-stat-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:5px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;transition:all .18s ease}
+.fin-stat-card:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(15,23,42,.05)}
+.fin-stat-card .fin-stat-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#64748b;line-height:1.2}
+.fin-stat-card .fin-stat-val{font-family:'Baloo Da 2',sans-serif;font-size:18px;font-weight:800;color:#0f172a;line-height:1.15;margin-top:1px}
 .fin-stat-card.price{background:#f8fafc;border-color:#e2e8f0}
 .fin-stat-card.price .fin-stat-lbl{color:#475569}
 .fin-stat-card.price .fin-stat-val{color:#0f172a}
@@ -51,20 +51,6 @@
 .fin-stat-card.settled{background:#f0fdf4;border-color:#bbf7d0}
 .fin-stat-card.settled .fin-stat-lbl{color:#15803d}
 .fin-stat-card.settled .fin-stat-val{color:#15803d;font-size:16px}
-/* Add Payment Field Enhancements */
-.pay-field-label{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:4px}
-.pay-label-title{font-weight:800;color:#1e293b;font-size:13px}
-.pay-label-badge{font-size:11.5px;font-weight:800;color:#059669;background:#ecfdf5;border:1px solid #a7f3d0;padding:2px 8px;border-radius:6px}
-.pay-summary-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:4px 8px;margin-bottom:6px;font-size:11.5px;color:#475569}
-.pay-summary-hint .hint-item b{color:#0f172a}
-.pay-summary-hint .hint-item.discount b{color:#b45309}
-.pay-summary-hint .hint-item.due b{color:#b91c1c}
-.pay-summary-hint .hint-item.paid b{color:#059669}
-.pay-live-preview{margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:5px 8px;font-size:11.5px;color:#1e40af;animation:contentIn .15s ease-out}
-.pay-live-preview .preview-tag{display:inline-flex;align-items:center;gap:3px}
-.pay-live-preview .preview-tag.ok b{color:#047857}
-.pay-live-preview .preview-tag.due b{color:#b91c1c}
-.pay-live-preview .preview-tag.settled b{color:#15803d}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -637,25 +623,6 @@ function renderCopyPhoneBtn(phone, label='Copy'){
   const p=String(phone||'').trim();
   if(!p||p==='—')return '';
   return `<button type="button" class="adm-copy-phone-btn" data-phone="${esc(p)}" onclick="copyStudentNumber(this,event)" title="মোবাইল নম্বর কপি করুন"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>${esc(label)}</span></button>`;
-}
-function updatePayLivePreview(input, basePaid, netPrice){
-  const preview=document.getElementById('payLivePreview');
-  if(!preview)return;
-  const raw=input.value.trim();
-  const val=parseFloat(raw);
-  if(!raw||isNaN(val)||val<=0){
-    preview.classList.add('hidden');
-    preview.innerHTML='';
-    return;
-  }
-  const newPaid=basePaid+val;
-  const newDue=netPrice!==null?netPrice-newPaid:null;
-  preview.classList.remove('hidden');
-  preview.innerHTML=`
-    <span class="preview-tag">যোগ: <b>+৳\u00A0${esc(fmtMoney(val))}</b></span>
-    <span class="preview-tag ok">· নতুন Paid: <b>৳\u00A0${esc(fmtMoney(newPaid))}</b></span>
-    <span class="preview-tag ${newDue!==null&&newDue>0?'due':'settled'}">· নতুন বাকি: <b>${newDue===null?'—':newDue>0?`৳\u00A0${esc(fmtMoney(newDue))}`:'০ (পরিশোধিত ✓)'}</b></span>
-  `;
 }
 async function api(action,o={}){
   const actionMap={
@@ -1647,7 +1614,7 @@ function editor(id,row){
   ef.innerHTML=`
     <div class="editor-meta">
       <b>${esc(isEnroll?[cellValue(row.name).trim(),cellValue(row.course).trim()].filter(Boolean).join(' — ')||P[S.table]?.[1]||S.table:P[S.table]?.[1]||S.table)}</b>
-      <span>${id?'Editing row #'+id:'Creating new row'}</span>
+      ${isEnroll ? '' : `<span>${id?'Editing row #'+id:'Creating new row'}</span>`}
     </div>
     ${isEnroll?`
       <div class="enroll-edit-fin-summary">
@@ -1687,18 +1654,8 @@ function editor(id,row){
         const dateValue=isEnrollDate?enrollDateInputValue(name,v):v;
         if(isPaidField){
           return `<div class="${large?'full':''}">
-            <div class="pay-field-label">
-              <label style="margin:0" class="pay-label-title">Add Payment</label>
-              <span class="pay-label-badge" id="paidCurrent">মোট Paid: ৳\u00A0${esc(fmtMoney(enrollPaid))}</span>
-            </div>
-            <div class="pay-summary-hint">
-              <span class="hint-item">কোর্স ফি: <b>৳\u00A0${enrollPrice!==null?esc(fmtMoney(enrollPrice)):'—'}</b></span>
-              ${enrollDiscount>0?`<span class="hint-item discount">· ছাড়: <b>৳\u00A0${esc(fmtMoney(enrollDiscount))}</b></span>`:''}
-              <span class="hint-item ${enrollDue>0?'due':'paid'}">· বাকি: <b>${enrollDue===null?'—':enrollDue>0?`৳\u00A0${esc(fmtMoney(enrollDue))}`:'০ (পরিশোধিত ✓)'}</b></span>
-            </div>
-            <input data-c="paid" value="" type="number" step="any" placeholder="যে পরিমাণ যোগ করতে চান লিখুন"
-              oninput="updatePayLivePreview(this, ${enrollPaid}, ${enrollNet!==null?enrollNet:'null'})">
-            <div id="payLivePreview" class="pay-live-preview hidden"></div>
+            <label>Add Payment</label>
+            <input data-c="paid" value="" type="number" step="any" placeholder="যে পরিমাণ যোগ করতে চান লিখুন">
           </div>`;
         }
         return `<div class="${large?'full':''}">
