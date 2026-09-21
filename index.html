@@ -52,6 +52,7 @@
 .fin-stat-card.settled .fin-stat-lbl{color:#15803d}
 .fin-stat-card.settled .fin-stat-val{color:#15803d;font-size:16px}
 .expires-readable-badge{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;border-radius:6px;padding:2px 8.5px;font-size:11.5px;font-weight:700;letter-spacing:0;text-transform:none;box-shadow:0 1px 2px rgba(29,78,216,.06);vertical-align:middle}
+.expires-readable-badge.red{background:#fef2f2;color:#dc2626;border-color:#fecaca;box-shadow:0 1px 2px rgba(220,38,38,.08)}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -94,6 +95,11 @@
 #courseFilter{min-width:190px}
 #dueFilter{min-width:150px}
 #nextDateFilter{min-width:185px}
+.next-date-select-wrap{position:relative;display:flex;align-items:center;gap:6px}
+.next-date-hidden-picker{position:absolute;opacity:0;pointer-events:none;width:0;height:0;visibility:hidden}
+.next-date-cal-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#2563eb;cursor:pointer;transition:all .2s ease;padding:0;flex-shrink:0}
+.next-date-cal-btn:hover{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;box-shadow:0 2px 8px rgba(59,130,246,.18)}
+.next-date-cal-btn:active{transform:scale(.96)}
 .filter-reset-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border:1px dashed #cbd5e1;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease}
 .filter-reset-btn:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
 .filter-reset-btn.hidden{display:none}
@@ -102,6 +108,8 @@
   .filter-bar{gap:10px}
   .filter-field{width:100%}
   .filter-bar select{width:100%;min-width:0 !important}
+  .next-date-select-wrap{width:100%}
+  .next-date-select-wrap select{flex:1}
   .filter-count{margin-left:0;width:100%}
 }
 
@@ -653,6 +661,22 @@ function populateNextDateFilter(rows){
       `</optgroup>`;
   }
 
+  let customPickedOption = '';
+  if(S.nextDateFilter && S.nextDateFilter.startsWith('date:')){
+    const isoVal = S.nextDateFilter.slice(5);
+    if(!dateMap.has(isoVal)){
+      const disp = formatNextPaymentDate(isoVal) || isoVal;
+      customPickedOption = `<optgroup label="কাস্টম নির্বাচিত তারিখ">
+        <option value="${esc(S.nextDateFilter)}" selected>📅 ${esc(disp)} (কাস্টম তারিখ)</option>
+      </optgroup>`;
+    }
+  }
+
+  const calendarOption = `
+    <optgroup label="ক্যালেন্ডার">
+      <option value="__custom_picker__">📅 ক্যালেন্ডার থেকে বাছুন (Custom Date)...</option>
+    </optgroup>`;
+
   sel.innerHTML = `
     <option value="" ${!S.nextDateFilter ? 'selected' : ''}>সকল তারিখ (All Dates)</option>
     <option value="today" ${S.nextDateFilter === 'today' ? 'selected' : ''}>আজকের তারিখ (Today)</option>
@@ -662,9 +686,50 @@ function populateNextDateFilter(rows){
     <option value="hasDate" ${S.nextDateFilter === 'hasDate' ? 'selected' : ''}>তারিখ নির্ধারণ করা আছে</option>
     <option value="noDate" ${S.nextDateFilter === 'noDate' ? 'selected' : ''}>কোনো তারিখ নেই</option>
     ${specificOptions}
+    ${customPickedOption}
+    ${calendarOption}
   `;
   sel.value = S.nextDateFilter || '';
 }
+
+function openNextDateCalendar(){
+  const sel = document.getElementById('nextDateFilter');
+  if(sel && sel.value === '__custom_picker__'){
+    sel.value = S.nextDateFilter || '';
+  }
+  const inp = document.getElementById('nextDateCustomInput');
+  if(!inp) return;
+  if(S.nextDateFilter && S.nextDateFilter.startsWith('date:')){
+    inp.value = S.nextDateFilter.slice(5);
+  } else {
+    inp.value = getTodayIso();
+  }
+  try{
+    if(typeof inp.showPicker === 'function'){
+      inp.showPicker();
+    } else {
+      inp.focus();
+      inp.click();
+    }
+  }catch(e){
+    inp.focus();
+    inp.click();
+  }
+}
+
+function onCustomDatePicked(pickedVal){
+  if(!pickedVal){
+    const sel = document.getElementById('nextDateFilter');
+    if(sel) sel.value = S.nextDateFilter || '';
+    return;
+  }
+  const iso = parseNextDateToIso(pickedVal);
+  if(!iso) return;
+  S.nextDateFilter = 'date:' + iso;
+  populateNextDateFilter(S.rawEnrollRows || []);
+  applyEnrollFiltersAndRender();
+}
+
 function updateFilterResetButton(){
   const resetBtn = document.getElementById('enrollFilterReset');
   if(!resetBtn) return;
@@ -706,6 +771,10 @@ function setDueFilter(value){
   applyEnrollFiltersAndRender();
 }
 function setNextDateFilter(value){
+  if(value === '__custom_picker__'){
+    openNextDateCalendar();
+    return;
+  }
   S.nextDateFilter=String(value||'');
   applyEnrollFiltersAndRender();
 }
@@ -719,6 +788,9 @@ function resetEnrollFilters(){
   if(dueSel) dueSel.value = '';
   const nextDateSel = document.getElementById('nextDateFilter');
   if(nextDateSel) nextDateSel.value = '';
+  const customInp = document.getElementById('nextDateCustomInput');
+  if(customInp) customInp.value = '';
+  populateNextDateFilter(S.rawEnrollRows || []);
   S.offset = 0;
   fetchRows();
 }
@@ -900,15 +972,21 @@ if(S.table===ENROLL_TABLE){
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           <span>Next Date:</span>
         </label>
-        <select id="nextDateFilter" onchange="setNextDateFilter(this.value)">
-          <option value="">সকল তারিখ (All Dates)</option>
-          <option value="today">আজকের তারিখ (Today)</option>
-          <option value="next7">আগামী ৭ দিন (Next 7 Days)</option>
-          <option value="thisMonth">এই মাস (This Month)</option>
-          <option value="overdue">মেয়াদোত্তীর্ণ (Overdue)</option>
-          <option value="hasDate">তারিখ নির্ধারণ করা আছে</option>
-          <option value="noDate">কোনো তারিখ নেই</option>
-        </select>
+        <div class="next-date-select-wrap">
+          <select id="nextDateFilter" onchange="setNextDateFilter(this.value)">
+            <option value="">সকল তারিখ (All Dates)</option>
+            <option value="today">আজকের তারিখ (Today)</option>
+            <option value="next7">আগামী ৭ দিন (Next 7 Days)</option>
+            <option value="thisMonth">এই মাস (This Month)</option>
+            <option value="overdue">মেয়াদোত্তীর্ণ (Overdue)</option>
+            <option value="hasDate">তারিখ নির্ধারণ করা আছে</option>
+            <option value="noDate">কোনো তারিখ নেই</option>
+          </select>
+          <input type="date" id="nextDateCustomInput" class="next-date-hidden-picker" onchange="onCustomDatePicked(this.value)" aria-label="Choose custom next date">
+          <button type="button" class="next-date-cal-btn" onclick="openNextDateCalendar()" title="ক্যালেন্ডার ওপেন করে কাস্টম তারিখ নির্বাচন করুন">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+        </div>
       </div>
 
       <button id="enrollFilterReset" class="filter-reset-btn hidden" type="button" onclick="resetEnrollFilters()" title="সব ফিল্টার রিসেট করুন">
@@ -1915,7 +1993,7 @@ function editor(id,row){
           return `<div class="${large?'full':''}">
             <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
               <span>${esc(name)}</span>
-              <span id="expiresReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
+              <span id="expiresReadableBadge" class="expires-readable-badge red" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
             </label>
             <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateExpiresReadable(this)">
           </div>`;
