@@ -51,7 +51,7 @@
 .fin-stat-card.settled{background:#f0fdf4;border-color:#bbf7d0}
 .fin-stat-card.settled .fin-stat-lbl{color:#15803d}
 .fin-stat-card.settled .fin-stat-val{color:#15803d;font-size:16px}
-.expires-readable-badge{display:inline-flex;align-items:center;gap:4px;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;border-radius:6px;padding:1.5px 7.5px;font-size:11.5px;font-weight:700;letter-spacing:0;text-transform:none;box-shadow:0 1px 2px rgba(29,78,216,.06);vertical-align:middle}
+.expires-readable-badge{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe;border-radius:6px;padding:2px 8.5px;font-size:11.5px;font-weight:700;letter-spacing:0;text-transform:none;box-shadow:0 1px 2px rgba(29,78,216,.06);vertical-align:middle}
 .spinner{width:24px;height:24px;border:3px solid #e4e8ef;border-top-color:#17233f;border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .smooth-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:150px;padding:34px;text-align:center;color:var(--m)}
 .search-wrap{position:relative;width:240px}
@@ -83,12 +83,27 @@
    PREMIUM ENROLLMENTS & STUDENTS TABLE DESIGN SUITE
    ============================================================ */
 
-/* Filter bar & Course selector */
-.filter-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0 14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 16px;box-shadow:0 4px 14px rgba(15,23,42,.03)}
-.filter-bar label{margin:0;font-size:13px;font-weight:800;color:#1e293b;display:flex;align-items:center;gap:6px}
-.filter-bar select{border:1.5px solid #cbd5e1;border-radius:10px;padding:8px 14px;background:#f8fafc;color:#0f172a;min-width:280px;font-weight:700;font-size:13.5px;transition:all .2s ease;cursor:pointer}
+/* Filter bar & Spinners */
+.filter-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0 14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 16px;box-shadow:0 4px 14px rgba(15,23,42,.03)}
+.filter-field{display:flex;align-items:center;gap:7px}
+.filter-bar label{margin:0;font-size:13px;font-weight:800;color:#1e293b;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.filter-bar label svg{color:#64748b;flex-shrink:0}
+.filter-bar select{border:1.5px solid #cbd5e1;border-radius:10px;padding:7px 12px;background:#f8fafc;color:#0f172a;font-weight:700;font-size:13px;transition:all .2s ease;cursor:pointer}
+.filter-bar select:hover{border-color:#94a3b8;background:#fff}
 .filter-bar select:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.15);outline:none}
-.filter-count{font-size:12.5px;font-weight:700;color:#64748b;margin-left:auto}
+#courseFilter{min-width:190px}
+#dueFilter{min-width:150px}
+#nextDateFilter{min-width:185px}
+.filter-reset-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border:1px dashed #cbd5e1;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease}
+.filter-reset-btn:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
+.filter-reset-btn.hidden{display:none}
+.filter-count{font-size:12.5px;font-weight:700;color:#64748b;margin-left:auto;white-space:nowrap;padding-left:8px}
+@media(max-width:760px){
+  .filter-bar{gap:10px}
+  .filter-field{width:100%}
+  .filter-bar select{width:100%;min-width:0 !important}
+  .filter-count{margin-left:0;width:100%}
+}
 
 /* Elevated Table Card */
 .panel{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 10px 30px -5px rgba(15,23,42,.05),0 2px 6px rgba(15,23,42,.02);overflow:hidden;margin-top:10px}
@@ -515,7 +530,7 @@
 const API='https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
 const P={students:['student_login','Students'],enrollments:['student_enrolled','Enrollments'],courses:['course_name','Courses'],subjects:['subjectwise_course_name','Subject-wise Courses'],teachers:['teachers','Teachers'],free:['free_class','Free Classes'],gallery:['gallery','Gallery / Reviews'],shop:['shop_item','Shop Products'],orders:['shop_orders','Shop Orders'],admins:['admin_login','Admin Accounts']};
 const CT=[['course_data_ssc','SSC'],['course_data_hsc','HSC'],['course_data_mba','MBA'],['course_data_bbs','BBS'],['course_data_bba_professional','BBA Professional'],['course_data_bba_nu','BBA NU'],['course_data_bba_dcu','BBA DCU']];
-let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],search:'',courseFilter:'',offset:0,limit:50,total:0};
+let S={token:localStorage.va_admin_token||'',user:null,table:null,cols:[],rows:[],rawEnrollRows:[],lastRawData:null,search:'',courseFilter:'',dueFilter:'',nextDateFilter:'',offset:0,limit:50,total:0};
 const ENROLL_TABLE='student_enrolled';
 const STUDENT_TABLE='student_login';
 const ENROLL_EDITABLE_FIELDS=['status','expires_at','paid','access_type','next_date'];
@@ -540,6 +555,67 @@ function clearPanelLoading(){
   if(x)x.remove();
   q.classList.remove('is-loading');
 }
+function parseNextDateToIso(val){
+  const raw=String(val||'').trim();
+  if(!raw || raw==='—') return null;
+  const m = /^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/.exec(raw);
+  if(m){
+    const y = m[1];
+    const mo = m[2].padStart(2, '0');
+    const d = m[3].padStart(2, '0');
+    return `${y}-${mo}-${d}`;
+  }
+  const dt = new Date(raw);
+  if(!isNaN(dt.getTime())){
+    const y = dt.getFullYear();
+    const mo = String(dt.getMonth()+1).padStart(2, '0');
+    const d = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${mo}-${d}`;
+  }
+  return null;
+}
+function getTodayIso(){
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+function getFutureIso(days){
+  const fut = new Date();
+  fut.setDate(fut.getDate() + Number(days));
+  const y = fut.getFullYear();
+  const m = String(fut.getMonth()+1).padStart(2, '0');
+  const d = String(fut.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+function matchesDueFilter(r, filterVal){
+  if(!filterVal) return true;
+  const due = dueAmount(r);
+  if(filterVal === 'due') return due !== null && due > 0;
+  if(filterVal === 'paid') return due !== null && due <= 0;
+  return true;
+}
+function matchesNextDateFilter(r, filterVal){
+  if(!filterVal) return true;
+  const raw = String(r.next_date || '').trim();
+  const iso = parseNextDateToIso(raw);
+
+  if(filterVal === 'hasDate') return !!iso;
+  if(filterVal === 'noDate') return !iso;
+  if(!iso) return false;
+
+  const todayIso = getTodayIso();
+  if(filterVal === 'today') return iso === todayIso;
+  if(filterVal === 'next7'){
+    const futIso = getFutureIso(7);
+    return iso >= todayIso && iso <= futIso;
+  }
+  if(filterVal === 'thisMonth') return iso.slice(0, 7) === todayIso.slice(0, 7);
+  if(filterVal === 'overdue') return iso < todayIso;
+  if(filterVal.startsWith('date:')) return iso === filterVal.slice(5);
+  return true;
+}
 function populateCourseFilter(courses){
   const sel=document.getElementById('courseFilter');
   if(!sel||!Array.isArray(courses))return;
@@ -551,9 +627,99 @@ function populateCourseFilter(courses){
     names.map(n=>`<option value="${esc(n)}" ${n===S.courseFilter?'selected':''}>${esc(n)}</option>`).join('');
   sel.value=S.courseFilter||'';
 }
+function populateNextDateFilter(rows){
+  const sel=document.getElementById('nextDateFilter');
+  if(!sel||!Array.isArray(rows))return;
+
+  const dateMap = new Map();
+  rows.forEach(r => {
+    const raw = String(r.next_date || '').trim();
+    const iso = parseNextDateToIso(raw);
+    if(iso){
+      const display = formatNextPaymentDate(raw) || iso;
+      dateMap.set(iso, display);
+    }
+  });
+
+  const sortedIsoDates = Array.from(dateMap.keys()).sort();
+  let specificOptions = '';
+  if(sortedIsoDates.length > 0){
+    specificOptions = `<optgroup label="নির্দিষ্ট তারিখ (Specific Date)">` +
+      sortedIsoDates.map(iso => {
+        const disp = dateMap.get(iso);
+        const val = 'date:' + iso;
+        return `<option value="${val}" ${S.nextDateFilter === val ? 'selected' : ''}>🗓 ${esc(disp)}</option>`;
+      }).join('') +
+      `</optgroup>`;
+  }
+
+  sel.innerHTML = `
+    <option value="" ${!S.nextDateFilter ? 'selected' : ''}>সকল তারিখ (All Dates)</option>
+    <option value="today" ${S.nextDateFilter === 'today' ? 'selected' : ''}>আজকের তারিখ (Today)</option>
+    <option value="next7" ${S.nextDateFilter === 'next7' ? 'selected' : ''}>আগামী ৭ দিন (Next 7 Days)</option>
+    <option value="thisMonth" ${S.nextDateFilter === 'thisMonth' ? 'selected' : ''}>এই মাস (This Month)</option>
+    <option value="overdue" ${S.nextDateFilter === 'overdue' ? 'selected' : ''}>মেয়াদোত্তীর্ণ (Overdue)</option>
+    <option value="hasDate" ${S.nextDateFilter === 'hasDate' ? 'selected' : ''}>তারিখ নির্ধারণ করা আছে</option>
+    <option value="noDate" ${S.nextDateFilter === 'noDate' ? 'selected' : ''}>কোনো তারিখ নেই</option>
+    ${specificOptions}
+  `;
+  sel.value = S.nextDateFilter || '';
+}
+function updateFilterResetButton(){
+  const resetBtn = document.getElementById('enrollFilterReset');
+  if(!resetBtn) return;
+  const hasActiveFilter = !!(S.courseFilter || S.dueFilter || S.nextDateFilter);
+  resetBtn.classList.toggle('hidden', !hasActiveFilter);
+}
+function applyEnrollFiltersAndRender(){
+  if(!isEnrollTable() || !S.lastRawData){
+    renderTable(S.lastRawData || { rows: S.rows });
+    return;
+  }
+  let filtered = (S.rawEnrollRows || []).slice();
+
+  if(S.dueFilter){
+    filtered = filtered.filter(r => matchesDueFilter(r, S.dueFilter));
+  }
+  if(S.nextDateFilter){
+    filtered = filtered.filter(r => matchesNextDateFilter(r, S.nextDateFilter));
+  }
+
+  const filteredData = {
+    ...S.lastRawData,
+    rows: filtered,
+    total: filtered.length,
+    offset: 0
+  };
+  S.rows = filtered;
+  S.total = filtered.length;
+  renderTable(filteredData);
+  updateFilterResetButton();
+}
 function setCourseFilter(value){
   S.courseFilter=String(value||'');
   S.offset=0;
+  fetchRows();
+}
+function setDueFilter(value){
+  S.dueFilter=String(value||'');
+  applyEnrollFiltersAndRender();
+}
+function setNextDateFilter(value){
+  S.nextDateFilter=String(value||'');
+  applyEnrollFiltersAndRender();
+}
+function resetEnrollFilters(){
+  S.courseFilter = '';
+  S.dueFilter = '';
+  S.nextDateFilter = '';
+  const courseSel = document.getElementById('courseFilter');
+  if(courseSel) courseSel.value = '';
+  const dueSel = document.getElementById('dueFilter');
+  if(dueSel) dueSel.value = '';
+  const nextDateSel = document.getElementById('nextDateFilter');
+  if(nextDateSel) nextDateSel.value = '';
+  S.offset = 0;
   fetchRows();
 }
 function liveSearch(value){
@@ -647,7 +813,14 @@ function updateExpiresReadable(input){
   const badge=document.getElementById('expiresReadableBadge');
   if(!badge) return;
   const readable=formatReadableDate(input.value);
-  badge.textContent=readable ? `🗓 ${readable}` : '';
+  badge.textContent=readable ? readable : '';
+  badge.style.display=readable ? 'inline-flex' : 'none';
+}
+function updateNextDateReadable(input){
+  const badge=document.getElementById('nextDateReadableBadge');
+  if(!badge) return;
+  const readable=formatReadableDate(input.value);
+  badge.textContent=readable ? readable : '';
   badge.style.display=readable ? 'inline-flex' : 'none';
 }
 async function api(action,o={}){
@@ -696,17 +869,53 @@ function applyRoleVisibility(){
 function logout(){localStorage.removeItem('va_admin_token');localStorage.removeItem('va_admin_user');location.reload()}function show(){login.classList.add('hidden');app.classList.remove('hidden');applyRoleVisibility();page('dashboard')}
 lf.onsubmit=async e=>{e.preventDefault();try{let j=await doLogin(lm.value.trim(),lp.value);S.token=j.data.adminToken;S.user=j.data;localStorage.va_admin_token=S.token;localStorage.va_admin_user=JSON.stringify(S.user);show()}catch(e){le.textContent=e.message}}
 nav.onclick=e=>{let b=e.target.closest('[data-p]');if(b)page(b.dataset.p)}
-async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';
+async function page(p){if(MASTER_ONLY_PAGES.has(p)&&!isMasterAdmin()){toast('এই সেকশনে প্রবেশের অনুমতি নেই');p='dashboard'}document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.p===p));if(p==='dashboard')return dashboard();if(p==='pending')return pending();if(p==='content')return contentPage();S.table=P[p][0];S.offset=0;S.search='';S.courseFilter='';S.dueFilter='';S.nextDateFilter='';
 if(S.table===ENROLL_TABLE){
   content.innerHTML=`
     <div class="filter-bar">
-      <label for="courseFilter">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-        <span>কোর্স নির্বাচন:</span>
-      </label>
-      <select id="courseFilter" onchange="setCourseFilter(this.value)">
-        <option value="">সব কোর্স (All Courses)</option>
-      </select>
+      <div class="filter-field">
+        <label for="courseFilter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span>কোর্স নির্বাচন:</span>
+        </label>
+        <select id="courseFilter" onchange="setCourseFilter(this.value)">
+          <option value="">সব কোর্স (All Courses)</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="dueFilter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span>পেমেন্ট:</span>
+        </label>
+        <select id="dueFilter" onchange="setDueFilter(this.value)">
+          <option value="">সব (Due / Paid)</option>
+          <option value="due">বকেয়া আছে (Due Only)</option>
+          <option value="paid">পরিশোধিত (Paid Only)</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="nextDateFilter">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Next Date:</span>
+        </label>
+        <select id="nextDateFilter" onchange="setNextDateFilter(this.value)">
+          <option value="">সকল তারিখ (All Dates)</option>
+          <option value="today">আজকের তারিখ (Today)</option>
+          <option value="next7">আগামী ৭ দিন (Next 7 Days)</option>
+          <option value="thisMonth">এই মাস (This Month)</option>
+          <option value="overdue">মেয়াদোত্তীর্ণ (Overdue)</option>
+          <option value="hasDate">তারিখ নির্ধারণ করা আছে</option>
+          <option value="noDate">কোনো তারিখ নেই</option>
+        </select>
+      </div>
+
+      <button id="enrollFilterReset" class="filter-reset-btn hidden" type="button" onclick="resetEnrollFilters()" title="সব ফিল্টার রিসেট করুন">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span>রিসেট</span>
+      </button>
+
       <div class="filter-count" id="enrollFilterCount"></div>
     </div>
     <div id="panel" class="panel"></div>`;
@@ -1298,7 +1507,7 @@ function rowClick(e,id){
   openDetail(id);
 }
 function openDetail(id){
-  const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
+  const r=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===Number(id));
   if(!r)return;
   const name=cellValue(r.name).trim()||(isStudentTable()?'Student':'Record');
   if(dmAvatar){
@@ -1478,7 +1687,13 @@ function renderTable(d){
   // Update filter count if present
   const fcEl=document.getElementById('enrollFilterCount');
   if(fcEl){
-    fcEl.textContent = S.courseFilter ? `ফিল্টারকৃত: ${total} জন` : `মোট শিক্ষার্থী: ${total} জন`;
+    const totalRaw = Array.isArray(S.rawEnrollRows) ? S.rawEnrollRows.length : total;
+    const isFiltered = !!(S.courseFilter || S.dueFilter || S.nextDateFilter || S.search);
+    if(isFiltered && total !== totalRaw){
+      fcEl.textContent = `ফিল্টারকৃত: ${total} জন (মোট ${totalRaw} জন)`;
+    } else {
+      fcEl.textContent = `মোট শিক্ষার্থী: ${total} জন`;
+    }
   }
 
   // Preserve search focus and cursor selection
@@ -1487,6 +1702,12 @@ function renderTable(d){
   const selStart = isSearchActive && searchEl ? searchEl.selectionStart : 0;
   const selEnd = isSearchActive && searchEl ? searchEl.selectionEnd : 0;
 
+  const enrollFilterSub = [
+    S.courseFilter ? `কোর্স: ${esc(S.courseFilter)}` : '',
+    S.dueFilter ? (S.dueFilter==='due' ? 'বকেয়া শিক্ষার্থী' : 'পরিশোধিত শিক্ষার্থী') : '',
+    S.nextDateFilter ? 'Next Date ফিল্টার' : ''
+  ].filter(Boolean).join(' · ');
+
   q.innerHTML=`
     <div class="ph">
       <div>
@@ -1494,7 +1715,7 @@ function renderTable(d){
           <h3 class="ph-title">${esc(d.label||P[S.table]?.[1]||S.table)}</h3>
           <span class="ph-count-pill">${total} টি রেকর্ড</span>
         </div>
-        <div class="ph-sub">${enroll?(S.courseFilter?'কোর্স ফিল্টার: '+esc(S.courseFilter):'সব কোর্স অন্তর্ভুক্ত'):student?'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন':esc(S.table)+' · '+cols.length+' fields'}</div>
+        <div class="ph-sub">${enroll?(enrollFilterSub||'সব কোর্স অন্তর্ভুক্ত'):student?'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন':esc(S.table)+' · '+cols.length+' fields'}</div>
       </div>
       <div class="tools">
         <div class="search-wrap">
@@ -1557,20 +1778,29 @@ async function fetchRows(isTyping=false){
       search:S.search,
       offset:S.offset,
       limit:S.limit,
-      course:S.courseFilter||''
+      course:S.courseFilter||'',
+      due:S.dueFilter||'',
+      nextDate:S.nextDateFilter||''
     });
     if(requestId!==refreshSeq)return;
 
     const d=response.data||{};
-    S.rows=Array.isArray(d.rows)?d.rows:[];
-    S.total=Number(d.total??S.rows.length);
     if(Array.isArray(d.columns)&&d.columns.length){
       S.cols=d.columns;
     }
-    if(isEnrollTable()&&Array.isArray(d.courses)){
-      populateCourseFilter(d.courses);
+    if(isEnrollTable()){
+      S.lastRawData=d;
+      S.rawEnrollRows=Array.isArray(d.rows)?d.rows:[];
+      if(Array.isArray(d.courses)){
+        populateCourseFilter(d.courses);
+      }
+      populateNextDateFilter(S.rawEnrollRows);
+      applyEnrollFiltersAndRender();
+    }else{
+      S.rows=Array.isArray(d.rows)?d.rows:[];
+      S.total=Number(d.total??S.rows.length);
+      renderTable(d);
     }
-    renderTable(d);
   }catch(e){
     if(requestId!==refreshSeq)return;
     q.innerHTML=`<div class="empty error-box"><b>Could not load this table</b><br>${esc(e.message||e)}</div>`;
@@ -1603,7 +1833,7 @@ function changePageLimit(val){
 function newR(){editor(0,{})}
 function edit(id){
   if(S.table==='student_login') return openDetail(id);
-  const r=S.rows.find(x=>Number(x.__rowid)===Number(id));
+  const r=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===Number(id));
   if(r) editor(id,r);
 }
 function enrollDateInputValue(name,v){
@@ -1672,6 +1902,7 @@ function editor(id,row){
         const isStatusField=isEnroll&&name==='status';
         const isPaidField=isEnroll&&name==='paid';
         const isExpiresField=name==='expires_at';
+        const isNextDateField=isEnroll&&(name==='next_date'||name==='next_payment_date');
         const ro=(secret&&id);
         const note=(secret&&id)?' <span class="field-note">(use Reset PW)</span>':'';
         const large=isLargeColumn(c);
@@ -1684,9 +1915,19 @@ function editor(id,row){
           return `<div class="${large?'full':''}">
             <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
               <span>${esc(name)}</span>
-              <span id="expiresReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">🗓 ${esc(readableDate)}</span>
+              <span id="expiresReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
             </label>
             <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateExpiresReadable(this)">
+          </div>`;
+        }
+        if(isNextDateField){
+          const readableDate=formatReadableDate(v||dateValue);
+          return `<div class="${large?'full':''}">
+            <label style="display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span>next_payment_date</span>
+              <span id="nextDateReadableBadge" class="expires-readable-badge" style="${readableDate?'':'display:none'}">${esc(readableDate)}</span>
+            </label>
+            <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro?'readonly':''} type="${inputType}" ${isEnrollDate?'data-enroll-date="1"':''} oninput="updateNextDateReadable(this)">
           </div>`;
         }
         if(isPaidField){
@@ -1750,7 +1991,7 @@ async function save(e){
   });
   if(isEnrollTable()){
     const ridVal=Number(document.getElementById('rid').value)||0;
-    const oldRow=S.rows.find(x=>Number(x.__rowid)===ridVal);
+    const oldRow=(S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows).find(x=>Number(x.__rowid)===ridVal);
     if(oldRow){
       const addStr=String(d.paid??'').replace(/[^\d.]/g,'').trim();
       if(addStr&&Number(addStr)>0){
