@@ -4103,25 +4103,8 @@
     const ENROLL_EDITABLE_FIELDS = ['expires_at', 'next_date', 'paid', 'access_type'];
     function isEnrollTable() { return S.table === ENROLL_TABLE }
     function isStudentTable() { return S.table === STUDENT_TABLE }
-    const pageCache = new Map();
     let searchTimer = null;
     let refreshSeq = 0;
-    function cacheKey() { return S.table || '' }
-    function getCache() { return pageCache.get(cacheKey()) || null }
-    function setCache(data) { pageCache.set(cacheKey(), data) }
-    function setPanelLoading(message = 'Loading database…') {
-      const q = document.getElementById('panel');
-      if (!q) return;
-      q.classList.add('is-loading');
-      q.insertAdjacentHTML('afterbegin', '<div class="smooth-loading" id="inlineLoading"><div class="spinner"></div><div>' + esc(message) + '</div></div>');
-    }
-    function clearPanelLoading() {
-      const q = document.getElementById('panel');
-      if (!q) return;
-      const x = q.querySelector('#inlineLoading');
-      if (x) x.remove();
-      q.classList.remove('is-loading');
-    }
     function parseNextDateToIso(val) {
       const raw = String(val || '').trim();
       if (!raw || raw === '—') return null;
@@ -4213,31 +4196,17 @@
 
     function getEnrollmentRowLevel(r) {
       if (!r) return '';
-      const sector = String(r.nu_dcu || r.nuDcu || '').trim().toUpperCase();
       const rawLevel = String(r.level || '').trim();
-      const course = String(r.course || '').trim();
-
-      if (rawLevel) {
-        const lUpper = rawLevel.toUpperCase();
-        if (lUpper === 'BBA DCU' || (lUpper === 'BBA' && sector === 'DCU')) return 'BBA DCU';
-        if (lUpper === 'BBA NU' || (lUpper === 'BBA' && sector === 'NU')) return 'BBA NU';
-        if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
-        if (lUpper === 'BBS') return 'BBS';
-        if (lUpper === 'MBA') return 'MBA';
-        if (lUpper === 'HSC') return 'HSC';
-        if (lUpper === 'SSC') return 'SSC';
-        return rawLevel;
-      }
-
-      const cLower = course.toLowerCase();
-      if (cLower.includes('hsc')) return 'HSC';
-      if (cLower.includes('ssc')) return 'SSC';
-      if (cLower.includes('mba')) return 'MBA';
-      if (cLower.includes('bbs')) return 'BBS';
-      if (cLower.includes('professional')) return 'BBA Professional';
-      if (sector === 'DCU' || cLower.includes('dcu')) return 'BBA DCU';
-      if (sector === 'NU' || cLower.includes('nu')) return 'BBA NU';
-      return sector === 'DCU' ? 'BBA DCU' : 'BBA NU';
+      if (!rawLevel) return '';
+      const lUpper = rawLevel.toUpperCase();
+      if (lUpper === 'BBA DCU') return 'BBA DCU';
+      if (lUpper === 'BBA NU') return 'BBA NU';
+      if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
+      if (lUpper === 'BBS') return 'BBS';
+      if (lUpper === 'MBA') return 'MBA';
+      if (lUpper === 'HSC') return 'HSC';
+      if (lUpper === 'SSC') return 'SSC';
+      return rawLevel;
     }
 
     function renderEnrollLevelButtons() {
@@ -4252,13 +4221,13 @@
 
     function updateEnrollLevelBadges() {
       const rows = S.rawEnrollRows || [];
+      // Single pass — O(N) instead of O(7×N)
       const counts = { '': rows.length };
-      ENROLL_LEVEL_TABS.forEach(tab => {
-        if (tab.id) {
-          counts[tab.id] = rows.filter(r => getEnrollmentRowLevel(r) === tab.id).length;
-        }
-      });
-
+      ENROLL_LEVEL_TABS.forEach(tab => { if (tab.id) counts[tab.id] = 0; });
+      for (const r of rows) {
+        const lvl = getEnrollmentRowLevel(r);
+        if (counts[lvl] !== undefined) counts[lvl]++;
+      }
       document.querySelectorAll('#enrollLevelBar .cc-badge-count').forEach(badge => {
         const lvl = badge.dataset.levelBadge ?? '';
         badge.textContent = counts[lvl] !== undefined ? counts[lvl] : '0';
@@ -4406,17 +4375,17 @@
     function populateCourseFilter(courses) {
       const sel = document.getElementById('courseFilter');
       if (!sel) return;
-      const allRows = S.rawEnrollRows || [];
-      const distinctCourses = Array.from(new Set([
-        ...(Array.isArray(courses) ? courses : []),
-        ...allRows.map(r => String(r.course || '').trim())
-      ])).filter(Boolean).sort((a, b) => a.localeCompare(b));
+      // Server already returns DISTINCT courses — no need to re-loop rawEnrollRows
+      const allCourses = (Array.isArray(courses) ? courses : [])
+        .map(c => String(c || '').trim()).filter(Boolean);
 
-      let filteredCourses = distinctCourses;
+      let filteredCourses = allCourses;
       if (S.levelFilter) {
-        filteredCourses = distinctCourses.filter(cName => {
-          return allRows.some(r => String(r.course || '').trim().toLowerCase() === cName.toLowerCase() && getEnrollmentRowLevel(r) === S.levelFilter);
-        });
+        const allRows = S.rawEnrollRows || [];
+        filteredCourses = allCourses.filter(cName =>
+          allRows.some(r => String(r.course || '').trim().toLowerCase() === cName.toLowerCase()
+            && getEnrollmentRowLevel(r) === S.levelFilter)
+        );
       }
 
       if (S.courseFilter && !filteredCourses.some(n => n.toLowerCase() === S.courseFilter.toLowerCase())) {
