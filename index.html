@@ -2951,6 +2951,23 @@
       font-size: 14px
     }
 
+    .pay-admit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2.5px 8.5px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      color: #0369a1;
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border: 1px solid #7dd3fc;
+      box-shadow: 0 1px 3px rgba(2, 132, 199, .12);
+      line-height: 1.2;
+    }
+
     .pay-row .p-by {
       display: inline-flex;
       align-items: center;
@@ -5358,10 +5375,10 @@
       try {
         let d = (await api('admin_dashboard')).data;
         const pendingCount = Number(d.pendingEnrollments) || 0;
-        const enrollCount = Number(d.counts?.student_enrolled) || 0;
+        const activeEnroll = Number(d.activeEnrollments) || 0;
+        const enrollCount = Number(d.approvedEnrollments ?? d.counts?.student_enrolled ?? activeEnroll) || 0;
         const studentCount = Number(d.counts?.student_login) || 0;
         const orderCount = Number(d.counts?.shop_orders) || 0;
-        const activeEnroll = Number(d.activeEnrollments) || 0;
         const pendingOrderCount = Number(d.pendingOrders) || 0;
 
         // Update real-time pending badge in sidebar
@@ -6650,9 +6667,11 @@
         const raw = cellValue(row?.payment_history).trim();
         if (raw) { const p = JSON.parse(raw); if (Array.isArray(p)) list = p; }
       } catch { }
-      const items = list.map(e => {
+      const items = list.map((e, idx) => {
         const date = String(e.date || '').trim().split('T')[0];
-        return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount || '')}</span>${renderAdminBadgeHtml(e.admin)}</div>`;
+        const isAdmit = (idx === 0) || String(e.type || '').toLowerCase() === 'admit';
+        const admitBadge = isAdmit ? '<span class="pay-admit-badge">Admit</span>' : '';
+        return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount || '')}</span>${admitBadge}${renderAdminBadgeHtml(e.admin)}</div>`;
       }).join('');
       return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items || '<div class="pay-empty">No payment history yet</div>'}</div></div>`;
     }
