@@ -2838,6 +2838,22 @@
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
+    #eleAccessType[data-val="Limited Access"],
+    #apInlineAccessType[data-val="Limited Access"] {
+      background-color: #fff1f2 !important;
+      border-color: #fca5a5 !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    #eleAccessType[data-val="Full Access"],
+    #apInlineAccessType[data-val="Full Access"] {
+      background-color: #f0fdf4 !important;
+      border-color: #86efac !important;
+      color: #166534 !important;
+      font-weight: 700;
+    }
+
     .detail-item {
       background: #f8fafc;
       border: 1px solid #edf2f7;
@@ -6052,7 +6068,7 @@
             </div>
             <div class="ele-field">
               <label class="ele-label">🔑 Access Type</label>
-              <select id="eleAccessType" class="ele-select">
+              <select id="eleAccessType" class="ele-select" data-val="${accessTypeVal}" onchange="this.dataset.val=this.value">
                 <option value="Limited Access" ${accessTypeVal === 'Limited Access' ? 'selected' : ''}>Limited Access</option>
                 <option value="Full Access" ${accessTypeVal === 'Full Access' ? 'selected' : ''}>Full Access</option>
               </select>
@@ -6350,7 +6366,7 @@
             </div>
             <div class="ap-inline-field">
               <label>Access Type</label>
-              <select id="apInlineAccessType" class="ap-select">
+              <select id="apInlineAccessType" class="ap-select" data-val="Limited Access" onchange="this.dataset.val=this.value">
                 <option value="Limited Access" selected>Limited Access</option>
                 <option value="Full Access">Full Access</option>
               </select>
