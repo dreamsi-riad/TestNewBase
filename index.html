@@ -2117,13 +2117,44 @@
     }
 
     .detail-head-sub {
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 600;
       color: #475569;
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .detail-head-sub .adm-course-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #1e40af;
+    }
+
+    .detail-head-sub .adm-sector-pill {
+      font-size: 12.5px;
+      padding: 3.5px 10px;
+      font-weight: 800;
+    }
+
+    .detail-head-sub .adm-phone-badge {
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 3px 10px;
+      gap: 7px;
+    }
+
+    .detail-head-sub .adm-contact-link {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #475569 !important;
+    }
+
+    .detail-head-sub .adm-copy-phone-btn {
+      font-size: 11.5px;
+      padding: 2.5px 8px;
     }
 
     .modal-close-btn {
@@ -4791,7 +4822,7 @@
         const cNu = cellValue(r.nu_dcu).trim();
         const cMob = cellValue(r.mobile).trim();
         const sectorClass = cNu.toLowerCase() === 'nu' ? 'nu' : cNu.toLowerCase() === 'dcu' ? 'dcu' : 'other';
-        dmSub.innerHTML = `${cCourse ? `<span class="adm-course-title" style="font-size:14px">${esc(cCourse)}</span>` : ''}${cNu ? ` <span class="adm-sector-pill ${sectorClass}">${esc(cNu)}</span>` : ''}${cMob ? ` <span class="adm-phone-badge"><a href="tel:${esc(cMob)}" class="adm-contact-link" style="color:#64748b">📞 ${esc(cMob)}</a>${renderCopyPhoneBtn(cMob)}</span>` : ''}`;
+        dmSub.innerHTML = `${cCourse ? `<span class="adm-course-title" style="font-size:15.5px">${esc(cCourse)}</span>` : ''}${cNu ? ` <span class="adm-sector-pill ${sectorClass}">${esc(cNu)}</span>` : ''}${cMob ? ` <span class="adm-phone-badge"><a href="tel:${esc(cMob)}" class="adm-contact-link" style="color:#475569;font-size:14.5px;font-weight:700">📞 ${esc(cMob)}</a>${renderCopyPhoneBtn(cMob)}</span>` : ''}`;
       } else if (isStudentTable()) {
         const cMob = cellValue(r.mobile).trim();
         const cEmail = cellValue(r.email).trim();
@@ -4898,7 +4929,6 @@
           'status',
           'next_date',
           'access_type',
-          'admin',
           'watch_time',
           'blocked'
         ];
@@ -4922,7 +4952,6 @@
         if (isEnrollTable()) {
           dmActions.innerHTML = `
         <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
-        <button type="button" class="btn primary" onclick="closeDetail();edit(${id})">✏ Edit Enrollment</button>
       `;
         } else if (isStudentTable()) {
           dmActions.innerHTML = `
@@ -4949,7 +4978,7 @@
       }
       if (dmStats) dmStats.classList.add('hidden');
       dmTitle.textContent = name;
-      dmSub.innerHTML = `<span class="adm-course-title" style="color:#d97706;font-size:14px">${esc(r.course || '')}</span>${r.nuDcu ? ' · <span class="adm-sector-pill nu">' + esc(r.nuDcu) + '</span>' : ''}${r.mobile ? ` · <span class="adm-phone-badge"><a href="tel:${esc(r.mobile)}" class="adm-contact-link" style="color:#64748b">📞 ${esc(r.mobile)}</a>${renderCopyPhoneBtn(r.mobile)}</span>` : ''}`;
+      dmSub.innerHTML = `<span class="adm-course-title" style="color:#d97706;font-size:15.5px">${esc(r.course || '')}</span>${r.nuDcu ? ' · <span class="adm-sector-pill nu">' + esc(r.nuDcu) + '</span>' : ''}${r.mobile ? ` · <span class="adm-phone-badge"><a href="tel:${esc(r.mobile)}" class="adm-contact-link" style="color:#475569;font-size:14.5px;font-weight:700">📞 ${esc(r.mobile)}</a>${renderCopyPhoneBtn(r.mobile)}</span>` : ''}`;
       const fields = [
         ['Name', r.name],
         ['Mobile', r.mobile],
