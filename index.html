@@ -2152,57 +2152,92 @@
     /* Financial Mini Stat Banner in Detail Modal */
     .detail-stat-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 16px 0
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 10px 0 12px;
     }
 
     .detail-stat-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px 14px;
-      text-align: center
+      border-radius: 10px;
+      padding: 6px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 46px;
+    }
+
+    .detail-stat-box.price {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .detail-stat-box.discount {
+      background: #fffbeb;
+      border-color: #fde68a;
     }
 
     .detail-stat-box.paid {
       background: #ecfdf5;
-      border-color: #a7f3d0
+      border-color: #a7f3d0;
     }
 
     .detail-stat-box.due {
       background: #fef2f2;
-      border-color: #fca5a5
+      border-color: #fca5a5;
     }
 
     .detail-stat-lbl {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: .6px;
-      color: #64748b
+      letter-spacing: .5px;
+      color: #64748b;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .detail-stat-box.price .detail-stat-lbl {
+      color: #475569;
+    }
+
+    .detail-stat-box.discount .detail-stat-lbl {
+      color: #b45309;
     }
 
     .detail-stat-box.paid .detail-stat-lbl {
-      color: #047857
+      color: #047857;
     }
 
     .detail-stat-box.due .detail-stat-lbl {
-      color: #b91c1c
+      color: #b91c1c;
     }
 
     .detail-stat-val {
-      font: 800 20px 'Baloo Da 2', sans-serif;
+      font: 800 16px/1.2 'Baloo Da 2', sans-serif;
       color: #0f172a;
-      margin-top: 2px
+      margin-top: 1px;
+      white-space: nowrap;
+    }
+
+    .detail-stat-box.price .detail-stat-val {
+      color: #0f172a;
+    }
+
+    .detail-stat-box.discount .detail-stat-val {
+      color: #b45309;
     }
 
     .detail-stat-box.paid .detail-stat-val {
-      color: #047857
+      color: #047857;
     }
 
     .detail-stat-box.due .detail-stat-val {
-      color: #b91c1c
+      color: #b91c1c;
     }
 
     /* Detail Grid items */
@@ -2415,7 +2450,8 @@
       }
 
       .detail-stat-row {
-        grid-template-columns: 1fr
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
       }
     }
   </style>
@@ -4768,13 +4804,18 @@
 
       if (isEnrollTable() && dmStats) {
         const price = moneyNumber(r.course_price);
+        const discount = moneyNumber(r.discount) || 0;
         const paid = moneyNumber(r.paid) || 0;
         const due = dueAmount(r);
         dmStats.classList.remove('hidden');
         dmStats.innerHTML = `
-      <div class="detail-stat-box">
+      <div class="detail-stat-box price">
         <div class="detail-stat-lbl">Course Price</div>
         <div class="detail-stat-val">${price !== null ? `৳ ${fmtMoney(price)}` : '—'}</div>
+      </div>
+      <div class="detail-stat-box discount">
+        <div class="detail-stat-lbl">Discount</div>
+        <div class="detail-stat-val">৳ ${fmtMoney(discount)}</div>
       </div>
       <div class="detail-stat-box paid">
         <div class="detail-stat-lbl">Total Paid</div>
@@ -4836,25 +4877,35 @@
         } else if (c === 'address') {
           extraClass = 'full';
           valHtml = esc(rawVal);
+        } else if (c === 'admin') {
+          valHtml = renderAdminBadgeHtml(rawVal) || esc(rawVal);
+        } else if (c === 'blocked') {
+          const isBlk = String(rawVal).trim().toUpperCase() === 'TRUE';
+          valHtml = `<span class="badge ${isBlk ? 'off' : 'on'}">${isBlk ? 'LOCKED' : 'NO'}</span>`;
         } else {
           valHtml = esc(rawVal);
         }
-        return `<div class="detail-item ${c === 'address' ? 'full' : ''}">
+        return `<div class="detail-item ${c === 'address' || c === 'b_comment' ? 'full' : ''}">
       <div class="k">${esc(label)}</div>
       <div class="v ${extraClass}">${valHtml}</div>
     </div>`;
       };
       let html = '';
       if (isEnrollTable()) {
-        const leftFields = ['name', 'mobile', 'course', 'nu_dcu', 'course_price', 'discount', 'paid', 'access_type', 'next_date', 'admin'];
-        const rightFields = ['enrolled_at', 'expires_at', 'status', 'watch_time', 'get_wt', 'blocked', 'b_comment'];
-        const due = dueAmount(r);
-        const dueItem = `<div class="detail-item"><div class="k">Due</div><div class="v">${due === null ? '<span class="v-empty muted">—</span>' : due > 0 ? `<span class="due-bad" style="color:#dc2626;font-weight:800">৳ ${esc(fmtMoney(due))}</span>` : '<span class="due-ok" style="color:#059669;font-weight:800">Paid ✓</span>'}</div></div>`;
-        const leftItems = leftFields.map(detailItem);
-        leftItems.splice(7, 0, dueItem);
-        const right = rightFields.map(detailItem).join('');
-        const maxRows = Math.max(leftItems.length, rightFields.length);
-        for (let i = 0; i < maxRows; i++) html += (leftItems[i] || '') + (rightFields[i] ? detailItem(rightFields[i]) : '');
+        const enrollFields = [
+          'enrolled_at',
+          'expires_at',
+          'status',
+          'next_date',
+          'access_type',
+          'admin',
+          'watch_time',
+          'blocked'
+        ];
+        if (r.b_comment || String(r.blocked ?? '').trim().toUpperCase() === 'TRUE') {
+          enrollFields.push('b_comment');
+        }
+        html = enrollFields.map(detailItem).join('');
         html += payHistoryHtml(r);
         html += feedbackHistoryHtml(r, false);
       } else if (isStudentTable()) {
