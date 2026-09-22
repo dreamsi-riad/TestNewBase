@@ -6021,6 +6021,7 @@
       const dispStatus = s ? (s.charAt(0).toUpperCase() + s.slice(1)) : (cellValue(r.status) || '—');
       const statusHtml = `<span class="val-status ${sClass}">${esc(dispStatus)}</span>`;
       const watchTime = cellValue(r.watch_time).trim() || '—';
+      const level = getEnrollmentRowLevel(r) || cellValue(r.level).trim() || '—';
 
       const isBlocked = String(r.blocked ?? '').trim().toUpperCase() === 'TRUE';
       const blockedHtml = isBlocked
@@ -6035,6 +6036,10 @@
             <div class="enroll-spec-cell">
               <span class="es-label">📅 Enrolled Date</span>
               <span class="es-value">${esc(enrolledAt)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🎓 Academic Level</span>
+              <span class="es-value">${esc(level)}</span>
             </div>
             <div class="enroll-spec-cell">
               <span class="es-label">⚡ Status</span>
