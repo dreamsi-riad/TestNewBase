@@ -4105,6 +4105,8 @@
     function isStudentTable() { return S.table === STUDENT_TABLE }
     let searchTimer = null;
     let refreshSeq = 0;
+    const pageCache = new Map();
+    function cacheKey() { return S.table || '' }
     function parseNextDateToIso(val) {
       const raw = String(val || '').trim();
       if (!raw || raw === '—') return null;
