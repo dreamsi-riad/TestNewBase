@@ -5584,10 +5584,7 @@
       dmTitle.textContent = name;
       dmSub.innerHTML = `<span class="adm-course-title" style="color:#d97706;font-size:15.5px">${esc(r.course || '')}</span>${r.nuDcu ? ' · <span class="adm-sector-pill nu">' + esc(r.nuDcu) + '</span>' : ''}${r.mobile ? ` · <span class="adm-phone-badge"><a href="tel:${esc(r.mobile)}" class="adm-contact-link" style="color:#475569;font-size:14.5px;font-weight:700">📞 ${esc(r.mobile)}</a>${renderCopyPhoneBtn(r.mobile)}</span>` : ''}`;
       const fields = [
-        ['Name', r.name],
-        ['Mobile', r.mobile],
         ['Email', r.email],
-        ['Course', r.course],
         ['Sector (NU/DCU)', r.nuDcu],
         ['Course Price', r.coursePrice ? `৳ ${fmtMoney(r.coursePrice)}` : r.coursePrice],
         ['Level', r.level],
