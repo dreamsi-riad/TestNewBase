@@ -2531,6 +2531,115 @@
       margin-top: 16px
     }
 
+    /* Compact Enrollment Specs Panel in Detail Modal */
+    .enroll-specs-card {
+      grid-column: 1 / -1;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 2px 0 6px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .enroll-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .enroll-spec-cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 14px;
+      border-bottom: 1px solid #edf2f7;
+      background: #ffffff;
+      min-height: 38px;
+      transition: background .15s ease;
+    }
+
+    .enroll-spec-cell:hover {
+      background: #f8fafc;
+    }
+
+    .enroll-spec-cell:nth-child(odd) {
+      border-right: 1px solid #edf2f7;
+    }
+
+    .enroll-spec-cell:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      border-right: none;
+    }
+
+    .enroll-spec-cell:nth-last-child(2):nth-child(odd),
+    .enroll-spec-cell:nth-last-child(1) {
+      border-bottom: none;
+    }
+
+    .es-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: .35px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .es-value {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: right;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .enroll-spec-reason {
+      background: #fef2f2;
+      border-top: 1.5px solid #fecaca;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .es-reason-tag {
+      font-weight: 800;
+      color: #b91c1c;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .4px;
+      white-space: nowrap;
+    }
+
+    .es-reason-text {
+      color: #dc2626;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    @media (max-width: 600px) {
+      .enroll-specs-grid {
+        grid-template-columns: 1fr;
+      }
+      .enroll-spec-cell:nth-child(odd) {
+        border-right: none;
+      }
+      .enroll-spec-cell {
+        border-bottom: 1px solid #edf2f7 !important;
+      }
+      .enroll-spec-cell:last-child {
+        border-bottom: none !important;
+      }
+    }
+
     .detail-item {
       background: #f8fafc;
       border: 1px solid #edf2f7;
@@ -5412,6 +5521,72 @@
       if (e.target.closest('.act')) return;
       openDetail(id);
     }
+    function renderEnrollSpecsPanel(r) {
+      const enrolledAt = formatDateOnly(r.enrolled_at) || '—';
+      const expiresAt = formatDateOnly(r.expires_at) || '—';
+
+      let s = cellValue(r.status).trim().toLowerCase();
+      if (r.expires_at) {
+        const expIso = parseNextDateToIso(r.expires_at);
+        if (expIso) s = (expIso < getTodayIso()) ? 'expired' : 'active';
+      }
+      const sClass = s === 'active' ? 'st-active' : (s === 'expired' ? 'st-expired' : 'st-pending');
+      const dispStatus = s ? (s.charAt(0).toUpperCase() + s.slice(1)) : (cellValue(r.status) || '—');
+      const statusHtml = `<span class="val-status ${sClass}">${esc(dispStatus)}</span>`;
+
+      const nextDate = formatNextPaymentDate(r.next_date) || '—';
+      const accessType = cellValue(r.access_type).trim() || '—';
+      const watchTime = cellValue(r.watch_time).trim() || '—';
+
+      const isBlocked = String(r.blocked ?? '').trim().toUpperCase() === 'TRUE';
+      const blockedHtml = isBlocked
+        ? `<span class="badge off" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;padding:2px 8px;border-radius:6px;font-weight:800;font-size:11px">LOCKED</span>`
+        : `<span class="badge on" style="background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:6px;font-weight:700;font-size:11px">No</span>`;
+
+      const lockComment = cellValue(r.b_comment).trim();
+
+      return `
+        <div class="enroll-specs-card">
+          <div class="enroll-specs-grid">
+            <div class="enroll-spec-cell">
+              <span class="es-label">📅 Enrolled Date</span>
+              <span class="es-value">${esc(enrolledAt)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">⏳ Expires At</span>
+              <span class="es-value">${esc(expiresAt)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">⚡ Status</span>
+              <span class="es-value">${statusHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🗓️ Next Payment</span>
+              <span class="es-value">${esc(nextDate)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🔑 Access Type</span>
+              <span class="es-value">${esc(accessType)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">⏱️ Watch Time</span>
+              <span class="es-value">${esc(watchTime)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🔒 Blocked</span>
+              <span class="es-value">${blockedHtml}</span>
+            </div>
+          </div>
+          ${(isBlocked && lockComment) ? `
+            <div class="enroll-spec-reason">
+              <span class="es-reason-tag">Lock Reason:</span>
+              <span class="es-reason-text">${esc(lockComment)}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
     function openDetail(id) {
       const pool = isEnrollTable() ? (S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows) : S.rows;
       const r = (pool || []).find(x => Number(x.__rowid) === Number(id));
@@ -5527,19 +5702,7 @@
       };
       let html = '';
       if (isEnrollTable()) {
-        const enrollFields = [
-          'enrolled_at',
-          'expires_at',
-          'status',
-          'next_date',
-          'access_type',
-          'watch_time',
-          'blocked'
-        ];
-        if (r.b_comment || String(r.blocked ?? '').trim().toUpperCase() === 'TRUE') {
-          enrollFields.push('b_comment');
-        }
-        html = enrollFields.map(detailItem).join('');
+        html = renderEnrollSpecsPanel(r);
         html += payHistoryHtml(r);
         html += feedbackHistoryHtml(r, false);
       } else if (isStudentTable()) {
