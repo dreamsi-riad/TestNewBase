@@ -3988,57 +3988,6 @@
       <form id="ef"></form>
     </div>
   </div>
-  <div id="approveModal" class="modal-overlay hidden">
-    <div class="modal-box detail-box" style="width:min(520px,100%)">
-      <div class="detail-header-card" style="padding-bottom:12px">
-        <div class="detail-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">✓</div>
-        <div class="detail-head-info">
-          <h3 style="margin:0 0 2px">Approve Enrollment</h3>
-          <div class="detail-head-sub" style="font-size:12.5px;color:#64748b">Set student access and payment schedule
-          </div>
-        </div>
-        <button type="button" class="modal-close-btn" onclick="closeApproveModal()" aria-label="Close modal">✕</button>
-      </div>
-      <div class="approve-info" style="margin-top:14px">
-        <div class="row"><span class="val" id="apStudent"></span></div>
-        <div class="row"><span class="val course" id="apCourse"></span></div>
-        <div class="row price"><span class="lbl">Course Price</span><span class="val" id="apPrice"></span></div>
-      </div>
-      <div class="grid" style="gap:12px">
-        <div>
-          <label style="font-size:13px;font-weight:700;margin:0 0 5px">Discount</label>
-          <input id="apDiscount" class="adm-enroll-num-input" placeholder="e.g. 500 (Optional)">
-        </div>
-        <div>
-          <label style="font-size:13px;font-weight:700;margin:0 0 5px">Paid Amount *</label>
-          <input id="apPaid" class="adm-enroll-num-input" placeholder="e.g. 5500" required>
-        </div>
-        <div>
-          <label style="font-size:13px;font-weight:700;margin:0 0 5px">Access Type</label>
-          <select id="apAccessType" class="access-spinner" data-val="Limited Access"
-            onchange="this.dataset.val=this.value">
-            <option value="Limited Access">Limited Access</option>
-            <option value="Full Access">Full Access</option>
-          </select>
-        </div>
-        <div>
-          <label style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;margin:0 0 5px">
-            <span>Next Payment Date</span>
-            <span id="apNextDateBadge" class="expires-readable-badge" style="display:none"></span>
-          </label>
-          <input id="apNextDate" type="date" class="adm-enroll-date-input" onclick="openDatePicker(this)"
-            onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}"
-            oninput="updateApNextDateBadge(this)">
-        </div>
-      </div>
-      <div class="modal-actions" style="margin-top:16px">
-        <button type="button" class="btn ghost" onclick="closeApproveModal()">Cancel</button>
-        <button type="button" class="btn primary"
-          style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="submitApprove()">✓
-          Approve Enrollment</button>
-      </div>
-    </div>
-  </div>
   <div id="detailModal" class="modal-overlay hidden">
     <div class="modal-box detail-box">
       <div class="detail-header-card">
@@ -5042,9 +4991,9 @@
       if (typeof cdpTargetInput.onchange === 'function') {
         try { cdpTargetInput.onchange(); } catch (e) { }
       }
-      if (cdpTargetInput.id === 'apNextDate') {
-        updateApNextDateBadge(cdpTargetInput);
+      if (cdpTargetInput.id === 'apNextDate' || cdpTargetInput.id === 'apInlineNextDate') {
         if (typeof updateInlineApNextDateBadge === 'function') updateInlineApNextDateBadge(cdpTargetInput);
+        if (typeof updateApNextDateBadge === 'function') updateApNextDateBadge(cdpTargetInput);
       }
       if (cdpTargetInput.id === 'eleExpiresAt' && typeof updateEleExpiresBadge === 'function') {
         updateEleExpiresBadge(cdpTargetInput);
@@ -5625,34 +5574,9 @@
     function approve(id) {
       openPendingDetail(id);
     }
-    function closeApproveModal() {
-      const apModal = document.getElementById('approveModal');
-      if (apModal) apModal.classList.add('hidden');
-    }
-    async function submitApprove() {
-      const apModal = document.getElementById('approveModal');
-      const apDiscountEl = document.getElementById('apDiscount');
-      const apPaidEl = document.getElementById('apPaid');
-      const apAccessTypeEl = document.getElementById('apAccessType');
-      const apNextDateEl = document.getElementById('apNextDate');
-      const id = Number(apModal?.dataset?.id || 0);
-      const discount = apDiscountEl?.value.trim() || '';
-      const paid = apPaidEl?.value.trim() || '';
-      const accessType = apAccessTypeEl?.value || 'Limited Access';
-      const nextDate = fmtDateInput(apNextDateEl?.value.trim() || '');
-      if (!paid) { toast('Paid amount আবশ্যক'); if (apPaidEl) apPaidEl.focus(); return; }
-      try {
-        await api('approve_enrollment', { id, adminName: S.user?.name || 'Admin', discount, paid, accessType, nextDate });
-        toast('Enrollment approved');
-        closeApproveModal();
-        closeDetail();
-        pending();
-      } catch (e) { toast(e.message || 'Approval failed'); }
-    }
-
     function calcInlineApprovalDue(price) {
-      const discount = Number(document.getElementById('apDiscount')?.value || 0);
-      const paid = Number(document.getElementById('apPaid')?.value || 0);
+      const discount = Number(document.getElementById('apInlineDiscount')?.value || 0);
+      const paid = Number(document.getElementById('apInlinePaid')?.value || 0);
       const due = Math.max(0, price - discount - paid);
       const badge = document.getElementById('apInlineDueBadge');
       if (badge) {
@@ -5675,10 +5599,10 @@
     }
 
     async function submitApproveDirect(id) {
-      const apDiscountEl = document.getElementById('apDiscount');
-      const apPaidEl = document.getElementById('apPaid');
-      const apAccessTypeEl = document.getElementById('apAccessType');
-      const apNextDateEl = document.getElementById('apNextDate');
+      const apDiscountEl = document.getElementById('apInlineDiscount');
+      const apPaidEl = document.getElementById('apInlinePaid');
+      const apAccessTypeEl = document.getElementById('apInlineAccessType');
+      const apNextDateEl = document.getElementById('apInlineNextDate');
       const discount = apDiscountEl?.value.trim() || '';
       const paid = apPaidEl?.value.trim() || '';
       const accessType = apAccessTypeEl?.value || 'Limited Access';
@@ -6408,11 +6332,11 @@
             </div>
             <div class="ap-inline-field">
               <label>Discount (Optional)</label>
-              <input type="number" id="apDiscount" class="ap-input" placeholder="e.g. 500" oninput="calcInlineApprovalDue(${priceNum || 0})">
+              <input type="number" id="apInlineDiscount" class="ap-input" placeholder="e.g. 500" oninput="calcInlineApprovalDue(${priceNum || 0})">
             </div>
             <div class="ap-inline-field">
               <label>Paid Amount *</label>
-              <input type="number" id="apPaid" class="ap-input ap-paid-input" placeholder="e.g. 5500" oninput="calcInlineApprovalDue(${priceNum || 0})">
+              <input type="number" id="apInlinePaid" class="ap-input ap-paid-input" placeholder="e.g. 5500" oninput="calcInlineApprovalDue(${priceNum || 0})">
             </div>
             <div class="ap-inline-field">
               <label>Due Amount</label>
@@ -6420,7 +6344,7 @@
             </div>
             <div class="ap-inline-field">
               <label>Access Type</label>
-              <select id="apAccessType" class="ap-select">
+              <select id="apInlineAccessType" class="ap-select">
                 <option value="Limited Access" selected>Limited Access</option>
                 <option value="Full Access">Full Access</option>
               </select>
@@ -6430,7 +6354,7 @@
                 <span>Next Payment Date</span>
                 <span id="apInlineNextBadge" class="expires-readable-badge" style="display:none"></span>
               </label>
-              <input type="date" id="apNextDate" class="ap-input" onclick="openDatePicker(this)"
+              <input type="date" id="apInlineNextDate" class="ap-input" onclick="openDatePicker(this)"
                 oninput="updateInlineApNextDateBadge(this)"
                 onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
             </div>
@@ -6446,13 +6370,12 @@
     `;
       }
       detailModal.classList.remove('hidden');
-      setTimeout(() => { const p = document.getElementById('apPaid'); if (p) p.focus(); }, 100);
+      setTimeout(() => { const p = document.getElementById('apInlinePaid'); if (p) p.focus(); }, 100);
     }
     function closeDetail() { detailModal.classList.add('hidden') }
     detailModal.addEventListener('click', e => { if (e.target === detailModal) closeDetail() });
     drawer.addEventListener('click', e => { if (e.target === drawer) closeDrawer() });
-    approveModal.addEventListener('click', e => { if (e.target === approveModal) closeApproveModal() });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closeDrawer(); closeApproveModal(); closeCustomDatePicker(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closeDrawer(); closeCustomDatePicker(); } });
     function renderTable(d) {
       const q = document.getElementById('panel');
       if (!q) return;
