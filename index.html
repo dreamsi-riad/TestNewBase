@@ -946,6 +946,21 @@
       outline: none
     }
 
+    /* Remove number stepper/spinner arrows */
+    .adm-enroll-num-input::-webkit-outer-spin-button,
+    .adm-enroll-num-input::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0 !important;
+    }
+
+    .adm-enroll-num-input,
+    input[type="number"] {
+      -moz-appearance: textfield !important;
+      appearance: textfield !important;
+    }
+
     .field-type {
       font-size: 10px;
       color: #8a94a8;
@@ -5792,7 +5807,7 @@
         if (isPaidField) {
           return `<div class="${large ? 'full' : ''}">
             <label>Add Payment</label>
-            <input class="adm-enroll-num-input" data-c="paid" value="" type="number" step="any" placeholder="Enter amount to add, e.g. 500">
+            <input class="adm-enroll-num-input" data-c="paid" value="" type="text" inputmode="numeric" placeholder="Enter amount to add, e.g. 500">
           </div>`;
         }
         if (name === 'access_type') {
