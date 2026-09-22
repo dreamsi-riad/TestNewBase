@@ -2640,6 +2640,216 @@
       }
     }
 
+    /* Inline Approval Section in Detail Modal */
+    .ap-inline-section {
+      grid-column: 1 / -1;
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 6px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .ap-inline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .ap-inline-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: .2px;
+    }
+
+    .ap-inline-hint {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .ap-inline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .ap-inline-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .ap-inline-field label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .ap-price-display {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .ap-input, .ap-select {
+      height: 38px;
+      padding: 0 12px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0f172a;
+      transition: all .15s ease;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .ap-input:focus, .ap-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .ap-paid-input {
+      border-color: #10b981 !important;
+      background: #f0fdf4 !important;
+    }
+
+    .ap-due-badge {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 800;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #475569;
+    }
+
+    .ap-due-badge.due {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: #b45309;
+    }
+
+    .ap-due-badge.paid {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #15803d;
+    }
+
+    /* Live Enrollment Edit Box in Detail Modal */
+    .enroll-live-edit-box {
+      grid-column: 1 / -1;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 8px 0;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .ele-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .ele-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: .2px;
+    }
+
+    .ele-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .ele-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .ele-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .ele-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .ele-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ele-input, .ele-select {
+      height: 38px;
+      padding: 0 12px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0f172a;
+      outline: none;
+      transition: all .15s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .ele-input:focus, .ele-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
     .detail-item {
       background: #f8fafc;
       border: 1px solid #edf2f7;
@@ -4703,6 +4913,13 @@
       }
       if (cdpTargetInput.id === 'apNextDate') {
         updateApNextDateBadge(cdpTargetInput);
+        if (typeof updateInlineApNextDateBadge === 'function') updateInlineApNextDateBadge(cdpTargetInput);
+      }
+      if (cdpTargetInput.id === 'eleExpiresAt' && typeof updateEleExpiresBadge === 'function') {
+        updateEleExpiresBadge(cdpTargetInput);
+      }
+      if (cdpTargetInput.id === 'eleNextDate' && typeof updateEleNextBadge === 'function') {
+        updateEleNextBadge(cdpTargetInput);
       }
       closeCustomDatePicker();
     }
@@ -5260,36 +5477,7 @@
       return v.replace(/-/g, '/');
     }
     function approve(id) {
-      const r = (S.pendingRows || []).find(x => Number(x.id) === Number(id));
-      const apModal = document.getElementById('approveModal');
-      const apStudentEl = document.getElementById('apStudent');
-      const apCourseEl = document.getElementById('apCourse');
-      const apPriceEl = document.getElementById('apPrice');
-      const apDiscountEl = document.getElementById('apDiscount');
-      const apPaidEl = document.getElementById('apPaid');
-      const apAccessTypeEl = document.getElementById('apAccessType');
-      const apNextDateEl = document.getElementById('apNextDate');
-
-      if (apStudentEl) {
-        if (r) {
-          apStudentEl.innerHTML = `<div class="ap-student-wrap"><span>${esc(r.name)}</span> <span style="color:#64748b;font-weight:600;font-size:15px">(${esc(r.mobile)})</span>${renderCopyPhoneBtn(r.mobile)}</div>`;
-        } else {
-          apStudentEl.innerHTML = '';
-        }
-      }
-      if (apCourseEl) apCourseEl.textContent = r ? `${r.course}${r.nuDcu ? ' — ' + r.nuDcu : ''}` : '';
-      if (apPriceEl) apPriceEl.textContent = r && r.coursePrice ? `৳ ${r.coursePrice}` : '—';
-      if (apDiscountEl) apDiscountEl.value = '';
-      if (apPaidEl) apPaidEl.value = '';
-      if (apAccessTypeEl) { apAccessTypeEl.value = 'Limited Access'; apAccessTypeEl.dataset.val = 'Limited Access'; }
-      if (apNextDateEl) apNextDateEl.value = '';
-      const apBadge = document.getElementById('apNextDateBadge');
-      if (apBadge) { apBadge.textContent = ''; apBadge.style.display = 'none'; }
-      if (apModal) {
-        apModal.dataset.id = id;
-        apModal.classList.remove('hidden');
-      }
-      if (apPaidEl) setTimeout(() => apPaidEl.focus(), 0);
+      openPendingDetail(id);
     }
     function closeApproveModal() {
       const apModal = document.getElementById('approveModal');
@@ -5306,13 +5494,184 @@
       const paid = apPaidEl?.value.trim() || '';
       const accessType = apAccessTypeEl?.value || 'Limited Access';
       const nextDate = fmtDateInput(apNextDateEl?.value.trim() || '');
-      if (!paid) { toast('Paid amount আবশ্যক'); if (apPaidEl) apPaidEl.focus(); return }
+      if (!paid) { toast('Paid amount আবশ্যক'); if (apPaidEl) apPaidEl.focus(); return; }
       try {
         await api('approve_enrollment', { id, adminName: S.user?.name || 'Admin', discount, paid, accessType, nextDate });
         toast('Enrollment approved');
         closeApproveModal();
+        closeDetail();
         pending();
-      } catch (e) { toast(e.message || 'Approval failed') }
+      } catch (e) { toast(e.message || 'Approval failed'); }
+    }
+
+    function calcInlineApprovalDue(price) {
+      const discount = Number(document.getElementById('apDiscount')?.value || 0);
+      const paid = Number(document.getElementById('apPaid')?.value || 0);
+      const due = Math.max(0, price - discount - paid);
+      const badge = document.getElementById('apInlineDueBadge');
+      if (badge) {
+        if (due > 0) {
+          badge.textContent = `৳ ${fmtMoney(due)} (Due)`;
+          badge.className = 'ap-due-badge due';
+        } else {
+          badge.textContent = 'Paid in Full ✓';
+          badge.className = 'ap-due-badge paid';
+        }
+      }
+    }
+
+    function updateInlineApNextDateBadge(input) {
+      const badge = document.getElementById('apInlineNextBadge');
+      if (!badge) return;
+      const readable = formatReadableDate(input.value);
+      badge.textContent = readable ? readable : '';
+      badge.style.display = readable ? 'inline-flex' : 'none';
+    }
+
+    async function submitApproveDirect(id) {
+      const apDiscountEl = document.getElementById('apDiscount');
+      const apPaidEl = document.getElementById('apPaid');
+      const apAccessTypeEl = document.getElementById('apAccessType');
+      const apNextDateEl = document.getElementById('apNextDate');
+      const discount = apDiscountEl?.value.trim() || '';
+      const paid = apPaidEl?.value.trim() || '';
+      const accessType = apAccessTypeEl?.value || 'Limited Access';
+      const nextDate = fmtDateInput(apNextDateEl?.value.trim() || '');
+      if (!paid) {
+        toast('Paid amount আবশ্যক');
+        if (apPaidEl) apPaidEl.focus();
+        return;
+      }
+      try {
+        await api('approve_enrollment', { id, adminName: S.user?.name || 'Admin', discount, paid, accessType, nextDate });
+        toast('Enrollment approved successfully');
+        closeDetail();
+        pending();
+      } catch (e) {
+        toast(e.message || 'Approval failed');
+      }
+    }
+
+    function updateEleExpiresBadge(input) {
+      const badge = document.getElementById('eleExpiresBadge');
+      if (!badge) return;
+      const val = input.value;
+      if (!val) {
+        badge.style.display = 'none';
+        return;
+      }
+      const expIso = parseNextDateToIso(val);
+      const isExp = expIso ? (expIso < getTodayIso()) : false;
+      const readableDate = formatReadableDate(val);
+      const badgeText = readableDate ? `${readableDate} (${isExp ? 'Expired' : 'Active'})` : '';
+      badge.textContent = badgeText;
+      badge.className = `expires-readable-badge ${isExp ? 'red' : 'green'}`;
+      badge.style.display = badgeText ? 'inline-flex' : 'none';
+    }
+
+    function updateEleNextBadge(input) {
+      const badge = document.getElementById('eleNextBadge');
+      if (!badge) return;
+      const readable = formatReadableDate(input.value);
+      badge.textContent = readable || '';
+      badge.style.display = readable ? 'inline-flex' : 'none';
+    }
+
+    async function saveEnrollmentDirect(id) {
+      const pool = isEnrollTable() ? (S.rawEnrollRows?.length ? S.rawEnrollRows : S.rows) : S.rows;
+      const oldRow = (pool || []).find(x => Number(x.__rowid) === Number(id));
+      if (!oldRow) {
+        toast('Enrollment record not found');
+        return;
+      }
+
+      const expInput = document.getElementById('eleExpiresAt');
+      const nextDateInput = document.getElementById('eleNextDate');
+      const accessTypeInput = document.getElementById('eleAccessType');
+      const addPaidInput = document.getElementById('eleAddPaid');
+      const feedbackInput = document.getElementById('eleFeedback');
+
+      const d = {};
+
+      // 1. Expires At
+      const expVal = expInput ? expInput.value.trim() : '';
+      if (expVal) {
+        d.expires_at = new Date(expVal + 'T23:59:59.999Z').toISOString();
+        const expIso = parseNextDateToIso(d.expires_at);
+        if (expIso) {
+          d.status = (expIso < getTodayIso()) ? 'Expired' : 'Active';
+        }
+      } else if (expInput && !expVal) {
+        d.expires_at = '';
+      }
+
+      // 2. Next Payment Date
+      if (nextDateInput) {
+        const ndVal = nextDateInput.value.trim();
+        d.next_date = ndVal ? fmtDateInput(ndVal) : '';
+      }
+
+      // 3. Access Type
+      if (accessTypeInput) {
+        d.access_type = accessTypeInput.value;
+      }
+
+      // 4. Add Payment (Installment)
+      const addPaidVal = addPaidInput ? addPaidInput.value.replace(/[^\d.]/g, '').trim() : '';
+      if (addPaidVal && Number(addPaidVal) > 0) {
+        const addAmt = Number(addPaidVal);
+        const oldPaid = moneyNumber(oldRow.paid) || 0;
+        d.paid = String(oldPaid + addAmt);
+
+        let hist = [];
+        try {
+          const raw = cellValue(oldRow.payment_history).trim();
+          if (raw) {
+            const p = JSON.parse(raw);
+            if (Array.isArray(p)) hist = p;
+          }
+        } catch { }
+        hist.push({
+          date: new Date().toISOString(),
+          amount: addAmt,
+          admin: String(S.user?.name || 'Admin').trim() || 'Admin'
+        });
+        d.payment_history = JSON.stringify(hist);
+      }
+
+      // 5. Add Feedback
+      const fbText = feedbackInput ? feedbackInput.value.trim() : '';
+      if (fbText) {
+        const todayDate = getTodayIso();
+        let fbList = [];
+        const rawFb = cellValue(oldRow.feedback ?? oldRow.Feedback).trim();
+        if (rawFb) {
+          try {
+            const parsed = JSON.parse(rawFb);
+            if (Array.isArray(parsed)) fbList = parsed;
+          } catch (err) {
+            if (rawFb) fbList.push({ date: todayDate, text: rawFb, admin: 'Admin' });
+          }
+        }
+        fbList.push({
+          date: todayDate,
+          text: fbText,
+          admin: String(S.user?.name || 'Admin').trim() || 'Admin'
+        });
+        const fbCol = (S.cols || []).find(c => colName(c).toLowerCase() === 'feedback');
+        const fbColName = fbCol ? colName(fbCol) : 'Feedback';
+        d[fbColName] = JSON.stringify(fbList);
+      }
+
+      try {
+        await api('admin_save', { table: 'student_enrolled', rowid: id, data: d });
+        pageCache.delete(cacheKey());
+        toast('Enrollment saved successfully');
+        closeDetail();
+        refresh();
+      } catch (e) {
+        toast(e.message || 'Save failed');
+      }
     }
 
     function colName(c) {
@@ -5383,9 +5742,10 @@
     function actionButtons(row) {
       const id = Number(row.__rowid);
       const isStudent = (S.table === 'student_login');
+      const isEnroll = (S.table === 'student_enrolled');
       const noDelete = ['student_login', 'student_enrolled'].includes(S.table);
       let html = '';
-      if (isStudent) {
+      if (isStudent || isEnroll) {
         html += `<button class="adm-act-btn act-view" onclick="openDetail(${id})" title="View Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             <span>View</span>
@@ -5523,8 +5883,6 @@
     }
     function renderEnrollSpecsPanel(r) {
       const enrolledAt = formatDateOnly(r.enrolled_at) || '—';
-      const expiresAt = formatDateOnly(r.expires_at) || '—';
-
       let s = cellValue(r.status).trim().toLowerCase();
       if (r.expires_at) {
         const expIso = parseNextDateToIso(r.expires_at);
@@ -5533,9 +5891,6 @@
       const sClass = s === 'active' ? 'st-active' : (s === 'expired' ? 'st-expired' : 'st-pending');
       const dispStatus = s ? (s.charAt(0).toUpperCase() + s.slice(1)) : (cellValue(r.status) || '—');
       const statusHtml = `<span class="val-status ${sClass}">${esc(dispStatus)}</span>`;
-
-      const nextDate = formatNextPaymentDate(r.next_date) || '—';
-      const accessType = cellValue(r.access_type).trim() || '—';
       const watchTime = cellValue(r.watch_time).trim() || '—';
 
       const isBlocked = String(r.blocked ?? '').trim().toUpperCase() === 'TRUE';
@@ -5553,20 +5908,8 @@
               <span class="es-value">${esc(enrolledAt)}</span>
             </div>
             <div class="enroll-spec-cell">
-              <span class="es-label">⏳ Expires At</span>
-              <span class="es-value">${esc(expiresAt)}</span>
-            </div>
-            <div class="enroll-spec-cell">
               <span class="es-label">⚡ Status</span>
               <span class="es-value">${statusHtml}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">🗓️ Next Payment</span>
-              <span class="es-value">${esc(nextDate)}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">🔑 Access Type</span>
-              <span class="es-value">${esc(accessType)}</span>
             </div>
             <div class="enroll-spec-cell">
               <span class="es-label">⏱️ Watch Time</span>
@@ -5583,6 +5926,123 @@
               <span class="es-reason-text">${esc(lockComment)}</span>
             </div>
           ` : ''}
+        </div>
+      `;
+    }
+
+    function renderEnrollLiveEditBox(r) {
+      const expDateVal = enrollDateInputValue('expires_at', r.expires_at);
+      const nextDateVal = enrollDateInputValue('next_date', r.next_date || r.next_payment_date);
+      const accessTypeVal = /^full access$/i.test(String(r.access_type || '')) ? 'Full Access' : 'Limited Access';
+
+      const expIso = expDateVal ? parseNextDateToIso(expDateVal) : '';
+      const isExp = expIso ? (expIso < getTodayIso()) : false;
+      const readableExp = formatReadableDate(expDateVal);
+      const expBadgeText = readableExp ? `${readableExp} (${isExp ? 'Expired' : 'Active'})` : '';
+      const expBadgeClass = isExp ? 'red' : 'green';
+
+      const readableNext = formatReadableDate(nextDateVal);
+      const nextBadgeText = readableNext || '';
+
+      return `
+        <div class="enroll-live-edit-box">
+          <div class="ele-header">
+            <span class="ele-title">⚙️ Access &amp; Payment Management</span>
+            <span class="ele-badge">Live Edit</span>
+          </div>
+          <div class="ele-grid">
+            <div class="ele-field">
+              <label class="ele-label">
+                <span>⏳ Expires At</span>
+                <span id="eleExpiresBadge" class="expires-readable-badge ${expBadgeClass}" style="${expBadgeText ? '' : 'display:none'}">${esc(expBadgeText)}</span>
+              </label>
+              <input id="eleExpiresAt" class="ele-input" type="date" value="${esc(expDateVal)}"
+                oninput="updateEleExpiresBadge(this)" onclick="openDatePicker(this)"
+                onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
+            </div>
+            <div class="ele-field">
+              <label class="ele-label">
+                <span>🗓️ Next Payment Date</span>
+                <span id="eleNextBadge" class="expires-readable-badge" style="${nextBadgeText ? '' : 'display:none'}">${esc(nextBadgeText)}</span>
+              </label>
+              <input id="eleNextDate" class="ele-input" type="date" value="${esc(nextDateVal)}"
+                oninput="updateEleNextBadge(this)" onclick="openDatePicker(this)"
+                onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
+            </div>
+            <div class="ele-field">
+              <label class="ele-label">🔑 Access Type</label>
+              <select id="eleAccessType" class="ele-select">
+                <option value="Limited Access" ${accessTypeVal === 'Limited Access' ? 'selected' : ''}>Limited Access</option>
+                <option value="Full Access" ${accessTypeVal === 'Full Access' ? 'selected' : ''}>Full Access</option>
+              </select>
+            </div>
+            <div class="ele-field">
+              <label class="ele-label">💰 Add Payment (Installment)</label>
+              <input id="eleAddPaid" class="ele-input" type="number" inputmode="numeric" placeholder="Enter amount to add, e.g. 500">
+            </div>
+            <div class="ele-field full">
+              <label class="ele-label">📝 Add Student Feedback / Note</label>
+              <input id="eleFeedback" class="ele-input" type="text" placeholder="Enter student feedback / note to record..." autocomplete="off">
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStudentSpecsPanel(r) {
+      const email = cellValue(r.email).trim();
+      const emailHtml = email ? `<a href="mailto:${esc(email)}" class="adm-contact-link email">✉ ${esc(email)}</a>` : '<span class="v-empty muted">—</span>';
+      const level = cellValue(r.level).trim() || '—';
+      const year = cellValue(r.year).trim() || '—';
+      const department = cellValue(r.department).trim() || '—';
+      const session = cellValue(r.session).trim() || '—';
+      const institute = cellValue(r.institute).trim() || '—';
+      const address = cellValue(r.address).trim() || '—';
+      const joinedAt = formatDateOnly(r.timestamp || r.created_at) || '—';
+      const updatedAt = r.updated_at ? formatDateOnly(r.updated_at) : '';
+
+      return `
+        <div class="enroll-specs-card">
+          <div class="enroll-specs-grid">
+            <div class="enroll-spec-cell">
+              <span class="es-label">✉️ Email</span>
+              <span class="es-value">${emailHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🎓 Level</span>
+              <span class="es-value">${esc(level)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">📅 Year</span>
+              <span class="es-value">${esc(year)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">📚 Department</span>
+              <span class="es-value">${esc(department)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">⏳ Session</span>
+              <span class="es-value">${esc(session)}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🏫 Institute</span>
+              <span class="es-value">${esc(institute)}</span>
+            </div>
+            <div class="enroll-spec-cell"${updatedAt ? '' : ' style="grid-column:1/-1;border-right:none;"'}>
+              <span class="es-label">🗓️ Joined Date</span>
+              <span class="es-value">${esc(joinedAt)}</span>
+            </div>
+            ${updatedAt ? `
+              <div class="enroll-spec-cell">
+                <span class="es-label">⏱️ Updated At</span>
+                <span class="es-value">${esc(updatedAt)}</span>
+              </div>
+            ` : ''}
+            <div class="enroll-spec-cell" style="grid-column: 1 / -1; border-right: none; border-bottom: none;">
+              <span class="es-label">📍 Address</span>
+              <span class="es-value">${esc(address)}</span>
+            </div>
+          </div>
         </div>
       `;
     }
@@ -5703,11 +6163,11 @@
       let html = '';
       if (isEnrollTable()) {
         html = renderEnrollSpecsPanel(r);
+        html += renderEnrollLiveEditBox(r);
         html += payHistoryHtml(r);
         html += feedbackHistoryHtml(r, false);
       } else if (isStudentTable()) {
-        const studentCols = ['name', 'mobile', 'email', 'department', 'institute', 'level', 'year', 'session', 'address', 'created_at', 'updated_at'];
-        html = studentCols.map(detailItem).join('');
+        html = renderStudentSpecsPanel(r);
       } else {
         const cols = S.cols.map(colName).filter(c => c && c !== 'payment_history' && c.toLowerCase() !== 'feedback');
         html = cols.map(detailItem).join('');
@@ -5719,6 +6179,7 @@
         if (isEnrollTable()) {
           dmActions.innerHTML = `
         <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
+        <button type="button" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;font-weight:700" onclick="saveEnrollmentDirect(${id})">💾 Save Changes</button>
       `;
         } else if (isStudentTable()) {
           dmActions.innerHTML = `
@@ -5792,16 +6253,57 @@
             </div>
           </div>
         </div>
+        <div class="ap-inline-section">
+          <div class="ap-inline-header">
+            <span class="ap-inline-title">⚡ Enrollment Approval &amp; Payment Settings</span>
+            <span class="ap-inline-hint">Verify amounts &amp; schedule before approving</span>
+          </div>
+          <div class="ap-inline-grid">
+            <div class="ap-inline-field">
+              <label>Course Price</label>
+              <div class="ap-price-display">${priceNum !== null ? `৳ ${fmtMoney(priceNum)}` : (r.coursePrice ? `৳ ${r.coursePrice}` : '—')}</div>
+            </div>
+            <div class="ap-inline-field">
+              <label>Discount (Optional)</label>
+              <input type="number" id="apDiscount" class="ap-input" placeholder="e.g. 500" oninput="calcInlineApprovalDue(${priceNum || 0})">
+            </div>
+            <div class="ap-inline-field">
+              <label>Paid Amount *</label>
+              <input type="number" id="apPaid" class="ap-input ap-paid-input" placeholder="e.g. 5500" oninput="calcInlineApprovalDue(${priceNum || 0})">
+            </div>
+            <div class="ap-inline-field">
+              <label>Due Amount</label>
+              <div id="apInlineDueBadge" class="ap-due-badge due">৳ ${priceNum !== null ? fmtMoney(priceNum) : '0'} (Due)</div>
+            </div>
+            <div class="ap-inline-field">
+              <label>Access Type</label>
+              <select id="apAccessType" class="ap-select">
+                <option value="Limited Access" selected>Limited Access</option>
+                <option value="Full Access">Full Access</option>
+              </select>
+            </div>
+            <div class="ap-inline-field">
+              <label style="display:flex;align-items:center;gap:6px">
+                <span>Next Payment Date</span>
+                <span id="apInlineNextBadge" class="expires-readable-badge" style="display:none"></span>
+              </label>
+              <input type="date" id="apNextDate" class="ap-input" onclick="openDatePicker(this)"
+                oninput="updateInlineApNextDateBadge(this)"
+                onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
+            </div>
+          </div>
+        </div>
       `;
 
       const dmActions = document.getElementById('dmActions');
       if (dmActions) {
         dmActions.innerHTML = `
       <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
-      <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669" onclick="closeDetail();approve(${r.id})">✓ Approve Enrollment</button>
+      <button type="button" class="btn primary" style="background:linear-gradient(135deg,#10b981,#059669);border-color:#059669;font-weight:700" onclick="submitApproveDirect(${r.id})">✓ Approve Enrollment</button>
     `;
       }
       detailModal.classList.remove('hidden');
+      setTimeout(() => { const p = document.getElementById('apPaid'); if (p) p.focus(); }, 100);
     }
     function closeDetail() { detailModal.classList.add('hidden') }
     detailModal.addEventListener('click', e => { if (e.target === detailModal) closeDetail() });
