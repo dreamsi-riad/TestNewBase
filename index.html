@@ -690,13 +690,233 @@
       border-radius: 7px;
       background-color: #eff6ff;
       border: 1px solid #bfdbfe;
-      transition: all .18s ease
+      transition: all .18s ease;
+      pointer-events: none;
     }
 
     .adm-enroll-date-input:hover::-webkit-calendar-picker-indicator {
       background-color: #dbeafe;
       border-color: #93c5fd;
       transform: scale(1.08)
+    }
+
+    /* Custom DatePicker Modal */
+    .cdp-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: cdpFadeIn .18s ease-out;
+    }
+
+    @keyframes cdpFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .cdp-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(226, 232, 240, 0.9);
+      width: 100%;
+      max-width: 325px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: inherit;
+      user-select: none;
+    }
+
+    .cdp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cdp-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .cdp-select {
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 5px 8px;
+      cursor: pointer;
+      outline: none;
+      transition: all .15s ease;
+    }
+
+    .cdp-select:hover, .cdp-select:focus {
+      border-color: #2563eb;
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .cdp-nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .cdp-nav-btn:hover {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+
+    .cdp-close-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: none;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .cdp-close-btn:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .cdp-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .cdp-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cdp-day {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
+      cursor: pointer;
+      transition: all .15s ease;
+      position: relative;
+    }
+
+    .cdp-day.other-month {
+      color: #cbd5e1;
+    }
+
+    .cdp-day:hover:not(.empty) {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .cdp-day.today::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #2563eb;
+    }
+
+    .cdp-day.selected {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+      color: #ffffff !important;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    }
+
+    .cdp-day.selected::after {
+      background: #ffffff;
+    }
+
+    .cdp-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid #f1f5f9;
+      gap: 10px;
+    }
+
+    .cdp-btn {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .cdp-btn.ghost {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+
+    .cdp-btn.ghost:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+
+    .cdp-btn.primary {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+      border: 1px solid #1d4ed8;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+      min-width: 70px;
+    }
+
+    .cdp-btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
     }
 
     .adm-enroll-num-input {
@@ -3480,6 +3700,29 @@
       </div>
     </div>
   </div>
+  <div id="customDatePicker" class="cdp-overlay hidden" onclick="if(event.target===this)closeCustomDatePicker()">
+    <div class="cdp-card" role="dialog" aria-modal="true" aria-label="Choose date">
+      <div class="cdp-header">
+        <button type="button" class="cdp-nav-btn" onclick="cdpPrevMonth()" title="Previous month" aria-label="Previous month">‹</button>
+        <div class="cdp-title-wrap">
+          <select id="cdpMonthSelect" class="cdp-select" onchange="cdpOnMonthYearChange()" aria-label="Select month"></select>
+          <select id="cdpYearSelect" class="cdp-select" onchange="cdpOnMonthYearChange()" aria-label="Select year"></select>
+        </div>
+        <button type="button" class="cdp-nav-btn" onclick="cdpNextMonth()" title="Next month" aria-label="Next month">›</button>
+        <button type="button" class="cdp-close-btn" onclick="closeCustomDatePicker()" title="Close" aria-label="Close calendar">✕</button>
+      </div>
+      <div class="cdp-weekdays">
+        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+      </div>
+      <div id="cdpDaysGrid" class="cdp-days-grid"></div>
+      <div class="cdp-footer">
+        <button type="button" class="cdp-btn ghost" onclick="cdpSelectToday()">Today</button>
+        <div class="cdp-footer-right">
+          <button type="button" class="cdp-btn primary" onclick="cdpConfirmOk()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="ccEditModal" class="modal-overlay hidden">
     <div class="modal-box detail-box" style="width:min(580px,100%)">
       <div class="detail-header-card" style="padding-bottom:12px">
@@ -3688,17 +3931,7 @@
       } else {
         inp.value = getTodayIso();
       }
-      try {
-        if (typeof inp.showPicker === 'function') {
-          inp.showPicker();
-        } else {
-          inp.focus();
-          inp.click();
-        }
-      } catch (e) {
-        inp.focus();
-        inp.click();
-      }
+      openDatePicker(inp);
     }
 
     function onCustomEnrolledDatePicked(pickedVal) {
@@ -3765,17 +3998,7 @@
       } else {
         inp.value = getTodayIso();
       }
-      try {
-        if (typeof inp.showPicker === 'function') {
-          inp.showPicker();
-        } else {
-          inp.focus();
-          inp.click();
-        }
-      } catch (e) {
-        inp.focus();
-        inp.click();
-      }
+      openDatePicker(inp);
     }
 
     function onCustomDatePicked(pickedVal) {
@@ -3995,15 +4218,206 @@
       badge.textContent = readable ? readable : '';
       badge.style.display = readable ? 'inline-flex' : 'none';
     }
-    function openDatePicker(input) {
+    let cdpTargetInput = null;
+    let cdpCurrentYear = new Date().getFullYear();
+    let cdpCurrentMonth = new Date().getMonth();
+    let cdpSelectedIso = '';
+
+    const CDP_MONTHS = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    function openDatePicker(input, ev) {
+      if (ev) {
+        try { ev.preventDefault(); } catch (e) { }
+        try { ev.stopPropagation(); } catch (e) { }
+      }
       if (!input) return;
-      try {
-        if (typeof input.showPicker === 'function') {
-          input.showPicker();
+      openCustomDatePicker(input);
+    }
+
+    function openCustomDatePicker(input) {
+      cdpTargetInput = input;
+      const rawVal = String(input.value || '').trim();
+      let initDate = null;
+      if (rawVal) {
+        const m = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/.exec(rawVal);
+        if (m) {
+          initDate = new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
         } else {
-          input.focus();
+          const d = new Date(rawVal);
+          if (!isNaN(d.getTime())) initDate = d;
         }
+      }
+      if (!initDate || isNaN(initDate.getTime())) {
+        initDate = new Date();
+      }
+      cdpCurrentYear = initDate.getFullYear();
+      cdpCurrentMonth = initDate.getMonth();
+      const pad = n => String(n).padStart(2, '0');
+      cdpSelectedIso = `${initDate.getFullYear()}-${pad(initDate.getMonth() + 1)}-${pad(initDate.getDate())}`;
+
+      initCdpMonthYearSelects();
+      renderCdpCalendar();
+      const modal = document.getElementById('customDatePicker');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCustomDatePicker() {
+      const modal = document.getElementById('customDatePicker');
+      if (modal) modal.classList.add('hidden');
+      cdpTargetInput = null;
+    }
+
+    function initCdpMonthYearSelects() {
+      const mSel = document.getElementById('cdpMonthSelect');
+      const ySel = document.getElementById('cdpYearSelect');
+      if (mSel) {
+        mSel.innerHTML = CDP_MONTHS.map((m, idx) => `<option value="${idx}">${m}</option>`).join('');
+        mSel.value = String(cdpCurrentMonth);
+      }
+      if (ySel) {
+        const currentYear = new Date().getFullYear();
+        let years = [];
+        for (let y = currentYear - 5; y <= currentYear + 10; y++) {
+          years.push(y);
+        }
+        if (!years.includes(cdpCurrentYear)) years.push(cdpCurrentYear);
+        years.sort((a, b) => a - b);
+        ySel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+        ySel.value = String(cdpCurrentYear);
+      }
+    }
+
+    function cdpOnMonthYearChange() {
+      const mSel = document.getElementById('cdpMonthSelect');
+      const ySel = document.getElementById('cdpYearSelect');
+      if (mSel) cdpCurrentMonth = parseInt(mSel.value, 10);
+      if (ySel) cdpCurrentYear = parseInt(ySel.value, 10);
+      renderCdpCalendar();
+    }
+
+    function cdpPrevMonth() {
+      cdpCurrentMonth--;
+      if (cdpCurrentMonth < 0) {
+        cdpCurrentMonth = 11;
+        cdpCurrentYear--;
+      }
+      syncCdpSelects();
+      renderCdpCalendar();
+    }
+
+    function cdpNextMonth() {
+      cdpCurrentMonth++;
+      if (cdpCurrentMonth > 11) {
+        cdpCurrentMonth = 0;
+        cdpCurrentYear++;
+      }
+      syncCdpSelects();
+      renderCdpCalendar();
+    }
+
+    function syncCdpSelects() {
+      const mSel = document.getElementById('cdpMonthSelect');
+      const ySel = document.getElementById('cdpYearSelect');
+      if (mSel) mSel.value = String(cdpCurrentMonth);
+      if (ySel) {
+        if (!ySel.querySelector(`option[value="${cdpCurrentYear}"]`)) {
+          const opt = document.createElement('option');
+          opt.value = cdpCurrentYear;
+          opt.textContent = cdpCurrentYear;
+          ySel.appendChild(opt);
+        }
+        ySel.value = String(cdpCurrentYear);
+      }
+    }
+
+    function renderCdpCalendar() {
+      const grid = document.getElementById('cdpDaysGrid');
+      if (!grid) return;
+      const pad = n => String(n).padStart(2, '0');
+      const today = new Date();
+      const todayIso = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+
+      const firstDay = new Date(cdpCurrentYear, cdpCurrentMonth, 1).getDay();
+      const daysInMonth = new Date(cdpCurrentYear, cdpCurrentMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(cdpCurrentYear, cdpCurrentMonth, 0).getDate();
+
+      let html = '';
+
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const d = daysInPrevMonth - i;
+        const prevMonth = cdpCurrentMonth === 0 ? 11 : cdpCurrentMonth - 1;
+        const prevYear = cdpCurrentMonth === 0 ? cdpCurrentYear - 1 : cdpCurrentYear;
+        const iso = `${prevYear}-${pad(prevMonth + 1)}-${pad(d)}`;
+        const isSel = (iso === cdpSelectedIso);
+        html += `<div class="cdp-day other-month ${isSel ? 'selected' : ''}" onclick="cdpPickDate('${iso}')" ondblclick="cdpPickAndConfirm('${iso}')">${d}</div>`;
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = `${cdpCurrentYear}-${pad(cdpCurrentMonth + 1)}-${pad(d)}`;
+        const isSel = (iso === cdpSelectedIso);
+        const isToday = (iso === todayIso);
+        html += `<div class="cdp-day ${isSel ? 'selected' : ''} ${isToday ? 'today' : ''}" onclick="cdpPickDate('${iso}')" ondblclick="cdpPickAndConfirm('${iso}')">${d}</div>`;
+      }
+
+      const totalCells = firstDay + daysInMonth;
+      const remaining = (totalCells % 7 === 0) ? 0 : (7 - (totalCells % 7));
+      for (let d = 1; d <= remaining; d++) {
+        const nextMonth = cdpCurrentMonth === 11 ? 0 : cdpCurrentMonth + 1;
+        const nextYear = cdpCurrentMonth === 11 ? cdpCurrentYear + 1 : cdpCurrentYear;
+        const iso = `${nextYear}-${pad(nextMonth + 1)}-${pad(d)}`;
+        const isSel = (iso === cdpSelectedIso);
+        html += `<div class="cdp-day other-month ${isSel ? 'selected' : ''}" onclick="cdpPickDate('${iso}')" ondblclick="cdpPickAndConfirm('${iso}')">${d}</div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function cdpPickDate(iso) {
+      cdpSelectedIso = iso;
+      renderCdpCalendar();
+    }
+
+    function cdpPickAndConfirm(iso) {
+      cdpSelectedIso = iso;
+      cdpConfirmOk();
+    }
+
+    function cdpSelectToday() {
+      const today = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      cdpCurrentYear = today.getFullYear();
+      cdpCurrentMonth = today.getMonth();
+      cdpSelectedIso = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+      syncCdpSelects();
+      renderCdpCalendar();
+    }
+
+    function cdpConfirmOk() {
+      if (!cdpSelectedIso || !cdpTargetInput) {
+        closeCustomDatePicker();
+        return;
+      }
+      const val = cdpSelectedIso;
+      cdpTargetInput.value = val;
+      try {
+        cdpTargetInput.dispatchEvent(new Event('input', { bubbles: true }));
       } catch (e) { }
+      try {
+        cdpTargetInput.dispatchEvent(new Event('change', { bubbles: true }));
+      } catch (e) { }
+      if (typeof cdpTargetInput.oninput === 'function') {
+        try { cdpTargetInput.oninput(); } catch (e) { }
+      }
+      if (typeof cdpTargetInput.onchange === 'function') {
+        try { cdpTargetInput.onchange(); } catch (e) { }
+      }
+      if (cdpTargetInput.id === 'apNextDate') {
+        updateApNextDateBadge(cdpTargetInput);
+      }
+      closeCustomDatePicker();
     }
     const FIELD_LABEL_MAP = {
       name: 'Name',
@@ -5016,7 +5430,7 @@
     detailModal.addEventListener('click', e => { if (e.target === detailModal) closeDetail() });
     drawer.addEventListener('click', e => { if (e.target === drawer) closeDrawer() });
     approveModal.addEventListener('click', e => { if (e.target === approveModal) closeApproveModal() });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closeDrawer(); closeApproveModal(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closeDrawer(); closeApproveModal(); closeCustomDatePicker(); } });
     function renderTable(d) {
       const q = document.getElementById('panel');
       if (!q) return;
