@@ -5425,7 +5425,7 @@
         </button>
       </div>
     </div>
-    ${rows.length ? `<div class="tw"><table class="tbl enroll-tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Course Price</th><th>Level / Year / Dept</th><th>Date</th><th class="actions-head">Action</th></tr></thead><tbody>${rows.map(r => {
+    ${rows.length ? `<div class="tw"><table class="tbl enroll-tbl"><thead><tr><th>Student</th><th>Course</th><th>Sector</th><th>Course Price</th><th>Level / Year / Dept</th><th>Date</th></tr></thead><tbody>${rows.map(r => {
         const name = r.name || 'Student';
         const sectorClass = String(r.nuDcu || '').toLowerCase() === 'nu' ? 'nu' : String(r.nuDcu || '').toLowerCase() === 'dcu' ? 'dcu' : 'other';
         return `
@@ -5444,12 +5444,6 @@
         <td>${r.coursePrice ? `<div class="adm-price-val">৳\u00A0${esc(fmtMoney(r.coursePrice))}</div>` : '<span class="muted">—</span>'}</td>
         <td class="wrap"><div class="adm-chips-group">${[r.level, r.year, r.department].filter(Boolean).map(x => `<span class="adm-chip">${esc(x)}</span>`).join('') || '<span class="muted">—</span>'}</div></td>
         <td><span class="adm-date-badge">🗓\u00A0${esc(formatDateOnly(r.enrolledAt))}</span></td>
-        <td class="actions-cell">
-          <button class="adm-act-btn act-approve" onclick="event.stopPropagation();approve(${r.id})">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>Approve</span>
-          </button>
-        </td>
       </tr>`;
       }).join('')}</tbody></table></div>`
           : `<div class="empty">${S.pendingSearch ? 'কোনো পেন্ডিং রিকোয়েস্ট মেলেনি।' : 'বর্তমানে কোনো পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট নেই।'}</div>`}
@@ -5745,12 +5739,12 @@
       const isEnroll = (S.table === 'student_enrolled');
       const noDelete = ['student_login', 'student_enrolled'].includes(S.table);
       let html = '';
-      if (isStudent || isEnroll) {
+      if (isStudent) {
         html += `<button class="adm-act-btn act-view" onclick="openDetail(${id})" title="View Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             <span>View</span>
           </button>`;
-      } else {
+      } else if (!isEnroll) {
         html += `<button class="adm-act-btn act-edit" onclick="edit(${id})" title="Edit Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             <span>Edit</span>
@@ -6216,32 +6210,24 @@
         <div class="enroll-specs-card">
           <div class="enroll-specs-grid">
             <div class="enroll-spec-cell">
-              <span class="es-label">✉️ Email</span>
-              <span class="es-value">${emailHtml}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">🏛️ Sector</span>
-              <span class="es-value">${sectorHtml}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">💰 Course Price</span>
-              <span class="es-value">${priceHtml}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">🎓 Level</span>
-              <span class="es-value">${r.level ? esc(r.level) : '<span class="v-empty muted">—</span>'}</span>
-            </div>
-            <div class="enroll-spec-cell">
-              <span class="es-label">📅 Year</span>
-              <span class="es-value">${r.year ? esc(r.year) : '<span class="v-empty muted">—</span>'}</span>
-            </div>
-            <div class="enroll-spec-cell">
               <span class="es-label">📚 Department</span>
               <span class="es-value">${r.department ? esc(r.department) : '<span class="v-empty muted">—</span>'}</span>
             </div>
             <div class="enroll-spec-cell">
               <span class="es-label">🏫 Institute</span>
               <span class="es-value">${r.institute ? esc(r.institute) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🎓 Level</span>
+              <span class="es-value">${r.level ? esc(r.level) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">✉️ Email</span>
+              <span class="es-value">${emailHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">📅 Year</span>
+              <span class="es-value">${r.year ? esc(r.year) : '<span class="v-empty muted">—</span>'}</span>
             </div>
             <div class="enroll-spec-cell">
               <span class="es-label">🗓️ Requested At</span>
