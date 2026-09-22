@@ -5667,29 +5667,41 @@
       const addPaidVal = addPaidInput ? addPaidInput.value.replace(/[^\d.]/g, '').trim() : '';
       const fbText = feedbackInput ? feedbackInput.value.trim() : '';
 
-      // Confirmation dialog to prevent unwanted/accidental clicks
+      const oldExpVal = enrollDateInputValue('expires_at', oldRow.expires_at);
+      const oldNextDateVal = enrollDateInputValue('next_date', oldRow.next_date || oldRow.next_payment_date);
+      const oldAccessVal = /^full access$/i.test(String(oldRow.access_type || '')) ? 'Full Access' : 'Limited Access';
+
+      const expChanged = (expVal !== oldExpVal);
+      const nextDateChanged = (ndVal !== oldNextDateVal);
+      const accessChanged = Boolean(accessVal && accessVal !== oldAccessVal);
+      const payChanged = Boolean(addPaidVal && Number(addPaidVal) > 0);
+      const fbChanged = Boolean(fbText);
+
+      // Confirmation dialog showing ONLY actual changed fields
       const studentName = oldRow.name || 'Student';
       const summary = [];
-      if (expVal) {
-        summary.push(`• মেয়াদ (Expires At): ${formatReadableDate(expVal) || expVal}`);
+      if (expChanged) {
+        summary.push(`• মেয়াদ (Expires At): ${expVal ? (formatReadableDate(expVal) || expVal) : 'মুছে ফেলা হয়েছে (Cleared)'}`);
       }
-      if (ndVal) {
-        summary.push(`• পরবর্তী পেমেন্ট (Next Date): ${formatReadableDate(ndVal) || ndVal}`);
+      if (nextDateChanged) {
+        summary.push(`• পরবর্তী পেমেন্ট (Next Date): ${ndVal ? (formatReadableDate(ndVal) || ndVal) : 'মুছে ফেলা হয়েছে (Cleared)'}`);
       }
-      if (accessVal && accessVal !== (oldRow.access_type || 'Limited Access')) {
+      if (accessChanged) {
         summary.push(`• অ্যাক্সেস টাইপ: ${accessVal}`);
       }
-      if (addPaidVal && Number(addPaidVal) > 0) {
+      if (payChanged) {
         summary.push(`• নতুন পেমেন্ট/কিস্তি: ৳ ${fmtMoney(Number(addPaidVal))}`);
       }
-      if (fbText) {
+      if (fbChanged) {
         summary.push(`• মন্তব্য (Feedback): "${fbText}"`);
       }
 
-      let confirmMsg = `আপনি কি নিশ্চিত যে ${studentName}-এর এনরোলমেন্টের পরিবর্তনগুলো সেভ করতে চান?`;
-      if (summary.length) {
-        confirmMsg += `\n\nপরিবর্তনের বিবরণ:\n${summary.join('\n')}`;
+      if (summary.length === 0) {
+        toast('কোনো তথ্য পরিবর্তন করা হয়নি');
+        return;
       }
+
+      const confirmMsg = `আপনি কি নিশ্চিত যে ${studentName}-এর এনরোলমেন্টের পরিবর্তনগুলো সেভ করতে চান?\n\nপরিবর্তনের বিবরণ:\n${summary.join('\n')}`;
       if (!confirm(confirmMsg)) return;
 
       const saveBtn = document.getElementById('dmSaveEnrollBtn');
@@ -5700,29 +5712,31 @@
 
       const d = {};
 
-      // 1. Expires At
-      if (expVal) {
-        d.expires_at = new Date(expVal + 'T23:59:59.999Z').toISOString();
-        const expIso = parseNextDateToIso(d.expires_at);
-        if (expIso) {
-          d.status = (expIso < getTodayIso()) ? 'Expired' : 'Active';
+      // 1. Expires At (only if changed)
+      if (expChanged) {
+        if (expVal) {
+          d.expires_at = new Date(expVal + 'T23:59:59.999Z').toISOString();
+          const expIso = parseNextDateToIso(d.expires_at);
+          if (expIso) {
+            d.status = (expIso < getTodayIso()) ? 'Expired' : 'Active';
+          }
+        } else {
+          d.expires_at = '';
         }
-      } else if (expInput && !expVal) {
-        d.expires_at = '';
       }
 
-      // 2. Next Payment Date
-      if (nextDateInput) {
+      // 2. Next Payment Date (only if changed)
+      if (nextDateChanged) {
         d.next_date = ndVal ? fmtDateInput(ndVal) : '';
       }
 
-      // 3. Access Type
-      if (accessTypeInput) {
-        d.access_type = accessTypeInput.value;
+      // 3. Access Type (only if changed)
+      if (accessChanged) {
+        d.access_type = accessVal;
       }
 
       // 4. Add Payment (Installment)
-      if (addPaidVal && Number(addPaidVal) > 0) {
+      if (payChanged) {
         const addAmt = Number(addPaidVal);
         const oldPaid = moneyNumber(oldRow.paid) || 0;
         d.paid = String(oldPaid + addAmt);
@@ -5744,7 +5758,7 @@
       }
 
       // 5. Add Feedback
-      if (fbText) {
+      if (fbChanged) {
         const todayDate = getTodayIso();
         let fbList = [];
         const rawFb = cellValue(oldRow.feedback ?? oldRow.Feedback).trim();
