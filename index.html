@@ -1342,6 +1342,23 @@
    PREMIUM ENROLLMENTS & STUDENTS TABLE DESIGN SUITE
    ============================================================ */
 
+    /* Academic Level Selection Bar in Enrollment */
+    .enroll-level-wrap {
+      margin: 8px 0 14px;
+    }
+
+    .enroll-level-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     /* Filter bar & Spinners */
     .filter-bar {
       display: flex;
@@ -3791,7 +3808,7 @@
   <script>
     const API = 'https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
     const P = { students: ['student_login', 'Students'], enrollments: ['student_enrolled', 'Enrollments'], courses: ['course_name', 'Courses'], subjects: ['subjectwise_course_name', 'Subject-wise Courses'], teachers: ['teachers', 'Teachers'], free: ['free_class', 'Free Classes'], gallery: ['gallery', 'Gallery / Reviews'], shop: ['shop_item', 'Shop Products'], orders: ['shop_orders', 'Shop Orders'] };
-    let S = { token: localStorage.va_admin_token || '', user: null, table: null, cols: [], rows: [], rawEnrollRows: [], lastRawData: null, search: '', courseFilter: '', dueFilter: '', enrolledDateFilter: '', nextDateFilter: '', offset: 0, limit: 50, total: 0 };
+    let S = { token: localStorage.va_admin_token || '', user: null, table: null, cols: [], rows: [], rawEnrollRows: [], lastRawData: null, search: '', levelFilter: '', courseFilter: '', dueFilter: '', enrolledDateFilter: '', nextDateFilter: '', offset: 0, limit: 50, total: 0 };
     const ENROLL_TABLE = 'student_enrolled';
     const STUDENT_TABLE = 'student_login';
     const ENROLL_EDITABLE_FIELDS = ['expires_at', 'next_date', 'paid', 'access_type'];
@@ -3894,15 +3911,148 @@
       if (filterVal.startsWith('date:')) return iso === filterVal.slice(5);
       return true;
     }
+    const ENROLL_LEVEL_TABS = [
+      { id: '', name: 'সকল লেভেল', icon: '🌐' },
+      { id: 'BBA DCU', name: 'BBA DCU', icon: '🎓' },
+      { id: 'BBA NU', name: 'BBA NU', icon: '🎓' },
+      { id: 'BBA Professional', name: 'BBA Professional', icon: '💼' },
+      { id: 'BBS', name: 'BBS', icon: '🏛' },
+      { id: 'MBA', name: 'MBA', icon: '🎖' },
+      { id: 'HSC', name: 'HSC', icon: '📚' },
+      { id: 'SSC', name: 'SSC', icon: '🎒' }
+    ];
+
+    let courseCatalogCache = [];
+    async function loadCourseCatalog() {
+      if (courseCatalogCache.length) return courseCatalogCache;
+      try {
+        const res = await api('get_courses');
+        if (Array.isArray(res?.data)) {
+          courseCatalogCache = res.data;
+        }
+      } catch (e) { }
+      return courseCatalogCache;
+    }
+
+    function getCourseLevel(courseName, sectorHint = '') {
+      const c = String(courseName || '').trim();
+      if (!c) return '';
+      const cLower = c.toLowerCase();
+      const s = String(sectorHint || '').trim().toUpperCase();
+
+      if (courseCatalogCache.length) {
+        const found = courseCatalogCache.find(x => String(x.name || '').trim().toLowerCase() === cLower && (!s || !x.tag || String(x.tag).toUpperCase() === s));
+        if (found) {
+          const lUpper = String(found.level || '').trim().toUpperCase();
+          const tagUpper = String(found.tag || '').trim().toUpperCase();
+          if (lUpper === 'BBA' && (tagUpper === 'DCU' || s === 'DCU')) return 'BBA DCU';
+          if (lUpper === 'BBA' && (tagUpper === 'NU' || s === 'NU')) return 'BBA NU';
+          if (lUpper === 'BBA') return (s === 'DCU' ? 'BBA DCU' : 'BBA NU');
+          if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
+          if (lUpper === 'BBS') return 'BBS';
+          if (lUpper === 'MBA') return 'MBA';
+          if (lUpper === 'HSC') return 'HSC';
+          if (lUpper === 'SSC') return 'SSC';
+        }
+      }
+
+      if (cLower.includes('hsc')) return 'HSC';
+      if (cLower.includes('ssc')) return 'SSC';
+      if (cLower.includes('mba')) return 'MBA';
+      if (cLower.includes('bbs')) return 'BBS';
+      if (cLower.includes('professional')) return 'BBA Professional';
+      if (s === 'DCU' || cLower.includes('dcu')) return 'BBA DCU';
+      if (s === 'NU' || cLower.includes('nu')) return 'BBA NU';
+
+      return s === 'DCU' ? 'BBA DCU' : 'BBA NU';
+    }
+
+    function getEnrollmentRowLevel(r) {
+      if (!r) return '';
+      const sector = String(r.nu_dcu || r.nuDcu || '').trim().toUpperCase();
+      const rawLevel = String(r.level || '').trim();
+      const course = String(r.course || '').trim();
+
+      if (rawLevel) {
+        const lUpper = rawLevel.toUpperCase();
+        if (lUpper === 'BBA DCU' || (lUpper === 'BBA' && sector === 'DCU')) return 'BBA DCU';
+        if (lUpper === 'BBA NU' || (lUpper === 'BBA' && sector === 'NU')) return 'BBA NU';
+        if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
+        if (lUpper === 'BBS') return 'BBS';
+        if (lUpper === 'MBA') return 'MBA';
+        if (lUpper === 'HSC') return 'HSC';
+        if (lUpper === 'SSC') return 'SSC';
+      }
+
+      return getCourseLevel(course, sector);
+    }
+
+    function renderEnrollLevelButtons() {
+      return ENROLL_LEVEL_TABS.map(l => `
+        <button type="button" class="cc-level-btn ${S.levelFilter === l.id ? 'active' : ''}" data-level="${esc(l.id)}" onclick="setEnrollLevel('${esc(l.id)}')">
+          <span>${l.icon}</span>
+          <span>${esc(l.name)}</span>
+          <span class="cc-badge-count" data-level-badge="${esc(l.id)}">…</span>
+        </button>
+      `).join('');
+    }
+
+    function updateEnrollLevelBadges() {
+      const rows = S.rawEnrollRows || [];
+      const counts = { '': rows.length };
+      ENROLL_LEVEL_TABS.forEach(tab => {
+        if (tab.id) {
+          counts[tab.id] = rows.filter(r => getEnrollmentRowLevel(r) === tab.id).length;
+        }
+      });
+
+      document.querySelectorAll('#enrollLevelBar .cc-badge-count').forEach(badge => {
+        const lvl = badge.dataset.levelBadge ?? '';
+        badge.textContent = counts[lvl] !== undefined ? counts[lvl] : '0';
+      });
+    }
+
+    function setEnrollLevel(lvl) {
+      if (S.levelFilter === lvl && lvl !== '') {
+        S.levelFilter = '';
+      } else {
+        S.levelFilter = String(lvl || '');
+      }
+
+      document.querySelectorAll('#enrollLevelBar .cc-level-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === S.levelFilter);
+      });
+
+      populateCourseFilter(S.lastRawData?.courses || []);
+      applyEnrollFiltersAndRender();
+    }
+
     function populateCourseFilter(courses) {
       const sel = document.getElementById('courseFilter');
-      if (!sel || !Array.isArray(courses)) return;
-      const names = Array.from(new Set(
-        courses.map(c => String(c || '').trim()).filter(Boolean)
-      )).sort((a, b) => a.localeCompare(b));
-      if (S.courseFilter && !names.some(n => n.toLowerCase() === S.courseFilter.toLowerCase())) S.courseFilter = '';
-      sel.innerHTML = '<option value="">All Courses</option>' +
-        names.map(n => `<option value="${esc(n)}" ${n === S.courseFilter ? 'selected' : ''}>${esc(n)}</option>`).join('');
+      if (!sel) return;
+      const allRows = S.rawEnrollRows || [];
+      const distinctCourses = Array.from(new Set([
+        ...(Array.isArray(courses) ? courses : []),
+        ...allRows.map(r => String(r.course || '').trim())
+      ])).filter(Boolean).sort((a, b) => a.localeCompare(b));
+
+      let filteredCourses = distinctCourses;
+      if (S.levelFilter) {
+        filteredCourses = distinctCourses.filter(cName => {
+          const hasMatchingRow = allRows.some(r => String(r.course || '').trim().toLowerCase() === cName.toLowerCase() && getEnrollmentRowLevel(r) === S.levelFilter);
+          if (hasMatchingRow) return true;
+          const cLevel = getCourseLevel(cName);
+          return cLevel === S.levelFilter;
+        });
+      }
+
+      if (S.courseFilter && !filteredCourses.some(n => n.toLowerCase() === S.courseFilter.toLowerCase())) {
+        S.courseFilter = '';
+      }
+
+      const allLabel = S.levelFilter ? `All Courses (${S.levelFilter})` : 'All Courses';
+      sel.innerHTML = `<option value="">${esc(allLabel)}</option>` +
+        filteredCourses.map(n => `<option value="${esc(n)}" ${n === S.courseFilter ? 'selected' : ''}>${esc(n)}</option>`).join('');
       sel.value = S.courseFilter || '';
     }
     function populateEnrolledDateFilter(rows) {
@@ -4032,7 +4182,7 @@
     function updateFilterResetButton() {
       const resetBtn = document.getElementById('enrollFilterReset');
       if (!resetBtn) return;
-      const hasActiveFilter = !!(S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter);
+      const hasActiveFilter = !!(S.levelFilter || S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter);
       resetBtn.classList.toggle('hidden', !hasActiveFilter);
     }
     function applyEnrollFiltersAndRender() {
@@ -4042,6 +4192,12 @@
       }
       let filtered = (S.rawEnrollRows || []).slice();
 
+      if (S.levelFilter) {
+        filtered = filtered.filter(r => getEnrollmentRowLevel(r) === S.levelFilter);
+      }
+      if (S.courseFilter) {
+        filtered = filtered.filter(r => String(r.course || '').trim().toLowerCase() === S.courseFilter.toLowerCase());
+      }
       if (S.dueFilter) {
         filtered = filtered.filter(r => matchesDueFilter(r, S.dueFilter));
       }
@@ -4052,9 +4208,9 @@
         filtered = filtered.filter(r => matchesNextDateFilter(r, S.nextDateFilter));
       }
 
-      const isClientDateFiltered = !!(S.enrolledDateFilter || S.nextDateFilter);
-      const total = isClientDateFiltered ? filtered.length : Number(S.lastRawData?.total ?? filtered.length);
-      const offset = isClientDateFiltered ? 0 : Number(S.lastRawData?.offset ?? S.offset ?? 0);
+      const isClientFiltered = !!(S.levelFilter || S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter);
+      const total = isClientFiltered ? filtered.length : Number(S.lastRawData?.total ?? filtered.length);
+      const offset = isClientFiltered ? 0 : Number(S.lastRawData?.offset ?? S.offset ?? 0);
 
       const filteredData = {
         ...S.lastRawData,
@@ -4086,10 +4242,16 @@
       applyEnrollFiltersAndRender();
     }
     function resetEnrollFilters() {
+      S.levelFilter = '';
       S.courseFilter = '';
       S.dueFilter = '';
       S.enrolledDateFilter = '';
       S.nextDateFilter = '';
+
+      document.querySelectorAll('#enrollLevelBar .cc-level-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === '');
+      });
+
       const courseSel = document.getElementById('courseFilter');
       if (courseSel) courseSel.value = '';
       const dueSel = document.getElementById('dueFilter');
@@ -4102,6 +4264,7 @@
       if (nextDateSel) nextDateSel.value = '';
       const customInp = document.getElementById('nextDateCustomInput');
       if (customInp) customInp.value = '';
+      populateCourseFilter(S.lastRawData?.courses || []);
       populateEnrolledDateFilter(S.rawEnrollRows || []);
       populateNextDateFilter(S.rawEnrollRows || []);
       S.offset = 0;
@@ -4549,9 +4712,22 @@
     lf.onsubmit = async e => { e.preventDefault(); try { let j = await doLogin(lm.value.trim(), lp.value); S.token = j.data.adminToken; S.user = j.data; localStorage.va_admin_token = S.token; localStorage.va_admin_user = JSON.stringify(S.user); show() } catch (e) { le.textContent = e.message } }
     nav.onclick = e => { let b = e.target.closest('[data-p]'); if (b) page(b.dataset.p) }
     async function page(p) {
-      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'content') return contentPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
+      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'content') return contentPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
       if (S.table === ENROLL_TABLE) {
+        loadCourseCatalog().then(() => {
+          populateCourseFilter(S.lastRawData?.courses || []);
+          updateEnrollLevelBadges();
+          applyEnrollFiltersAndRender();
+        }).catch(() => {});
         content.innerHTML = `
+    <div class="enroll-level-wrap">
+      <div class="enroll-level-label">
+        লেভেল নির্বাচন করুন (SELECT ACADEMIC LEVEL):
+      </div>
+      <div class="cc-level-bar" id="enrollLevelBar">
+        ${renderEnrollLevelButtons()}
+      </div>
+    </div>
     <div class="filter-bar">
       <div class="filter-field">
         <label for="courseFilter">
@@ -5470,7 +5646,7 @@
       // Update filter count if present
       const fcEl = document.getElementById('enrollFilterCount');
       if (fcEl) {
-        const isFiltered = !!(S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter || S.search);
+        const isFiltered = !!(S.levelFilter || S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter || S.search);
         if (isFiltered) {
           fcEl.textContent = `ফিল্টারকৃত শিক্ষার্থী: ${total} জন`;
         } else {
@@ -5485,6 +5661,7 @@
       const selEnd = isSearchActive && searchEl ? searchEl.selectionEnd : 0;
 
       const enrollFilterSub = [
+        S.levelFilter ? `Level: ${esc(S.levelFilter)}` : '',
         S.courseFilter ? `Course: ${esc(S.courseFilter)}` : '',
         S.dueFilter ? (S.dueFilter === 'due' ? 'Due Only' : 'Paid Only') : '',
         S.enrolledDateFilter ? 'Enrolled Date Filter' : '',
@@ -5563,6 +5740,7 @@
           search: S.search,
           offset: S.offset,
           limit: S.limit,
+          level: S.levelFilter || '',
           course: S.courseFilter || '',
           due: S.dueFilter || '',
           enrolledDate: S.enrolledDateFilter || '',
@@ -5577,6 +5755,7 @@
         if (isEnrollTable()) {
           S.lastRawData = d;
           S.rawEnrollRows = Array.isArray(d.rows) ? d.rows : [];
+          updateEnrollLevelBadges();
           if (Array.isArray(d.courses)) {
             populateCourseFilter(d.courses);
           }
