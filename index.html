@@ -2327,13 +2327,43 @@
     }
 
     .pay-row .p-by {
-      color: #64748b;
-      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       margin-left: auto;
-      background: #e2e8f0;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 700
+      padding: 3.5px 11px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      color: #4338ca;
+      background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 50%, #fae8ff 100%);
+      border: 1.5px solid #c7d2fe;
+      box-shadow: 0 1px 4px rgba(99, 102, 241, .14);
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all .2s ease;
+    }
+
+    .pay-row .p-by:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(99, 102, 241, .22);
+    }
+
+    .pay-row .p-by-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .85;
+      flex-shrink: 0;
+    }
+
+    .pay-row .p-by-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      opacity: .85;
     }
 
     .pay-empty {
@@ -2386,45 +2416,6 @@
       flex: 1;
       word-break: break-word;
       line-height: 1.4;
-    }
-
-    .fb-del-btn {
-      border: none;
-      background: transparent;
-      color: #94a3b8;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 3px 7px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all .15s ease;
-      line-height: 1;
-      margin-left: 6px;
-      flex-shrink: 0;
-    }
-
-    .fb-del-btn:hover {
-      color: #ef4444;
-      background: #fee2e2;
-    }
-
-    .fb-add-btn {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all .15s ease;
-      line-height: 1.2;
-    }
-
-    .fb-add-btn:hover {
-      background: #dbeafe;
-      border-color: #93c5fd;
-      transform: translateY(-1px);
     }
 
     @media(max-width:600px) {
@@ -5144,6 +5135,22 @@
       if (isNaN(d.getTime())) return '';
       return d.toISOString().slice(0, 10);
     }
+    function renderAdminBadgeHtml(adminName) {
+      const name = String(adminName || '').trim();
+      if (!name) return '';
+      const palettes = [
+        { bg: 'linear-gradient(135deg, #eef2ff 0%, #ede9fe 100%)', color: '#4338ca', border: '#c7d2fe', dot: '#6366f1' },
+        { bg: 'linear-gradient(135deg, #ecfeff 0%, #e0f2fe 100%)', color: '#0369a1', border: '#bae6fd', dot: '#0ea5e9' },
+        { bg: 'linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%)', color: '#7e22ce', border: '#f0abfc', dot: '#a855f7' },
+        { bg: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', color: '#047857', border: '#a7f3d0', dot: '#10b981' },
+        { bg: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)', color: '#c2410c', border: '#fed7aa', dot: '#f97316' },
+        { bg: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)', color: '#be123c', border: '#fecdd3', dot: '#f43f5e' }
+      ];
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = (hash << 5) - hash + name.charCodeAt(i);
+      const p = palettes[Math.abs(hash) % palettes.length];
+      return `<span class="p-by" style="background:${p.bg};color:${p.color};border-color:${p.border}"><span class="p-by-dot" style="background:${p.dot}"></span><span class="p-by-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>${esc(name)}</span></span>`;
+    }
     function payHistoryHtml(row) {
       let list = [];
       try {
@@ -5152,11 +5159,11 @@
       } catch { }
       const items = list.map(e => {
         const date = String(e.date || '').trim().split('T')[0];
-        return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount || '')}</span><span class="p-by">${esc(e.admin || '')}</span></div>`;
+        return `<div class="pay-row"><span class="p-date">${esc(date)}</span><span class="p-amt">৳ ${esc(e.amount || '')}</span>${renderAdminBadgeHtml(e.admin)}</div>`;
       }).join('');
       return `<div class="pay-history full"><div class="ph-title">Payment History</div><div class="pay-list">${items || '<div class="pay-empty">No payment history yet</div>'}</div></div>`;
     }
-    function feedbackHistoryHtml(row, isEditMode = false) {
+    function feedbackHistoryHtml(row) {
       let list = [];
       try {
         const raw = cellValue(row?.feedback ?? row?.Feedback).trim();
@@ -5169,11 +5176,7 @@
         const raw = cellValue(row?.feedback ?? row?.Feedback).trim();
         if (raw) list = [{ date: '', text: raw, admin: '' }];
       }
-      if (isEditMode) {
-        window._currentEditFeedback = list.slice();
-        window._feedbackModified = false;
-      }
-      const itemsHtml = renderFeedbackItemsHtml(list, isEditMode);
+      const itemsHtml = renderFeedbackItemsHtml(list);
       return `<div class="pay-history feedback-history-section full">
         <div class="ph-title" style="display:flex;align-items:center;justify-content:space-between">
           <span>Feedback History</span>
@@ -5182,63 +5185,19 @@
         <div class="pay-list" id="feedbackListContainer">${itemsHtml}</div>
       </div>`;
     }
-    function renderFeedbackItemsHtml(list, isEditMode = false) {
+    function renderFeedbackItemsHtml(list) {
       if (!list || !list.length) {
         return '<div class="pay-empty">No feedback history yet</div>';
       }
       return list.map((e, idx) => {
         const date = String(e.date || '').trim().split('T')[0];
         const text = String(e.text || e.feedback || e.comment || '').trim();
-        const admin = String(e.admin || '').trim();
         return `<div class="pay-row feedback-item-row" data-idx="${idx}">
           <span class="p-date feedback-date-badge">🗓 ${esc(date || '—')}</span>
           <span class="feedback-text-content">${esc(text)}</span>
-          ${admin ? `<span class="p-by">${esc(admin)}</span>` : ''}
-          ${isEditMode ? `<button type="button" class="fb-del-btn" onclick="removeFeedbackItem(${idx})" title="ফিডব্যাক মুছুন">✕</button>` : ''}
+          ${renderAdminBadgeHtml(e.admin)}
         </div>`;
       }).join('');
-    }
-    function removeFeedbackItem(idx) {
-      if (!window._currentEditFeedback || idx < 0 || idx >= window._currentEditFeedback.length) return;
-      window._currentEditFeedback.splice(idx, 1);
-      window._feedbackModified = true;
-      const container = document.getElementById('feedbackListContainer');
-      if (container) {
-        container.innerHTML = renderFeedbackItemsHtml(window._currentEditFeedback, true);
-      }
-      const badge = document.getElementById('fbCountBadge');
-      if (badge) {
-        badge.textContent = `${window._currentEditFeedback.length} টি ফিডব্যাক`;
-      }
-    }
-    function addFeedbackStaged() {
-      const fbInput = document.getElementById('efFeedbackText');
-      const fbText = String(fbInput?.value ?? '').trim();
-      if (!fbText) {
-        toast('ফিডব্যাক টেক্সট লিখুন');
-        if (fbInput) fbInput.focus();
-        return;
-      }
-      const todayDate = getTodayIso();
-      if (!Array.isArray(window._currentEditFeedback)) {
-        window._currentEditFeedback = [];
-      }
-      window._currentEditFeedback.push({
-        date: todayDate,
-        text: fbText,
-        admin: String(S.user?.name || 'Admin').trim() || 'Admin'
-      });
-      window._feedbackModified = true;
-      fbInput.value = '';
-      const container = document.getElementById('feedbackListContainer');
-      if (container) {
-        container.innerHTML = renderFeedbackItemsHtml(window._currentEditFeedback, true);
-      }
-      const badge = document.getElementById('fbCountBadge');
-      if (badge) {
-        badge.textContent = `${window._currentEditFeedback.length} টি ফিডব্যাক`;
-      }
-      toast('ফিডব্যাক তালিকায় যোগ হয়েছে (সেভ করতে Save Changes চাপুন)');
     }
     function editor(id, row) {
       const isEnroll = isEnrollTable();
@@ -5382,15 +5341,12 @@
       }).join('')}
       ${isEnroll ? `
         <div class="full">
-          <label style="display:flex;align-items:center;justify-content:space-between">
-            <span>Feedback</span>
-            <button type="button" class="fb-add-btn" onclick="addFeedbackStaged()">＋ Add to list</button>
-          </label>
+          <label>Feedback</label>
           <input id="efFeedbackText" class="adm-enroll-num-input" type="text" placeholder="Enter student feedback / note..." autocomplete="off">
         </div>
       ` : ''}
       ${isEnroll ? payHistoryHtml(row) : ''}
-      ${isEnroll ? feedbackHistoryHtml(row, true) : ''}
+      ${isEnroll ? feedbackHistoryHtml(row) : ''}
     </div>
     <div class="drawer-actions">
       <button type="button" class="btn ghost" onclick="closeDrawer()">Cancel</button>
@@ -5441,23 +5397,29 @@
             delete d.paid;
           }
 
-          // Feedback handling: append newly typed feedback and/or persist modified list
+          // Feedback handling: append newly typed feedback
           const fbInput = document.getElementById('efFeedbackText');
           const fbText = String(fbInput?.value ?? '').trim();
           if (fbText) {
             const todayDate = getTodayIso();
-            if (!Array.isArray(window._currentEditFeedback)) window._currentEditFeedback = [];
-            window._currentEditFeedback.push({
+            let fbList = [];
+            const rawFb = cellValue(oldRow.feedback ?? oldRow.Feedback).trim();
+            if (rawFb) {
+              try {
+                const parsed = JSON.parse(rawFb);
+                if (Array.isArray(parsed)) fbList = parsed;
+              } catch (err) {
+                if (rawFb) fbList.push({ date: todayDate, text: rawFb, admin: 'Admin' });
+              }
+            }
+            fbList.push({
               date: todayDate,
               text: fbText,
               admin: String(S.user?.name || 'Admin').trim() || 'Admin'
             });
-            window._feedbackModified = true;
-          }
-          if (window._feedbackModified) {
             const fbCol = (S.cols || []).find(c => colName(c).toLowerCase() === 'feedback');
             const fbColName = fbCol ? colName(fbCol) : 'Feedback';
-            d[fbColName] = JSON.stringify(window._currentEditFeedback || []);
+            d[fbColName] = JSON.stringify(fbList);
           }
         }
       }
@@ -5473,8 +5435,6 @@
     function closeDrawer() {
       const drawerEl = document.getElementById('drawer');
       if (drawerEl) drawerEl.classList.add('hidden');
-      window._currentEditFeedback = [];
-      window._feedbackModified = false;
     }
     async function del(id) {
       if (!confirm(`Delete row #${id} permanently?\n\nThis cannot be undone.`)) return;
