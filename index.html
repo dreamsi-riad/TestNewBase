@@ -4115,7 +4115,7 @@
   <script>
     const API = 'https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
     const P = { students: ['student_login', 'Students'], enrollments: ['student_enrolled', 'Enrollments'], courses: ['course_name', 'Courses'], subjects: ['subjectwise_course_name', 'Subject-wise Courses'], teachers: ['teachers', 'Teachers'], free: ['free_class', 'Free Classes'], gallery: ['gallery', 'Gallery / Reviews'], shop: ['shop_item', 'Shop Products'], orders: ['shop_orders', 'Shop Orders'] };
-    let S = { token: localStorage.va_admin_token || '', user: null, table: null, cols: [], rows: [], rawEnrollRows: [], lastRawData: null, search: '', levelFilter: '', courseFilter: '', dueFilter: '', enrolledDateFilter: '', nextDateFilter: '', offset: 0, limit: 50, total: 0 };
+    let S = { token: localStorage.va_admin_token || '', user: null, table: null, cols: [], rows: [], rawEnrollRows: [], rawStudentRows: [], lastRawData: null, lastStudentRawData: null, search: '', levelFilter: '', courseFilter: '', dueFilter: '', enrolledDateFilter: '', nextDateFilter: '', pendingLevel: '', pendingSearch: '', offset: 0, limit: 50, total: 0 };
     const ENROLL_TABLE = 'student_enrolled';
     const STUDENT_TABLE = 'student_login';
     const ENROLL_EDITABLE_FIELDS = ['expires_at', 'next_date', 'paid', 'access_type'];
@@ -4332,6 +4332,132 @@
 
       populateCourseFilter(S.lastRawData?.courses || []);
       applyEnrollFiltersAndRender();
+    }
+
+    function getStudentRowLevel(r) {
+      if (!r) return '';
+      const rawLevel = String(r.level || '').trim();
+      const rawInst = String(r.institute || '').trim().toUpperCase();
+
+      if (rawLevel) {
+        const lUpper = rawLevel.toUpperCase();
+        if (lUpper === 'BBA DCU' || (lUpper.includes('BBA') && (lUpper.includes('DCU') || rawInst.includes('DCU') || rawInst.includes('7 COLLEGE') || rawInst.includes('DHAKA')))) return 'BBA DCU';
+        if (lUpper === 'BBA NU' || (lUpper.includes('BBA') && (lUpper.includes('NU') || rawInst.includes('NU') || rawInst.includes('NATIONAL')))) return 'BBA NU';
+        if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
+        if (lUpper === 'BBS' || lUpper.includes('BBS')) return 'BBS';
+        if (lUpper === 'MBA' || lUpper.includes('MBA')) return 'MBA';
+        if (lUpper === 'HSC' || lUpper.includes('HSC')) return 'HSC';
+        if (lUpper === 'SSC' || lUpper.includes('SSC')) return 'SSC';
+        if (lUpper === 'BBA') return 'BBA DCU';
+        for (const tab of ENROLL_LEVEL_TABS) {
+          if (tab.id && lUpper.includes(tab.id.toUpperCase())) return tab.id;
+        }
+      }
+      return '';
+    }
+
+    function renderStudentLevelButtons() {
+      return ENROLL_LEVEL_TABS.map(l => `
+        <button type="button" class="cc-level-btn ${S.levelFilter === l.id ? 'active' : ''}" data-level="${esc(l.id)}" onclick="setStudentLevel('${esc(l.id)}')">
+          <span>${l.icon}</span>
+          <span>${esc(l.name)}</span>
+          <span class="cc-badge-count" data-student-level-badge="${esc(l.id)}">…</span>
+        </button>
+      `).join('');
+    }
+
+    function updateStudentLevelBadges() {
+      const rows = S.rawStudentRows || [];
+      const counts = { '': rows.length };
+      ENROLL_LEVEL_TABS.forEach(tab => {
+        if (tab.id) {
+          counts[tab.id] = rows.filter(r => getStudentRowLevel(r) === tab.id).length;
+        }
+      });
+
+      document.querySelectorAll('#studentLevelBar .cc-badge-count').forEach(badge => {
+        const lvl = badge.dataset.studentLevelBadge ?? '';
+        badge.textContent = counts[lvl] !== undefined ? counts[lvl] : '0';
+      });
+    }
+
+    function setStudentLevel(lvl) {
+      if (S.levelFilter === lvl && lvl !== '') {
+        S.levelFilter = '';
+      } else {
+        S.levelFilter = String(lvl || '');
+      }
+
+      document.querySelectorAll('#studentLevelBar .cc-level-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === S.levelFilter);
+      });
+
+      applyStudentFiltersAndRender();
+    }
+
+    function applyStudentFiltersAndRender() {
+      if (!isStudentTable() || !S.lastStudentRawData) {
+        renderTable(S.lastStudentRawData || { rows: S.rows });
+        return;
+      }
+      let filtered = (S.rawStudentRows || []).slice();
+
+      if (S.levelFilter) {
+        filtered = filtered.filter(r => getStudentRowLevel(r) === S.levelFilter);
+      }
+
+      const isClientFiltered = !!S.levelFilter;
+      const total = isClientFiltered ? filtered.length : Number(S.lastStudentRawData?.total ?? filtered.length);
+      const offset = isClientFiltered ? 0 : Number(S.lastStudentRawData?.offset ?? S.offset ?? 0);
+
+      const filteredData = {
+        ...S.lastStudentRawData,
+        rows: filtered,
+        total: total,
+        offset: offset
+      };
+      S.rows = filtered;
+      S.total = total;
+      renderTable(filteredData);
+    }
+
+    function renderPendingLevelButtons() {
+      return ENROLL_LEVEL_TABS.map(l => `
+        <button type="button" class="cc-level-btn ${S.pendingLevel === l.id ? 'active' : ''}" data-level="${esc(l.id)}" onclick="setPendingLevel('${esc(l.id)}')">
+          <span>${l.icon}</span>
+          <span>${esc(l.name)}</span>
+          <span class="cc-badge-count" data-pending-level-badge="${esc(l.id)}">…</span>
+        </button>
+      `).join('');
+    }
+
+    function updatePendingLevelBadges() {
+      const rows = S.pendingRows || [];
+      const counts = { '': rows.length };
+      ENROLL_LEVEL_TABS.forEach(tab => {
+        if (tab.id) {
+          counts[tab.id] = rows.filter(r => getEnrollmentRowLevel(r) === tab.id).length;
+        }
+      });
+
+      document.querySelectorAll('#pendingLevelBar .cc-badge-count').forEach(badge => {
+        const lvl = badge.dataset.pendingLevelBadge ?? '';
+        badge.textContent = counts[lvl] !== undefined ? counts[lvl] : '0';
+      });
+    }
+
+    function setPendingLevel(lvl) {
+      if (S.pendingLevel === lvl && lvl !== '') {
+        S.pendingLevel = '';
+      } else {
+        S.pendingLevel = String(lvl || '');
+      }
+
+      document.querySelectorAll('#pendingLevelBar .cc-level-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === S.pendingLevel);
+      });
+
+      renderPending();
     }
 
     function populateCourseFilter(courses) {
@@ -5027,6 +5153,7 @@
     nav.onclick = e => { let b = e.target.closest('[data-p]'); if (b) page(b.dataset.p) }
     async function page(p) {
       if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'content') return contentPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
+      if (S.table !== STUDENT_TABLE) { S.rawStudentRows = []; S.lastStudentRawData = null; }
       if (S.table === ENROLL_TABLE) {
         loadCourseCatalog().then(() => {
           populateCourseFilter(S.lastRawData?.courses || []);
@@ -5105,6 +5232,14 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         <span>Reset</span>
       </button>
+    </div>
+    <div id="panel" class="panel"></div>`;
+      } else if (S.table === STUDENT_TABLE) {
+        content.innerHTML = `
+    <div class="enroll-level-wrap">
+      <div class="cc-level-bar" id="studentLevelBar">
+        ${renderStudentLevelButtons()}
+      </div>
     </div>
     <div id="panel" class="panel"></div>`;
       } else {
@@ -5369,31 +5504,48 @@
     }
 
     async function pending() {
-      content.innerHTML = `<div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>পেন্ডিং রিকোয়েস্ট লোড হচ্ছে…</div></div></div>`;
+      S.pendingLevel = S.pendingLevel || '';
+      S.pendingSearch = '';
+      content.innerHTML = `
+    <div class="enroll-level-wrap">
+      <div class="cc-level-bar" id="pendingLevelBar">
+        ${renderPendingLevelButtons()}
+      </div>
+    </div>
+    <div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>পেন্ডিং রিকোয়েস্ট লোড হচ্ছে…</div></div></div>`;
       try {
         let a = (await api('get_pending_requests')).data || [];
         S.pendingRows = a;
         updatePendingBadge(a.length);
-        S.pendingSearch = '';
+        updatePendingLevelBadges();
         renderPending();
       } catch (e) {
-        panel.innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+        const pEl = document.getElementById('panel');
+        if (pEl) pEl.innerHTML = `<div class="empty">${esc(e.message)}</div>`;
       }
     }
-    function filterPendingRows(rows, search) {
+    function filterPendingRows(rows, search, level) {
+      let list = rows || [];
+      if (level) {
+        list = list.filter(r => getEnrollmentRowLevel(r) === level);
+      }
       const q = String(search ?? '').trim().toLowerCase();
-      if (!q) return rows.slice();
-      return rows.filter(r => [r.name, r.mobile, r.email, r.course, r.nuDcu, r.level, r.year, r.department, r.institute].some(v => String(v ?? '').toLowerCase().includes(q)));
+      if (!q) return list;
+      return list.filter(r => [r.name, r.mobile, r.email, r.course, r.nuDcu, r.level, r.year, r.department, r.institute].some(v => String(v ?? '').toLowerCase().includes(q)));
     }
     function renderPending() {
       const q = document.getElementById('panel');
       if (!q) return;
-      const rows = filterPendingRows(S.pendingRows || [], S.pendingSearch);
+      const rows = filterPendingRows(S.pendingRows || [], S.pendingSearch, S.pendingLevel);
+      const levelSub = S.pendingLevel ? `<div class="ph-sub">লেভেল: ${esc(S.pendingLevel)}</div>` : '';
       q.innerHTML = `
     <div class="ph">
-      <div class="ph-title-wrap">
-        <h3 class="ph-title">Pending Enrollments</h3>
-        <span class="ph-count-pill">${rows.length} টি রিকোয়েস্ট</span>
+      <div>
+        <div class="ph-title-wrap">
+          <h3 class="ph-title">Pending Enrollments</h3>
+          <span class="ph-count-pill">${rows.length} টি রিকোয়েস্ট</span>
+        </div>
+        ${levelSub}
       </div>
       <div class="tools">
         <div class="search-wrap">
@@ -5429,7 +5581,7 @@
         <td><span class="adm-date-badge">🗓\u00A0${esc(formatDateOnly(r.enrolledAt))}</span></td>
       </tr>`;
       }).join('')}</tbody></table></div>`
-          : `<div class="empty">${S.pendingSearch ? 'কোনো পেন্ডিং রিকোয়েস্ট মেলেনি।' : 'বর্তমানে কোনো পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট নেই।'}</div>`}
+          : `<div class="empty">${(S.pendingSearch || S.pendingLevel) ? 'কোনো পেন্ডিং রিকোয়েস্ট মেলেনি।' : 'বর্তমানে কোনো পেন্ডিং এনরোলমেন্ট রিকোয়েস্ট নেই।'}</div>`}
     `;
     }
     let pendingSearchTimer = null;
@@ -6315,7 +6467,12 @@
         S.nextDateFilter ? 'Next Date Filter' : ''
       ].filter(Boolean).join(' · ');
 
-      const subText = enroll ? enrollFilterSub : student ? 'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন' : `${esc(S.table)} · ${cols.length} fields`;
+      const studentFilterSub = [
+        S.levelFilter ? `Level: ${esc(S.levelFilter)}` : '',
+        'পুরো প্রোফাইল দেখতে যেকোনো রো-তে ক্লিক করুন'
+      ].filter(Boolean).join(' · ');
+
+      const subText = enroll ? enrollFilterSub : student ? studentFilterSub : `${esc(S.table)} · ${cols.length} fields`;
 
       q.innerHTML = `
     <div class="ph">
@@ -6382,11 +6539,12 @@
       }
 
       try {
+        const limitParam = isStudentTable() ? 1000 : S.limit;
         const response = await api('admin_rows', {
           table: S.table,
           search: S.search,
-          offset: S.offset,
-          limit: S.limit,
+          offset: isStudentTable() ? 0 : S.offset,
+          limit: limitParam,
           level: S.levelFilter || '',
           course: S.courseFilter || '',
           due: S.dueFilter || '',
@@ -6409,6 +6567,11 @@
           populateEnrolledDateFilter(S.rawEnrollRows);
           populateNextDateFilter(S.rawEnrollRows);
           applyEnrollFiltersAndRender();
+        } else if (isStudentTable()) {
+          S.lastStudentRawData = d;
+          S.rawStudentRows = Array.isArray(d.rows) ? d.rows : [];
+          updateStudentLevelBadges();
+          applyStudentFiltersAndRender();
         } else {
           S.rows = Array.isArray(d.rows) ? d.rows : [];
           S.total = Number(d.total ?? S.rows.length);
