@@ -5661,10 +5661,46 @@
       const addPaidInput = document.getElementById('eleAddPaid');
       const feedbackInput = document.getElementById('eleFeedback');
 
+      const expVal = expInput ? expInput.value.trim() : '';
+      const ndVal = nextDateInput ? nextDateInput.value.trim() : '';
+      const accessVal = accessTypeInput ? accessTypeInput.value : '';
+      const addPaidVal = addPaidInput ? addPaidInput.value.replace(/[^\d.]/g, '').trim() : '';
+      const fbText = feedbackInput ? feedbackInput.value.trim() : '';
+
+      // Confirmation dialog to prevent unwanted/accidental clicks
+      const studentName = oldRow.name || 'Student';
+      const summary = [];
+      if (expVal) {
+        summary.push(`• মেয়াদ (Expires At): ${formatReadableDate(expVal) || expVal}`);
+      }
+      if (ndVal) {
+        summary.push(`• পরবর্তী পেমেন্ট (Next Date): ${formatReadableDate(ndVal) || ndVal}`);
+      }
+      if (accessVal && accessVal !== (oldRow.access_type || 'Limited Access')) {
+        summary.push(`• অ্যাক্সেস টাইপ: ${accessVal}`);
+      }
+      if (addPaidVal && Number(addPaidVal) > 0) {
+        summary.push(`• নতুন পেমেন্ট/কিস্তি: ৳ ${fmtMoney(Number(addPaidVal))}`);
+      }
+      if (fbText) {
+        summary.push(`• মন্তব্য (Feedback): "${fbText}"`);
+      }
+
+      let confirmMsg = `আপনি কি নিশ্চিত যে ${studentName}-এর এনরোলমেন্টের পরিবর্তনগুলো সেভ করতে চান?`;
+      if (summary.length) {
+        confirmMsg += `\n\nপরিবর্তনের বিবরণ:\n${summary.join('\n')}`;
+      }
+      if (!confirm(confirmMsg)) return;
+
+      const saveBtn = document.getElementById('dmSaveEnrollBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+      }
+
       const d = {};
 
       // 1. Expires At
-      const expVal = expInput ? expInput.value.trim() : '';
       if (expVal) {
         d.expires_at = new Date(expVal + 'T23:59:59.999Z').toISOString();
         const expIso = parseNextDateToIso(d.expires_at);
@@ -5677,7 +5713,6 @@
 
       // 2. Next Payment Date
       if (nextDateInput) {
-        const ndVal = nextDateInput.value.trim();
         d.next_date = ndVal ? fmtDateInput(ndVal) : '';
       }
 
@@ -5687,7 +5722,6 @@
       }
 
       // 4. Add Payment (Installment)
-      const addPaidVal = addPaidInput ? addPaidInput.value.replace(/[^\d.]/g, '').trim() : '';
       if (addPaidVal && Number(addPaidVal) > 0) {
         const addAmt = Number(addPaidVal);
         const oldPaid = moneyNumber(oldRow.paid) || 0;
@@ -5710,7 +5744,6 @@
       }
 
       // 5. Add Feedback
-      const fbText = feedbackInput ? feedbackInput.value.trim() : '';
       if (fbText) {
         const todayDate = getTodayIso();
         let fbList = [];
@@ -5741,6 +5774,11 @@
         refresh();
       } catch (e) {
         toast(e.message || 'Save failed');
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = '💾 Save Changes';
+        }
       }
     }
 
@@ -6254,7 +6292,7 @@
         if (isEnrollTable()) {
           dmActions.innerHTML = `
         <button type="button" class="btn ghost" onclick="closeDetail()">Close</button>
-        <button type="button" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;font-weight:700" onclick="saveEnrollmentDirect(${id})">💾 Save Changes</button>
+        <button type="button" id="dmSaveEnrollBtn" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;font-weight:700" onclick="saveEnrollmentDirect(${id})">💾 Save Changes</button>
       `;
         } else if (isStudentTable()) {
           dmActions.innerHTML = `
