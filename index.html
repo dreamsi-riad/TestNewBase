@@ -3405,8 +3405,7 @@
         <div class="detail-avatar" id="drawerAvatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">✏</div>
         <div class="detail-head-info">
           <h3 id="dt" style="margin:0 0 2px;font:800 22px 'Baloo Da 2'">Edit Record</h3>
-          <div class="detail-head-sub" id="drawerSub" style="font-size:12.5px;color:#64748b">Update information and save
-            changes</div>
+          <div class="detail-head-sub" id="drawerSub">Update information and save changes</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="closeDrawer()" aria-label="Close drawer">✕</button>
       </div>
@@ -5287,7 +5286,8 @@
           drawerAvatar.textContent = getInitial(studentName || 'E');
         }
         if (drawerSub) {
-          drawerSub.innerHTML = `${studentName ? `<b style="color:#0f172a">${esc(studentName)}</b> · ` : ''}<span class="adm-course-title" style="font-size:13px">${esc(courseName || '')}</span>${studentNu ? ` <span class="adm-sector-pill nu">${esc(studentNu)}</span>` : ''}${studentMobile ? ` · <span style="color:#64748b">📞 ${esc(studentMobile)}</span>` : ''}`;
+          const sectorClass = studentNu.toLowerCase() === 'nu' ? 'nu' : studentNu.toLowerCase() === 'dcu' ? 'dcu' : 'other';
+          drawerSub.innerHTML = `${studentName ? `<b style="color:#0f172a;font-size:15.5px">${esc(studentName)}</b> · ` : ''}<span class="adm-course-title" style="font-size:15px">${esc(courseName || '')}</span>${studentNu ? ` <span class="adm-sector-pill ${sectorClass}">${esc(studentNu)}</span>` : ''}${studentMobile ? ` <span class="adm-phone-badge"><a href="tel:${esc(studentMobile)}" class="adm-contact-link" style="color:#475569;font-size:14px;font-weight:700">📞 ${esc(studentMobile)}</a>${renderCopyPhoneBtn(studentMobile)}</span>` : ''}`;
         }
       } else {
         dt.textContent = id ? 'Edit Record' : 'Add Record';
