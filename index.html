@@ -5746,27 +5746,53 @@
       if (dmStats) dmStats.classList.add('hidden');
       dmTitle.textContent = name;
       dmSub.innerHTML = `<span class="adm-course-title" style="color:#d97706;font-size:15.5px">${esc(r.course || '')}</span>${r.nuDcu ? ' · <span class="adm-sector-pill nu">' + esc(r.nuDcu) + '</span>' : ''}${r.mobile ? ` · <span class="adm-phone-badge"><a href="tel:${esc(r.mobile)}" class="adm-contact-link" style="color:#475569;font-size:14.5px;font-weight:700">📞 ${esc(r.mobile)}</a>${renderCopyPhoneBtn(r.mobile)}</span>` : ''}`;
-      const fields = [
-        ['Email', r.email],
-        ['Sector (NU/DCU)', r.nuDcu],
-        ['Course Price', r.coursePrice ? `৳ ${fmtMoney(r.coursePrice)}` : r.coursePrice],
-        ['Level', r.level],
-        ['Year', r.year],
-        ['Department', r.department],
-        ['Institute', r.institute],
-        ['Address', r.address],
-        ['Requested At', formatDateOnly(r.enrolledAt)]
-      ];
-      dmBody.innerHTML = fields.map(([k, v]) => {
-        const large = k === 'Address';
-        const isCourse = (k === 'Course');
-        const isPrice = (k === 'Course Price');
-        let valHtml = v ? esc(v) : '<span class="v-empty muted">—</span>';
-        if (k === 'Mobile' && v) valHtml = `<div class="adm-phone-field"><a href="tel:${esc(v)}" class="adm-contact-link">📞 ${esc(v)}</a>${renderCopyPhoneBtn(v)}</div>`;
-        if (k === 'Email' && v) valHtml = `<a href="mailto:${esc(v)}" class="adm-contact-link email">✉ ${esc(v)}</a>`;
-        if (isPrice && v) valHtml = `<span class="val-price" style="color:#0f172a;font-weight:800">${esc(v)}</span>`;
-        return `<div class="detail-item ${large ? 'full' : ''}"><div class="k">${esc(k)}</div><div class="v ${isCourse ? 'val-course' : ''}">${valHtml}</div></div>`;
-      }).join('');
+      const emailHtml = r.email ? `<a href="mailto:${esc(r.email)}" class="adm-contact-link email">✉ ${esc(r.email)}</a>` : '<span class="v-empty muted">—</span>';
+      const priceNum = moneyNumber(r.coursePrice);
+      const priceHtml = priceNum !== null ? `<span style="color:#0f172a;font-weight:800">৳ ${fmtMoney(priceNum)}</span>` : (r.coursePrice ? esc(r.coursePrice) : '<span class="v-empty muted">—</span>');
+      const sectorHtml = r.nuDcu ? `<span class="adm-sector-pill nu">${esc(r.nuDcu)}</span>` : '<span class="v-empty muted">—</span>';
+
+      dmBody.innerHTML = `
+        <div class="enroll-specs-card">
+          <div class="enroll-specs-grid">
+            <div class="enroll-spec-cell">
+              <span class="es-label">✉️ Email</span>
+              <span class="es-value">${emailHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🏛️ Sector</span>
+              <span class="es-value">${sectorHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">💰 Course Price</span>
+              <span class="es-value">${priceHtml}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🎓 Level</span>
+              <span class="es-value">${r.level ? esc(r.level) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">📅 Year</span>
+              <span class="es-value">${r.year ? esc(r.year) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">📚 Department</span>
+              <span class="es-value">${r.department ? esc(r.department) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🏫 Institute</span>
+              <span class="es-value">${r.institute ? esc(r.institute) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell">
+              <span class="es-label">🗓️ Requested At</span>
+              <span class="es-value">${r.enrolledAt ? esc(formatDateOnly(r.enrolledAt)) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+            <div class="enroll-spec-cell" style="grid-column: 1 / -1; border-right: none; border-bottom: none;">
+              <span class="es-label">📍 Address</span>
+              <span class="es-value">${r.address ? esc(r.address) : '<span class="v-empty muted">—</span>'}</span>
+            </div>
+          </div>
+        </div>
+      `;
 
       const dmActions = document.getElementById('dmActions');
       if (dmActions) {
