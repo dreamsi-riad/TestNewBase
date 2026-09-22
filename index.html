@@ -2350,20 +2350,11 @@
       box-shadow: 0 3px 8px rgba(99, 102, 241, .22);
     }
 
-    .pay-row .p-by-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-      opacity: .85;
-      flex-shrink: 0;
-    }
-
     .pay-row .p-by-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      opacity: .85;
+      opacity: .9;
     }
 
     .pay-empty {
@@ -5149,7 +5140,7 @@
       let hash = 0;
       for (let i = 0; i < name.length; i++) hash = (hash << 5) - hash + name.charCodeAt(i);
       const p = palettes[Math.abs(hash) % palettes.length];
-      return `<span class="p-by" style="background:${p.bg};color:${p.color};border-color:${p.border}"><span class="p-by-dot" style="background:${p.dot}"></span><span class="p-by-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>${esc(name)}</span></span>`;
+      return `<span class="p-by" style="background:${p.bg};color:${p.color};border-color:${p.border}"><span class="p-by-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>${esc(name)}</span></span>`;
     }
     function payHistoryHtml(row) {
       let list = [];
