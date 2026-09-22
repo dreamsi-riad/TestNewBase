@@ -4195,51 +4195,6 @@
       { id: 'SSC', name: 'SSC', icon: '🎒' }
     ];
 
-    let courseCatalogCache = [];
-    async function loadCourseCatalog() {
-      if (courseCatalogCache.length) return courseCatalogCache;
-      try {
-        const res = await api('get_courses');
-        if (Array.isArray(res?.data)) {
-          courseCatalogCache = res.data;
-        }
-      } catch (e) { }
-      return courseCatalogCache;
-    }
-
-    function getCourseLevel(courseName, sectorHint = '') {
-      const c = String(courseName || '').trim();
-      if (!c) return '';
-      const cLower = c.toLowerCase();
-      const s = String(sectorHint || '').trim().toUpperCase();
-
-      if (courseCatalogCache.length) {
-        const found = courseCatalogCache.find(x => String(x.name || '').trim().toLowerCase() === cLower && (!s || !x.tag || String(x.tag).toUpperCase() === s));
-        if (found) {
-          const lUpper = String(found.level || '').trim().toUpperCase();
-          const tagUpper = String(found.tag || '').trim().toUpperCase();
-          if (lUpper === 'BBA' && (tagUpper === 'DCU' || s === 'DCU')) return 'BBA DCU';
-          if (lUpper === 'BBA' && (tagUpper === 'NU' || s === 'NU')) return 'BBA NU';
-          if (lUpper === 'BBA') return (s === 'DCU' ? 'BBA DCU' : 'BBA NU');
-          if (lUpper.includes('PROFESSIONAL')) return 'BBA Professional';
-          if (lUpper === 'BBS') return 'BBS';
-          if (lUpper === 'MBA') return 'MBA';
-          if (lUpper === 'HSC') return 'HSC';
-          if (lUpper === 'SSC') return 'SSC';
-        }
-      }
-
-      if (cLower.includes('hsc')) return 'HSC';
-      if (cLower.includes('ssc')) return 'SSC';
-      if (cLower.includes('mba')) return 'MBA';
-      if (cLower.includes('bbs')) return 'BBS';
-      if (cLower.includes('professional')) return 'BBA Professional';
-      if (s === 'DCU' || cLower.includes('dcu')) return 'BBA DCU';
-      if (s === 'NU' || cLower.includes('nu')) return 'BBA NU';
-
-      return s === 'DCU' ? 'BBA DCU' : 'BBA NU';
-    }
-
     function getEnrollmentRowLevel(r) {
       if (!r) return '';
       const sector = String(r.nu_dcu || r.nuDcu || '').trim().toUpperCase();
@@ -4255,9 +4210,18 @@
         if (lUpper === 'MBA') return 'MBA';
         if (lUpper === 'HSC') return 'HSC';
         if (lUpper === 'SSC') return 'SSC';
+        return rawLevel;
       }
 
-      return getCourseLevel(course, sector);
+      const cLower = course.toLowerCase();
+      if (cLower.includes('hsc')) return 'HSC';
+      if (cLower.includes('ssc')) return 'SSC';
+      if (cLower.includes('mba')) return 'MBA';
+      if (cLower.includes('bbs')) return 'BBS';
+      if (cLower.includes('professional')) return 'BBA Professional';
+      if (sector === 'DCU' || cLower.includes('dcu')) return 'BBA DCU';
+      if (sector === 'NU' || cLower.includes('nu')) return 'BBA NU';
+      return sector === 'DCU' ? 'BBA DCU' : 'BBA NU';
     }
 
     function renderEnrollLevelButtons() {
@@ -4362,10 +4326,7 @@
     }
 
     function applyStudentFiltersAndRender() {
-      if (!isStudentTable() || !S.lastStudentRawData) {
-        renderTable(S.lastStudentRawData || { rows: S.rows });
-        return;
-      }
+      if (!isStudentTable() || !S.lastStudentRawData) return;
       let filtered = (S.rawStudentRows || []).slice();
 
       if (S.levelFilter) {
@@ -4438,10 +4399,7 @@
       let filteredCourses = distinctCourses;
       if (S.levelFilter) {
         filteredCourses = distinctCourses.filter(cName => {
-          const hasMatchingRow = allRows.some(r => String(r.course || '').trim().toLowerCase() === cName.toLowerCase() && getEnrollmentRowLevel(r) === S.levelFilter);
-          if (hasMatchingRow) return true;
-          const cLevel = getCourseLevel(cName);
-          return cLevel === S.levelFilter;
+          return allRows.some(r => String(r.course || '').trim().toLowerCase() === cName.toLowerCase() && getEnrollmentRowLevel(r) === S.levelFilter);
         });
       }
 
@@ -4585,10 +4543,7 @@
       resetBtn.classList.toggle('hidden', !hasActiveFilter);
     }
     function applyEnrollFiltersAndRender() {
-      if (!isEnrollTable() || !S.lastRawData) {
-        renderTable(S.lastRawData || { rows: S.rows });
-        return;
-      }
+      if (!isEnrollTable() || !S.lastRawData) return;
       let filtered = (S.rawEnrollRows || []).slice();
 
       if (S.levelFilter) {
@@ -5121,11 +5076,6 @@
       if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'content') return contentPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
       if (S.table !== STUDENT_TABLE) { S.rawStudentRows = []; S.lastStudentRawData = null; }
       if (S.table === ENROLL_TABLE) {
-        loadCourseCatalog().then(() => {
-          populateCourseFilter(S.lastRawData?.courses || []);
-          updateEnrollLevelBadges();
-          applyEnrollFiltersAndRender();
-        }).catch(() => {});
         content.innerHTML = `
     <div class="enroll-level-wrap">
       <div class="cc-level-bar" id="enrollLevelBar">
@@ -5199,7 +5149,9 @@
         <span>Reset</span>
       </button>
     </div>
-    <div id="panel" class="panel"></div>`;
+    <div id="panel" class="panel">
+      <div class="smooth-loading"><div class="spinner"></div><div>ডাটাবেজ লোড হচ্ছে…</div><div class="search-status">Cloudflare D1 থেকে লাইভ ডাটা লোড হচ্ছে</div></div>
+    </div>`;
       } else if (S.table === STUDENT_TABLE) {
         content.innerHTML = `
     <div class="enroll-level-wrap">
@@ -5207,9 +5159,11 @@
         ${renderStudentLevelButtons()}
       </div>
     </div>
-    <div id="panel" class="panel"></div>`;
+    <div id="panel" class="panel">
+      <div class="smooth-loading"><div class="spinner"></div><div>ডাটাবেজ লোড হচ্ছে…</div><div class="search-status">Cloudflare D1 থেকে লাইভ ডাটা লোড হচ্ছে</div></div>
+    </div>`;
       } else {
-        content.innerHTML = `<div id="panel" class="panel"></div>`;
+        content.innerHTML = `<div id="panel" class="panel"><div class="smooth-loading"><div class="spinner"></div><div>ডাটাবেজ লোড হচ্ছে…</div><div class="search-status">Cloudflare D1 থেকে লাইভ ডাটা লোড হচ্ছে</div></div></div>`;
       }
       refresh()
     }
