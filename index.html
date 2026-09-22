@@ -1344,79 +1344,72 @@
 
     /* Academic Level Selection Bar in Enrollment */
     .enroll-level-wrap {
-      margin: 8px 0 14px;
+      margin: 4px 0 6px;
     }
 
     .enroll-level-label {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: none;
     }
 
     /* Filter bar & Spinners */
     .filter-bar {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
-      margin: 10px 0 14px;
+      margin: 4px 0 8px;
       background: #fff;
       border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 10px 16px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, .03)
+      border-radius: 12px;
+      padding: 6px 12px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, .03);
     }
 
     .filter-field {
       display: flex;
       align-items: center;
-      gap: 7px
+      gap: 6px;
     }
 
     .filter-bar label {
       margin: 0;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: #1e293b;
       display: flex;
       align-items: center;
-      gap: 6px;
-      white-space: nowrap
+      gap: 5px;
+      white-space: nowrap;
     }
 
     .filter-bar label svg {
       color: #64748b;
-      flex-shrink: 0
+      flex-shrink: 0;
     }
 
     .filter-bar select {
       border: 1.5px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 7px 12px;
+      border-radius: 8px;
+      padding: 4px 10px;
+      height: 32px;
       background: #f8fafc;
       color: #0f172a;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12.5px;
       transition: all .2s ease;
-      cursor: pointer
+      cursor: pointer;
     }
 
     .filter-bar select:hover {
       border-color: #94a3b8;
-      background: #fff
+      background: #fff;
     }
 
     .filter-bar select:focus {
       border-color: #3b82f6;
       background: #fff;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, .15);
-      outline: none
+      outline: none;
     }
 
     #courseFilter {
@@ -1458,16 +1451,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border: 1.5px solid #cbd5e1;
-      border-radius: 10px;
+      border-radius: 8px;
       background: #f8fafc;
       color: #2563eb;
       cursor: pointer;
       transition: all .2s ease;
       padding: 0;
-      flex-shrink: 0
+      flex-shrink: 0;
     }
 
     .enrolled-date-cal-btn:hover,
@@ -1475,75 +1468,69 @@
       background: #eff6ff;
       border-color: #3b82f6;
       color: #1d4ed8;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, .18)
+      box-shadow: 0 2px 8px rgba(59, 130, 246, .18);
     }
 
     .enrolled-date-cal-btn:active,
     .next-date-cal-btn:active {
-      transform: scale(.96)
+      transform: scale(.96);
     }
 
     .filter-reset-btn {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 6px 11px;
+      padding: 5px 10px;
       border: 1px dashed #cbd5e1;
       border-radius: 8px;
       background: #f8fafc;
       color: #64748b;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .15s ease
+      transition: all .15s ease;
     }
 
     .filter-reset-btn:hover {
       background: #fee2e2;
       color: #dc2626;
-      border-color: #fca5a5
+      border-color: #fca5a5;
     }
 
     .filter-reset-btn.hidden {
-      display: none
+      display: none;
     }
 
     .filter-count {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #64748b;
-      margin-left: auto;
-      white-space: nowrap;
-      padding-left: 8px
+      display: none !important;
     }
 
     @media(max-width:760px) {
       .filter-bar {
-        gap: 10px
+        gap: 8px;
       }
 
       .filter-field {
-        width: 100%
+        width: 100%;
       }
 
       .filter-bar select {
         width: 100%;
-        min-width: 0 !important
+        min-width: 0 !important;
       }
 
       .enrolled-date-select-wrap,
       .next-date-select-wrap {
-        width: 100%
+        width: 100%;
       }
 
       .enrolled-date-select-wrap select,
       .next-date-select-wrap select {
-        flex: 1
+        flex: 1;
       }
 
       .filter-count {
-        margin-left: 0;
-        width: 100%
+        display: none !important;
       }
     }
 
@@ -1551,21 +1538,21 @@
     .panel {
       background: #fff;
       border: 1px solid #e2e8f0;
-      border-radius: 18px;
+      border-radius: 14px;
       box-shadow: 0 10px 30px -5px rgba(15, 23, 42, .05), 0 2px 6px rgba(15, 23, 42, .02);
       overflow: hidden;
-      margin-top: 10px
+      margin-top: 6px;
     }
 
     .ph {
-      padding: 14px 20px;
+      padding: 8px 16px;
       border-bottom: 1px solid #edf2f7;
       background: #fff;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .ph-title-wrap {
@@ -1733,45 +1720,46 @@
 
     /* Enrollments Table specific */
     .tbl.enroll-tbl {
-      min-width: 980px
+      min-width: 980px;
     }
 
     .tbl.enroll-tbl td,
     .tbl.enroll-tbl th {
       max-width: none;
       width: auto;
-      white-space: nowrap
+      white-space: nowrap;
+      padding: 8px 12px;
     }
 
     .tbl.enroll-tbl td.wrap {
       white-space: normal;
-      max-width: 220px
+      max-width: 220px;
     }
 
     .tbl.enroll-tbl td.actions-cell {
-      cursor: default
+      cursor: default;
     }
 
     /* Student Avatar Cell */
     .adm-user-cell {
       display: flex;
       align-items: center;
-      gap: 11px
+      gap: 9px;
     }
 
     .adm-avatar-circle {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
       display: grid;
       place-items: center;
       color: #fff;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: .5px;
       flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(15, 23, 42, .12);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, .2)
+      box-shadow: 0 2px 6px rgba(15, 23, 42, .12);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
     }
 
     .adm-user-info {
@@ -5047,9 +5035,6 @@
         }).catch(() => {});
         content.innerHTML = `
     <div class="enroll-level-wrap">
-      <div class="enroll-level-label">
-        লেভেল নির্বাচন করুন (SELECT ACADEMIC LEVEL):
-      </div>
       <div class="cc-level-bar" id="enrollLevelBar">
         ${renderEnrollLevelButtons()}
       </div>
@@ -5120,8 +5105,6 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         <span>Reset</span>
       </button>
-
-      <div class="filter-count" id="enrollFilterCount"></div>
     </div>
     <div id="panel" class="panel"></div>`;
       } else {
@@ -6317,16 +6300,6 @@
       const from = total ? offset + 1 : 0;
       const to = Math.min(offset + limit, total);
 
-      // Update filter count if present
-      const fcEl = document.getElementById('enrollFilterCount');
-      if (fcEl) {
-        const isFiltered = !!(S.levelFilter || S.courseFilter || S.dueFilter || S.enrolledDateFilter || S.nextDateFilter || S.search);
-        if (isFiltered) {
-          fcEl.textContent = `ফিল্টারকৃত শিক্ষার্থী: ${total} জন`;
-        } else {
-          fcEl.textContent = `মোট শিক্ষার্থী: ${total} জন`;
-        }
-      }
 
       // Preserve search focus and cursor selection
       const searchEl = document.getElementById('search');
