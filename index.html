@@ -4237,6 +4237,381 @@
     .zsp-pill-remove:hover {
       color: #dc2626;
     }
+
+    /* ===== ADMIN CREDITS STYLES ===== */
+    .ac-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ac-breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .ac-crumb-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #64748b;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transition: all .15s ease;
+    }
+    .ac-crumb-item:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .ac-crumb-item.active {
+      color: #2563eb;
+      background: #eff6ff;
+      cursor: default;
+    }
+    .ac-crumb-sep {
+      color: #94a3b8;
+      font-size: 12px;
+    }
+    .ac-stats-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .ac-stat-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .ac-stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .ac-stat-val {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .ac-stat-lbl {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .ac-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .ac-admin-card, .ac-course-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 13px 15px;
+      cursor: pointer;
+      transition: all .2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .ac-admin-card:hover, .ac-course-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+    }
+    .ac-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .ac-card-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ac-user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 13.5px;
+    }
+    .ac-user-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .ac-card-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #f8fafc;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #f1f5f9;
+    }
+    .ac-metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .ac-metric-lbl {
+      font-size: 10.5px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .ac-metric-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .ac-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2563eb;
+      padding-top: 4px;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .ac-table-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .ac-table-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .ac-table-scroll {
+      overflow-x: auto;
+    }
+    .ac-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .ac-table th {
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 800;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 11.5px;
+      letter-spacing: .02em;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .ac-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+    .ac-table tbody tr {
+      cursor: pointer;
+      transition: background .12s ease;
+    }
+    .ac-table tbody tr:hover {
+      background: #f8fafc;
+    }
+    .ac-btn-view {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .ac-btn-view:hover {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    /* Ultra-compact Read-Only Modal */
+    .ac-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+    .ac-modal-overlay.hidden {
+      display: none !important;
+    }
+    .ac-modal-box {
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+      border: 1px solid #e2e8f0;
+      animation: acModalIn .2s ease-out;
+      overflow: hidden;
+    }
+    @keyframes acModalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .ac-modal-head {
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ac-modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ac-modal-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      border: 1px solid #bfdbfe;
+    }
+    .ac-modal-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+    .ac-modal-sub {
+      font-size: 11.5px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+    .ac-modal-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #64748b;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 800;
+      transition: all .15s ease;
+    }
+    .ac-modal-close:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+    .ac-modal-content {
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 82vh;
+      overflow-y: auto;
+    }
+    .ac-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 12px;
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #f1f5f9;
+    }
+    .ac-info-cell {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+    }
+    .ac-info-cell span.lbl {
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+    .ac-info-cell span.val {
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+    .ac-history-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ac-history-head {
+      background: #f1f5f9;
+      padding: 6px 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ac-hist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+    }
+    .ac-hist-table th {
+      background: #f8fafc;
+      padding: 4px 8px;
+      text-align: left;
+      color: #64748b;
+      font-weight: 700;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 10.5px;
+    }
+    .ac-hist-table td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
   </style>
   <base target="_blank">
 </head>
@@ -4259,7 +4634,7 @@
       <nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending"><span>⏳
             Pending Enrollments</span><span id="navPendingBadge"
             class="nav-pending-badge hidden"></span></button><button data-p="enrollments">🎓 Enrollments</button><button
-          data-p="students">👨‍🎓 Students</button><button data-p="zoom">📹 Zoom Meeting</button><button data-p="courses" class="master-only">📚
+          data-p="students">👨‍🎓 Students</button><button data-p="credits">💳 Admin Credits</button><button data-p="zoom">📹 Zoom Meeting</button><button data-p="courses" class="master-only">📚
           Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button
           data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers"
           class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free
@@ -4374,6 +4749,25 @@
       </form>
     </div>
   </div>
+  <!-- Ultra-compact Read-only Student Credit Modal -->
+  <div id="adminCreditStudentModal" class="ac-modal-overlay hidden" onclick="if(event.target===this)closeAdminCreditModal()">
+    <div class="ac-modal-box">
+      <div class="ac-modal-head">
+        <div class="ac-modal-title-wrap">
+          <div class="ac-modal-avatar">🎓</div>
+          <div>
+            <h3 id="acModalStudentName" class="ac-modal-title">—</h3>
+            <div id="acModalStudentSub" class="ac-modal-sub">—</div>
+          </div>
+        </div>
+        <button type="button" class="ac-modal-close" onclick="closeAdminCreditModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="ac-modal-content" id="acModalContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast hidden"></div>
   <script>
     const API = 'https://late-forest-4748.dreamsicreation.workers.dev/'; // Cloudflare Worker URL
@@ -5341,7 +5735,7 @@
     lf.onsubmit = async e => { e.preventDefault(); try { let j = await doLogin(lm.value.trim(), lp.value); S.token = j.data.adminToken; S.user = j.data; localStorage.va_admin_token = S.token; localStorage.va_admin_user = JSON.stringify(S.user); show() } catch (e) { le.textContent = e.message } }
     nav.onclick = e => { let b = e.target.closest('[data-p]'); if (b) page(b.dataset.p) }
     async function page(p) {
-      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'content') return contentPage(); if (p === 'zoom') return zoomMeetingPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
+      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'credits') return adminCreditsPage(); if (p === 'content') return contentPage(); if (p === 'zoom') return zoomMeetingPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
       if (S.table !== STUDENT_TABLE) { S.rawStudentRows = []; S.lastStudentRawData = null; }
       if (S.table === ENROLL_TABLE) {
         content.innerHTML = `
@@ -8655,6 +9049,638 @@
         }
       }
     }
+
+    // ============================================================
+    // ADMIN CREDITS MODULE
+    // ============================================================
+    const acState = {
+      loading: false,
+      data: null,
+      currentView: 'admins', // 'admins' | 'courses' | 'students'
+      selectedAdmin: null,
+      selectedCourse: null,
+      searchQuery: ''
+    };
+
+    function acFmtMoney(n) {
+      const num = Number(n || 0);
+      return isNaN(num) ? '0' : num.toLocaleString('en-IN');
+    }
+
+    async function adminCreditsPage() {
+      content.innerHTML = `
+        <div class="ac-wrap">
+          <div class="dash-header" style="margin-bottom:6px;">
+            <div>
+              <div class="dash-eyebrow">VISION ACADEMICS · ADMIN PERFORMANCE & METRICS</div>
+              <h1 class="dash-title">💳 Admin Credits</h1>
+            </div>
+          </div>
+          <div id="acBreadcrumbs"></div>
+          <div id="acViewContainer"></div>
+        </div>
+      `;
+
+      if (!acState.data) {
+        await loadAdminCreditsData();
+      } else {
+        renderAcCurrentView();
+      }
+    }
+
+    async function loadAdminCreditsData(force = false) {
+      const container = document.getElementById('acViewContainer');
+      if (container) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
+            <div style="font-size:24px;margin-bottom:8px">⏳</div>
+            <div>এডমিন ক্রেডিটস ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</div>
+          </div>
+        `;
+      }
+
+      try {
+        acState.loading = true;
+        const res = await api('panel_admin_get_admin_credits');
+        if (res && res.status === 'ok') {
+          acState.data = res.admins || [];
+          renderAcCurrentView();
+        } else {
+          throw Error(res?.message || 'ডাটা ফেচ করতে ব্যর্থ হয়েছে।');
+        }
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `
+            <div class="panel" style="text-align:center;padding:30px;color:#dc2626">
+              ❌ ডাটা লোড করতে ব্যর্থ: ${esc(err.message)}
+              <div style="margin-top:10px">
+                <button type="button" class="btn primary" onclick="loadAdminCreditsData(true)">🔄 পুনরায় চেষ্টা করুন</button>
+              </div>
+            </div>
+          `;
+        }
+      } finally {
+        acState.loading = false;
+      }
+    }
+
+    function renderAcBreadcrumbs() {
+      const bcEl = document.getElementById('acBreadcrumbs');
+      if (!bcEl) return;
+
+      const isAdminsActive = acState.currentView === 'admins';
+      const isCoursesActive = acState.currentView === 'courses';
+      const isStudentsActive = acState.currentView === 'students';
+
+      let html = `
+        <div class="ac-breadcrumb-bar">
+          <div class="ac-crumb-item ${isAdminsActive ? 'active' : ''}" onclick="goToAcView('admins')">
+            <span>🏠</span>
+            <span>সকল এডমিন</span>
+          </div>
+      `;
+
+      if (acState.selectedAdmin) {
+        html += `
+          <span class="ac-crumb-sep">›</span>
+          <div class="ac-crumb-item ${isCoursesActive ? 'active' : ''}" onclick="goToAcView('courses', '${esc(acState.selectedAdmin)}')">
+            <span>👤</span>
+            <span>${esc(acState.selectedAdmin)}</span>
+          </div>
+        `;
+      }
+
+      if (acState.selectedCourse) {
+        html += `
+          <span class="ac-crumb-sep">›</span>
+          <div class="ac-crumb-item ${isStudentsActive ? 'active' : ''}">
+            <span>📚</span>
+            <span>${esc(acState.selectedCourse)}</span>
+          </div>
+        `;
+      }
+
+      html += `
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+            <button type="button" class="btn ghost" style="padding:4px 10px;font-size:12px;height:auto" onclick="loadAdminCreditsData(true)">
+              🔄 রিফ্রেশ
+            </button>
+          </div>
+        </div>
+      `;
+
+      bcEl.innerHTML = html;
+    }
+
+    function goToAcView(view, admin = null, course = null) {
+      acState.currentView = view;
+      if (view === 'admins') {
+        acState.selectedAdmin = null;
+        acState.selectedCourse = null;
+        acState.searchQuery = '';
+      } else if (view === 'courses') {
+        if (admin) acState.selectedAdmin = admin;
+        acState.selectedCourse = null;
+        acState.searchQuery = '';
+      } else if (view === 'students') {
+        if (admin) acState.selectedAdmin = admin;
+        if (course) acState.selectedCourse = course;
+      }
+      renderAcCurrentView();
+    }
+
+    function renderAcCurrentView() {
+      renderAcBreadcrumbs();
+      const container = document.getElementById('acViewContainer');
+      if (!container) return;
+
+      if (!acState.data || acState.data.length === 0) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
+            কোনো এডমিন ক্রেডিট ডাটা পাওয়া যায়নি।
+          </div>
+        `;
+        return;
+      }
+
+      if (acState.currentView === 'admins') {
+        renderAcAdminsView(container);
+      } else if (acState.currentView === 'courses') {
+        renderAcCoursesView(container);
+      } else if (acState.currentView === 'students') {
+        renderAcStudentsView(container);
+      }
+    }
+
+    function renderAcAdminsView(container) {
+      const admins = acState.data;
+
+      // Aggregates
+      let totalStudents = 0;
+      let totalCourseVal = 0;
+      let totalFirstPay = 0;
+      let totalPaid = 0;
+      let totalDue = 0;
+
+      for (const adm of admins) {
+        totalStudents += (adm.studentCount || 0);
+        totalCourseVal += (adm.totalCourseValue || 0);
+        totalFirstPay += (adm.totalFirstPayment || 0);
+        totalPaid += (adm.totalPaid || 0);
+        totalDue += (adm.totalDue || 0);
+      }
+
+      let html = `
+        <!-- Top Stats Banner -->
+        <div class="ac-stats-banner">
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#eff6ff;color:#2563eb">👥</div>
+            <div>
+              <div class="ac-stat-val">${admins.length} জন</div>
+              <div class="ac-stat-lbl">মোট এডমিন</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#ecfdf5;color:#059669">🎓</div>
+            <div>
+              <div class="ac-stat-val">${totalStudents} জন</div>
+              <div class="ac-stat-lbl">ভর্তি শিক্ষার্থী (1st payment)</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#fef3c7;color:#d97706">💰</div>
+            <div>
+              <div class="ac-stat-val">৳${acFmtMoney(totalCourseVal)}</div>
+              <div class="ac-stat-lbl">সর্বমোট কোর্সের মূল্য</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#f5f3ff;color:#7c3aed">💵</div>
+            <div>
+              <div class="ac-stat-val">৳${acFmtMoney(totalFirstPay)}</div>
+              <div class="ac-stat-lbl">১ম পেমেন্ট সংগৃহীত</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;margin-bottom:8px;font-size:14px;font-weight:800;color:#334155;display:flex;align-items:center;justify-content:space-between">
+          <span>এডমিন তালিকা (${admins.length} জন)</span>
+          <span style="font-size:12px;color:#64748b;font-weight:normal">কোর্সের লিস্ট দেখতে এডমিনের কার্ডে ক্লিক করুন</span>
+        </div>
+
+        <div class="ac-cards-grid">
+      `;
+
+      for (const adm of admins) {
+        const initial = (adm.admin || 'A').charAt(0).toUpperCase();
+        html += `
+          <div class="ac-admin-card" onclick="selectAcAdmin('${esc(adm.admin)}')">
+            <div class="ac-card-head">
+              <div class="ac-card-user">
+                <div class="ac-user-avatar">${esc(initial)}</div>
+                <div>
+                  <div class="ac-user-name">${esc(adm.admin)}</div>
+                  <div style="font-size:11.5px;color:#64748b">${(adm.courses || []).length}টি কোর্সে ভর্তি করিয়েছেন</div>
+                </div>
+              </div>
+              <span class="badge" style="background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;font-size:12px;font-weight:800;padding:4px 8px">
+                ${adm.studentCount} জন ভর্তি
+              </span>
+            </div>
+
+            <div class="ac-card-metrics">
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">কোর্সের মোট মূল্য</span>
+                <span class="ac-metric-val">৳${acFmtMoney(adm.totalCourseValue)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">১ম পেমেন্ট (ভর্তি)</span>
+                <span class="ac-metric-val" style="color:#059669">৳${acFmtMoney(adm.totalFirstPayment)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">মোট পেইড</span>
+                <span class="ac-metric-val" style="color:#2563eb">৳${acFmtMoney(adm.totalPaid)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">মোট বকেয়া</span>
+                <span class="ac-metric-val" style="color:${adm.totalDue > 0 ? '#dc2626' : '#64748b'}">৳${acFmtMoney(adm.totalDue)}</span>
+              </div>
+            </div>
+
+            <div class="ac-card-footer">
+              <span>কোর্স ভিত্তিক বিস্তারিত দেখুন</span>
+              <span>➔</span>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function selectAcAdmin(adminName) {
+      acState.selectedAdmin = adminName;
+      acState.currentView = 'courses';
+      acState.selectedCourse = null;
+      acState.searchQuery = '';
+      renderAcCurrentView();
+    }
+
+    function renderAcCoursesView(container) {
+      const adminObj = (acState.data || []).find(a => a.admin === acState.selectedAdmin);
+      if (!adminObj) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:30px;color:#dc2626">
+            এডমিন ডাটা খুঁজে পাওয়া যায়নি।
+            <div style="margin-top:10px">
+              <button type="button" class="btn ghost" onclick="goToAcView('admins')">← এডমিন তালিকায় ফিরুন</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const courses = adminObj.courses || [];
+
+      let html = `
+        <!-- Admin summary header -->
+        <div class="ac-stats-banner">
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#eff6ff;color:#2563eb">👤</div>
+            <div>
+              <div class="ac-stat-val">${esc(adminObj.admin)}</div>
+              <div class="ac-stat-lbl">নির্বাচিত এডমিন</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#ecfdf5;color:#059669">🎓</div>
+            <div>
+              <div class="ac-stat-val">${adminObj.studentCount} জন</div>
+              <div class="ac-stat-lbl">মোট ভর্তি শিক্ষার্থী</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#fef3c7;color:#d97706">💰</div>
+            <div>
+              <div class="ac-stat-val">৳${acFmtMoney(adminObj.totalCourseValue)}</div>
+              <div class="ac-stat-lbl">কোর্সের মোট মূল্য</div>
+            </div>
+          </div>
+          <div class="ac-stat-box">
+            <div class="ac-stat-icon" style="background:#f5f3ff;color:#7c3aed">💵</div>
+            <div>
+              <div class="ac-stat-val">৳${acFmtMoney(adminObj.totalFirstPayment)}</div>
+              <div class="ac-stat-lbl">১ম পেমেন্ট (ভর্তি ফি)</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;margin-bottom:8px;font-size:14px;font-weight:800;color:#334155;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" class="btn ghost" style="padding:4px 8px;font-size:12px;height:auto" onclick="goToAcView('admins')">← এডমিন তালিকা</button>
+            <span>ভর্তি করোনো কোর্সের তালিকা (${courses.length}টি)</span>
+          </div>
+          <span style="font-size:12px;color:#64748b;font-weight:normal">শিক্ষার্থীদের লিস্ট দেখতে কোর্সের কার্ডে ক্লিক করুন</span>
+        </div>
+
+        <div class="ac-cards-grid">
+      `;
+
+      for (const c of courses) {
+        html += `
+          <div class="ac-course-card" onclick="selectAcCourse('${esc(c.courseName)}')">
+            <div class="ac-card-head">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="ac-user-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">📚</div>
+                <div>
+                  <div class="ac-user-name">${esc(c.courseName)}</div>
+                  <div style="font-size:11.5px;color:#64748b">এডমিন: ${esc(adminObj.admin)}</div>
+                </div>
+              </div>
+              <span class="badge" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;font-size:12px;font-weight:800;padding:4px 8px">
+                ${c.studentCount} জন শিক্ষার্থী
+              </span>
+            </div>
+
+            <div class="ac-card-metrics">
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">কোর্সের মোট মূল্য</span>
+                <span class="ac-metric-val">৳${acFmtMoney(c.totalCourseValue)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">১ম পেমেন্ট (ভর্তি)</span>
+                <span class="ac-metric-val" style="color:#059669">৳${acFmtMoney(c.totalFirstPayment)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">মোট পেইড</span>
+                <span class="ac-metric-val" style="color:#2563eb">৳${acFmtMoney(c.totalPaid)}</span>
+              </div>
+              <div class="ac-metric-item">
+                <span class="ac-metric-lbl">মোট বকেয়া</span>
+                <span class="ac-metric-val" style="color:${c.totalDue > 0 ? '#dc2626' : '#64748b'}">৳${acFmtMoney(c.totalDue)}</span>
+              </div>
+            </div>
+
+            <div class="ac-card-footer">
+              <span>শিক্ষার্থীদের তালিকা দেখুন</span>
+              <span>➔</span>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function selectAcCourse(courseName) {
+      acState.selectedCourse = courseName;
+      acState.currentView = 'students';
+      acState.searchQuery = '';
+      renderAcCurrentView();
+    }
+
+    function renderAcStudentsView(container) {
+      const adminObj = (acState.data || []).find(a => a.admin === acState.selectedAdmin);
+      const courseObj = (adminObj?.courses || []).find(c => c.courseName === acState.selectedCourse);
+
+      if (!courseObj) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:30px;color:#dc2626">
+            কোর্সের তথ্য পাওয়া যায়নি।
+            <div style="margin-top:10px">
+              <button type="button" class="btn ghost" onclick="goToAcView('courses', '${esc(acState.selectedAdmin)}')">← কোর্স তালিকায় ফিরুন</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let allStudents = courseObj.students || [];
+      const q = String(acState.searchQuery || '').trim().toLowerCase();
+      let filteredStudents = allStudents;
+
+      if (q) {
+        filteredStudents = allStudents.filter(st => {
+          const name = String(st.name || '').toLowerCase();
+          const mobile = String(st.mobile || '').toLowerCase();
+          return name.includes(q) || mobile.includes(q);
+        });
+      }
+
+      let html = `
+        <div class="ac-table-card">
+          <div class="ac-table-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <button type="button" class="btn ghost" style="padding:4px 8px;font-size:12px;height:auto" onclick="goToAcView('courses', '${esc(acState.selectedAdmin)}')">← কোর্স সমূহ</button>
+              <span style="font-weight:800;color:#0f172a;font-size:14px">${esc(acState.selectedCourse)}</span>
+              <span class="badge" style="background:#eff6ff;color:#1e40af;font-size:11px">${filteredStudents.length} জন শিক্ষার্থী</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="text" id="acStudentSearchInput" value="${esc(acState.searchQuery)}" placeholder="🔍 নাম বা মোবাইল খুঁজুন..." oninput="onAcStudentSearch(this.value)" style="padding:5px 10px;font-size:12px;border:1px solid #cbd5e1;border-radius:8px;width:220px">
+            </div>
+          </div>
+          <div class="ac-table-scroll">
+            <table class="ac-table">
+              <thead>
+                <tr>
+                  <th style="width:40px">#</th>
+                  <th>শিক্ষার্থীর নাম</th>
+                  <th>মোবাইল নাম্বার</th>
+                  <th>ভর্তির তারিখ</th>
+                  <th>কোর্স মূল্য</th>
+                  <th>১ম পেমেন্ট (ভর্তি)</th>
+                  <th>মোট পেইড</th>
+                  <th>বকেয়া (Due)</th>
+                  <th style="text-align:center;width:90px">অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      if (filteredStudents.length === 0) {
+        html += `
+          <tr>
+            <td colspan="9" style="text-align:center;padding:30px;color:#94a3b8">
+              ${q ? 'সার্চ অনুযায়ী কোনো শিক্ষার্থী পাওয়া যায়নি' : 'এই কোর্সে কোনো শিক্ষার্থী ভর্তি নেই'}
+            </td>
+          </tr>
+        `;
+      } else {
+        filteredStudents.forEach((st, idx) => {
+          const dueColor = st.due > 0 ? '#dc2626' : '#10b981';
+          html += `
+            <tr onclick="showAcStudentModalById(${st.id})">
+              <td style="color:#64748b;font-weight:700">${idx + 1}</td>
+              <td style="font-weight:800;color:#0f172a">${esc(st.name || '—')}</td>
+              <td style="font-family:monospace;font-size:12.5px">${esc(st.mobile || '—')}</td>
+              <td style="color:#64748b;font-size:12px">${esc(st.enrolledAt || '—')}</td>
+              <td style="font-weight:700">৳${acFmtMoney(st.coursePrice)}</td>
+              <td style="font-weight:800;color:#059669">৳${acFmtMoney(st.firstPayment)}</td>
+              <td style="font-weight:700;color:#2563eb">৳${acFmtMoney(st.paid)}</td>
+              <td style="font-weight:800;color:${dueColor}">৳${acFmtMoney(st.due)}</td>
+              <td style="text-align:center">
+                <button type="button" class="ac-btn-view" onclick="event.stopPropagation();showAcStudentModalById(${st.id})">
+                  বিস্তারিত
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function onAcStudentSearch(val) {
+      acState.searchQuery = val;
+      const container = document.getElementById('acViewContainer');
+      if (container && acState.currentView === 'students') {
+        renderAcStudentsView(container);
+        const inp = document.getElementById('acStudentSearchInput');
+        if (inp) {
+          inp.focus();
+          inp.setSelectionRange(inp.value.length, inp.value.length);
+        }
+      }
+    }
+
+    function showAcStudentModalById(studentId) {
+      if (!acState.data) return;
+      for (const adm of acState.data) {
+        for (const c of adm.courses || []) {
+          for (const st of c.students || []) {
+            if (st.id === studentId) {
+              return openAdminCreditModal(st);
+            }
+          }
+        }
+      }
+    }
+
+    function openAdminCreditModal(st) {
+      const modal = document.getElementById('adminCreditStudentModal');
+      const nameEl = document.getElementById('acModalStudentName');
+      const subEl = document.getElementById('acModalStudentSub');
+      const contentEl = document.getElementById('acModalContent');
+
+      if (!modal || !nameEl || !contentEl) return;
+
+      nameEl.textContent = st.name || 'শিক্ষার্থী';
+      subEl.textContent = `কোর্স: ${st.course || '—'} · এডমিন: ${st.admin || '—'}`;
+
+      const history = Array.isArray(st.paymentHistory) ? st.paymentHistory : [];
+
+      let histHtml = '';
+      if (history.length > 0) {
+        histHtml = `
+          <div class="ac-history-box">
+            <div class="ac-history-head">
+              <span>💳 পেমেন্ট হিস্ট্রি (${history.length}টি কিস্তি/ট্রানজেকশন)</span>
+              <span style="font-size:10.5px;color:#64748b">Read-Only</span>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="ac-hist-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>তারিখ</th>
+                    <th>টাইপ</th>
+                    <th>পরিমাণ</th>
+                    <th>TrxID</th>
+                    <th>রিসিভকারী এডমিন</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${history.map((ph, idx) => `
+                    <tr>
+                      <td>${idx + 1}</td>
+                      <td>${esc(ph.date || ph.created_at || '—')}</td>
+                      <td><span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#f1f5f9;font-weight:700">${esc(ph.type || (idx === 0 ? 'admit' : 'installment'))}</span></td>
+                      <td style="font-weight:800;color:#059669">৳${acFmtMoney(ph.amount)}</td>
+                      <td style="font-family:monospace;font-size:11px">${esc(ph.trx || ph.trx_id || '—')}</td>
+                      <td>${esc(ph.admin || st.admin || '—')}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else {
+        histHtml = `
+          <div style="font-size:11.5px;color:#94a3b8;text-align:center;padding:10px;background:#f8fafc;border-radius:8px;border:1px dashed #cbd5e1">
+            কোনো পূর্ববর্তী পেমেন্ট হিস্ট্রি রেকর্ড পাওয়া যায়নি
+          </div>
+        `;
+      }
+
+      contentEl.innerHTML = `
+        <div class="ac-info-grid">
+          <div class="ac-info-cell">
+            <span class="lbl">মোবাইল নাম্বার</span>
+            <span class="val" style="font-family:monospace">${esc(st.mobile || '—')}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">ভর্তির তারিখ</span>
+            <span class="val">${esc(st.enrolledAt || '—')}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">লেভেল / সেকশন</span>
+            <span class="val">${esc(st.level || '—')} ${st.nuDcu ? '(' + esc(st.nuDcu) + ')' : ''}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">স্ট্যাটাস</span>
+            <span class="val" style="color:#059669">${esc(st.status || 'Active')}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">কোর্সের নির্ধারিত মূল্য</span>
+            <span class="val">৳${acFmtMoney(st.coursePrice)}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">ডিসকাউন্ট</span>
+            <span class="val" style="color:#d97706">৳${acFmtMoney(st.discount || 0)}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">১ম পেমেন্ট (ভর্তি ফি)</span>
+            <span class="val" style="color:#059669">৳${acFmtMoney(st.firstPayment)}</span>
+          </div>
+          <div class="ac-info-cell">
+            <span class="lbl">সর্বমোট পেইড</span>
+            <span class="val" style="color:#2563eb">৳${acFmtMoney(st.paid)}</span>
+          </div>
+          <div class="ac-info-cell" style="grid-column:1/-1;background:#fff1f2;padding:6px 10px;border-radius:8px;border:1px solid #ffe4e6">
+            <span class="lbl" style="color:#be123c">অবশিষ্ট বকেয়া (Due)</span>
+            <span class="val" style="color:${st.due > 0 ? '#e11d48' : '#059669'};font-size:14px">৳${acFmtMoney(st.due)}</span>
+          </div>
+        </div>
+
+        ${histHtml}
+
+        <div style="display:flex;justify-content:flex-end;margin-top:2px">
+          <button type="button" class="btn ghost" style="padding:4px 12px;font-size:12px;height:auto" onclick="closeAdminCreditModal()">বন্ধ করুন</button>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeAdminCreditModal() {
+      const modal = document.getElementById('adminCreditStudentModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeAdminCreditModal();
+    });
 
     if (S.token && S.user) {
       show();
