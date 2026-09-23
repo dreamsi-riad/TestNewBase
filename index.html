@@ -3963,12 +3963,12 @@
     .zoom-mgr-wrap {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 10px;
       animation: contentIn .25s ease-out;
     }
     .zoom-top-card {
-      padding: 10px 14px;
-      border-radius: 12px;
+      padding: 14px 18px;
+      border-radius: 14px;
       background: #ffffff;
       border: 1.5px solid #e2e8f0;
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
@@ -3976,58 +3976,58 @@
     .zoom-inputs-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 12px;
+      margin-bottom: 10px;
     }
     @media(max-width: 640px) {
       .zoom-inputs-row {
         grid-template-columns: 1fr;
-        gap: 6px;
+        gap: 8px;
       }
     }
     .zoom-input-col label {
-      margin: 0 0 3px;
-      font-size: 11.5px;
+      margin: 0 0 5px;
+      font-size: 13px;
       font-weight: 700;
       color: #1e293b;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
     .zoom-input-col input {
-      height: 32px !important;
-      padding: 4px 8px !important;
-      font-size: 12.5px !important;
-      border-radius: 6px !important;
+      height: 38px;
+      padding: 6px 12px;
+      font-size: 13.5px;
+      border-radius: 8px;
     }
     .zoom-actions-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .zoom-courses-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 7px;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 10px;
     }
     .zoom-course-card {
       background: #ffffff;
       border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 8px 10px;
+      border-radius: 12px;
+      padding: 12px 14px;
       cursor: pointer;
       transition: all .18s ease;
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 5px;
+      gap: 8px;
     }
     .zoom-course-card:hover {
       transform: translateY(-1px);
       border-color: #94a3b8;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
     }
     .zoom-course-card.selected {
       border-color: #2563eb;
@@ -4052,25 +4052,25 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
     }
     .zcc-header-left {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: 9px;
       flex: 1;
     }
     .zcc-checkbox {
-      width: 17px;
-      height: 17px;
-      border-radius: 5px;
-      border: 1.6px solid #cbd5e1;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.8px solid #cbd5e1;
       background: #ffffff;
       display: grid;
       place-items: center;
       transition: all .15s ease;
       flex-shrink: 0;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       color: transparent;
       margin-top: 1px;
@@ -4084,30 +4084,30 @@
       color: #ffffff;
     }
     .zcc-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       color: #0f172a;
-      line-height: 1.25;
+      line-height: 1.3;
     }
     .zcc-level-badge {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 5px;
+      padding: 2px 7px;
+      border-radius: 6px;
       background: #f1f5f9;
       color: #475569;
       white-space: nowrap;
     }
     .zcc-meeting-info {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 6px;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
       background: #f8fafc;
       border: 1px solid #edf2f7;
       color: #475569;
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
     }
     .zcc-meeting-info.has-meeting {
       background: #f0fdf4;
@@ -4119,19 +4119,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 4px 10px;
-      margin: 2px 0 4px;
+      border-radius: 10px;
+      padding: 6px 12px;
+      margin: 4px 0 8px;
       flex-wrap: wrap;
     }
     .zst-left {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12px;
+      gap: 8px;
+      font-size: 13px;
       font-weight: 700;
       color: #334155;
     }
@@ -4139,24 +4139,24 @@
       background: #eff6ff;
       color: #1d4ed8;
       border: 1px solid #bfdbfe;
-      padding: 1px 8px;
+      padding: 2px 9px;
       border-radius: 999px;
       font-weight: 800;
-      font-size: 11px;
+      font-size: 12px;
     }
     .zst-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .zst-btn {
       background: #ffffff;
       border: 1px solid #cbd5e1;
       color: #475569;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 6px;
+      padding: 5px 12px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all .15s ease;
     }
@@ -4169,7 +4169,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 10px;
+      margin-top: 8px;
       max-height: 90px;
       overflow-y: auto;
       padding: 2px 0;
@@ -4195,19 +4195,6 @@
     }
     .zsp-pill-remove:hover {
       color: #dc2626;
-    }
-    #zoomLevelBar {
-      padding: 2px 4px !important;
-      gap: 4px !important;
-    }
-    #zoomLevelBar .cc-level-btn {
-      padding: 3px 8px !important;
-      font-size: 11px !important;
-      border-radius: 6px !important;
-    }
-    #zoomLevelBar .cc-badge-count {
-      padding: 0 5px !important;
-      font-size: 9.5px !important;
     }
 
     /* ===== ADMIN CREDITS STYLES ===== */
@@ -9140,37 +9127,37 @@
     async function zoomMeetingPage() {
       content.innerHTML = `
         <div class="zoom-mgr-wrap">
-          <div class="dash-header" style="margin-bottom:4px;">
-            <h1 class="dash-title" style="font-size:16px;margin:0">📹 Zoom Meeting Manager</h1>
+          <div class="dash-header" style="margin-bottom:8px;">
+            <h1 class="dash-title" style="font-size:22px;margin:0">📹 Zoom Meeting Manager</h1>
           </div>
 
           <!-- Top Input Controls Card -->
           <div class="panel zoom-top-card">
-            <div id="zoomSelectedPillsWrap" class="zoom-selected-pills" style="display:none;margin-bottom:6px;"></div>
+            <div id="zoomSelectedPillsWrap" class="zoom-selected-pills" style="display:none;margin-bottom:8px;"></div>
 
             <form id="zoomMeetingForm" onsubmit="saveSelectedZoomMeeting(event)" style="margin:0;">
               <div class="zoom-inputs-row">
                 <div class="zoom-input-col">
                   <label for="zoomMeetingIdInput">
                     <span>Meeting ID *</span>
-                    <small style="color:#64748b;font-weight:normal">(স্পেস সহ বা ছাড়া)</small>
+                    <small style="color:#64748b;font-weight:normal">(স্পেস সহ বা ছাড়া যেকোনো ফরম্যাটে দেওয়া যাবে)</small>
                   </label>
-                  <input type="text" id="zoomMeetingIdInput" class="adm-enroll-num-input" placeholder="যেমনঃ 9876543210" required>
+                  <input type="text" id="zoomMeetingIdInput" class="adm-enroll-num-input" placeholder="যেমনঃ 9876543210" required style="height:38px;padding:6px 12px;font-size:13.5px">
                 </div>
                 <div class="zoom-input-col">
                   <label for="zoomPasscodeInput">
                     <span>Passcode / Password</span>
                     <small style="color:#64748b;font-weight:normal">(জুম মিটিংয়ের পাসকোড)</small>
                   </label>
-                  <input type="text" id="zoomPasscodeInput" class="adm-enroll-num-input" placeholder="যেমনঃ 123456">
+                  <input type="text" id="zoomPasscodeInput" class="adm-enroll-num-input" placeholder="যেমনঃ 123456" style="height:38px;padding:6px 12px;font-size:13.5px">
                 </div>
               </div>
 
               <div class="zoom-actions-row">
-                <button type="submit" id="btnSaveZoomMeeting" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;padding:6px 16px;font-size:12.5px">
+                <button type="submit" id="btnSaveZoomMeeting" class="btn primary" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#1d4ed8;padding:8px 20px;font-size:13.5px">
                   ✓ সেভ / আপডেট করুন (Save Changes)
                 </button>
-                <button type="button" id="btnDeleteZoomMeeting" class="btn ghost" onclick="deleteSelectedZoomMeeting()" style="color:#dc2626;border-color:#fca5a5;padding:6px 12px;font-size:12px">
+                <button type="button" id="btnDeleteZoomMeeting" class="btn ghost" onclick="deleteSelectedZoomMeeting()" style="color:#dc2626;border-color:#fca5a5;padding:8px 16px;font-size:13px">
                   ✕ মিটিং মুছে ফেলুন
                 </button>
               </div>
@@ -9178,17 +9165,17 @@
           </div>
 
           <!-- Filter Bar with Search -->
-          <div class="filter-bar" style="margin:2px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-            <div style="font-weight:800; font-size:12px; color:#1e293b;">
+          <div class="filter-bar" style="margin:4px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-weight:800; font-size:13px; color:#1e293b;">
               📚 কোর্স নির্বাচন করুন:
             </div>
-            <div class="search-wrap" style="width:220px;">
-              <input type="text" id="zoomCourseSearchInput" placeholder="🔍 কোর্স নাম খুঁজুন..." oninput="onZoomCourseSearch(this.value)" style="height:30px;padding:3px 8px;font-size:12px">
+            <div class="search-wrap" style="width:240px;">
+              <input type="text" id="zoomCourseSearchInput" placeholder="🔍 কোর্স নাম দিয়ে খুঁজুন..." oninput="onZoomCourseSearch(this.value)" style="height:34px;padding:5px 10px;font-size:13px">
             </div>
           </div>
 
           <!-- Academic Level Selection Bar -->
-          <div class="enroll-level-wrap" style="margin-bottom:2px;">
+          <div class="enroll-level-wrap" style="margin-bottom:4px;">
             <div class="cc-level-bar" id="zoomLevelBar">
               ${renderZoomLevelButtons()}
             </div>
@@ -9201,8 +9188,8 @@
               <span id="zoomSelectionCountBadge" class="zst-badge">০টি নির্বাচিত</span>
             </div>
             <div class="zst-actions">
-              <button type="button" class="zst-btn" style="background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" onclick="selectOnlyRunningZoomCourses()">🟢 শুধু রানিং মিটিং</button>
-              <button type="button" class="zst-btn" onclick="selectAllVisibleZoomCourses()">☑ দৃশ্যমান সব সিলেক্ট</button>
+              <button type="button" class="zst-btn" style="background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" onclick="selectOnlyRunningZoomCourses()">🟢 শুধু রানিং মিটিং সিলেক্ট করুন</button>
+              <button type="button" class="zst-btn" onclick="selectAllVisibleZoomCourses()">☑ দৃশ্যমান সব সিলেক্ট করুন</button>
               <button type="button" class="zst-btn" onclick="deselectAllZoomCourses()">☒ সিলেকশন মুছুন</button>
             </div>
           </div>
