@@ -7983,9 +7983,49 @@
       { id: 'SSC', name: 'SSC', icon: '🎒' }
     ];
 
+    function getCourseAcademicLevel(c) {
+      if (!c) return 'Course';
+      const rawLevel = String(c.level || '').trim().toUpperCase();
+      const rawName = String(c.name || '').trim().toUpperCase();
+
+      // 1. Explicit Non-BBA Levels first (tag has NO effect on these)
+      if (rawLevel === 'MBA' || (!rawLevel && rawName.includes('MBA'))) return 'MBA';
+      if (rawLevel === 'HSC' || (!rawLevel && rawName.includes('HSC'))) return 'HSC';
+      if (rawLevel === 'SSC' || (!rawLevel && rawName.includes('SSC'))) return 'SSC';
+      if (rawLevel === 'BBS' || (!rawLevel && rawName.includes('BBS'))) return 'BBS';
+      if (rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL')) return 'BBA Professional';
+
+      // 2. If it is BBA
+      if (rawLevel.includes('BBA') || rawName.includes('BBA') || rawLevel === 'BBA DCU' || rawLevel === 'BBA NU') {
+        return 'BBA';
+      }
+
+      if (rawLevel) {
+        if (rawLevel.includes('MBA')) return 'MBA';
+        if (rawLevel.includes('HSC')) return 'HSC';
+        if (rawLevel.includes('SSC')) return 'SSC';
+        if (rawLevel.includes('BBS')) return 'BBS';
+        return c.level;
+      }
+
+      return 'Course';
+    }
+
     function doesCourseMatchLevel(c, targetLevel) {
       if (!c) return false;
       if (!targetLevel) return true; // All levels
+
+      const baseLevel = getCourseAcademicLevel(c);
+
+      // Non-BBA levels: ONLY match if baseLevel equals targetLevel!
+      if (targetLevel === 'MBA') return baseLevel === 'MBA';
+      if (targetLevel === 'HSC') return baseLevel === 'HSC';
+      if (targetLevel === 'SSC') return baseLevel === 'SSC';
+      if (targetLevel === 'BBS') return baseLevel === 'BBS';
+      if (targetLevel === 'BBA Professional') return baseLevel === 'BBA Professional';
+
+      // For BBA DCU or BBA NU: MUST be a BBA course!
+      if (baseLevel !== 'BBA') return false;
 
       const rawLevel = String(c.level || '').trim().toUpperCase();
       const rawTag = String(c.tag || '').trim().toUpperCase();
@@ -7993,62 +8033,39 @@
 
       if (targetLevel === 'BBA DCU') {
         if (rawLevel === 'BBA DCU') return true;
-        if (rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL')) return false;
         if (rawTag.includes('DCU') || rawLevel.includes('DCU') || rawName.includes('DCU') || rawName.includes('7 COLLEGE') || rawName.includes('DHAKA')) return true;
-        if (rawLevel === 'BBA' || rawName.includes('BBA')) {
-          if (rawTag === 'NU' || (rawName.includes('NU') && !rawName.includes('DCU'))) return false;
-          return true;
-        }
-        return false;
+        // General BBA without NU-only tag
+        if (rawTag === 'NU' || (rawName.includes('NU') && !rawName.includes('DCU'))) return false;
+        return true;
       }
 
       if (targetLevel === 'BBA NU') {
         if (rawLevel === 'BBA NU') return true;
-        if (rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL')) return false;
         if (rawTag.includes('NU') || rawLevel.includes('NU') || rawName.includes('NU') || rawName.includes('NATIONAL')) return true;
-        if (rawLevel === 'BBA' || rawName.includes('BBA')) {
-          if (rawTag === 'DCU' || (rawName.includes('DCU') && !rawName.includes('NU'))) return false;
-          return true;
-        }
-        return false;
+        // General BBA without DCU-only tag
+        if (rawTag === 'DCU' || (rawName.includes('DCU') && !rawName.includes('NU'))) return false;
+        return true;
       }
 
-      if (targetLevel === 'BBA Professional') {
-        return rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL');
-      }
-
-      if (targetLevel === 'BBS') {
-        return rawLevel === 'BBS' || rawLevel.includes('BBS') || rawName.includes('BBS');
-      }
-
-      if (targetLevel === 'MBA') {
-        return rawLevel === 'MBA' || rawLevel.includes('MBA') || rawName.includes('MBA');
-      }
-
-      if (targetLevel === 'HSC') {
-        return rawLevel === 'HSC' || rawLevel.includes('HSC') || rawName.includes('HSC');
-      }
-
-      if (targetLevel === 'SSC') {
-        return rawLevel === 'SSC' || rawLevel.includes('SSC') || rawName.includes('SSC');
-      }
-
-      return rawLevel === targetLevel.toUpperCase();
+      return false;
     }
 
     function getZoomCourseLevelBadge(c) {
       if (!c) return 'Course';
-      if (doesCourseMatchLevel(c, 'BBA Professional')) return 'BBA Professional';
+      const baseLevel = getCourseAcademicLevel(c);
+
+      // Non-BBA levels: just show their level! (MBA, HSC, SSC, BBS, BBA Professional)
+      if (baseLevel !== 'BBA') {
+        return baseLevel;
+      }
+
+      // For BBA only: show tag if specific, else BBA
       const isDcu = doesCourseMatchLevel(c, 'BBA DCU');
       const isNu = doesCourseMatchLevel(c, 'BBA NU');
-      if (isDcu && isNu) return 'BBA (NU & DCU)';
-      if (isDcu) return 'BBA DCU';
-      if (isNu) return 'BBA NU';
-      if (doesCourseMatchLevel(c, 'BBS')) return 'BBS';
-      if (doesCourseMatchLevel(c, 'MBA')) return 'MBA';
-      if (doesCourseMatchLevel(c, 'HSC')) return 'HSC';
-      if (doesCourseMatchLevel(c, 'SSC')) return 'SSC';
-      return c.level || 'Course';
+
+      if (isDcu && !isNu) return 'BBA (DCU)';
+      if (isNu && !isDcu) return 'BBA (NU)';
+      return 'BBA';
     }
 
     function renderZoomLevelButtons() {
