@@ -9293,9 +9293,11 @@
       const container = document.getElementById('acViewContainer');
       if (container) {
         container.innerHTML = `
-          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
-            <div style="font-size:24px;margin-bottom:8px">⏳</div>
-            <div>এডমিন ক্রেডিটস ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</div>
+          <div class="panel" style="padding:40px 20px">
+            <div class="smooth-loading">
+              <div class="spinner"></div>
+              <div style="font-weight:700;color:#64748b">এডমিন ক্রেডিটস ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন…</div>
+            </div>
           </div>
         `;
       }
@@ -9957,9 +9959,11 @@
       const container = document.getElementById('actMainContainer');
       if (container) {
         container.innerHTML = `
-          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
-            <div style="font-size:24px;margin-bottom:8px">⏳</div>
-            <div>অ্যাক্টিভিটি সাইকেল ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</div>
+          <div class="panel" style="padding:40px 20px">
+            <div class="smooth-loading">
+              <div class="spinner"></div>
+              <div style="font-weight:700;color:#64748b">অ্যাক্টিভিটি সাইকেল ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন…</div>
+            </div>
           </div>
         `;
       }
