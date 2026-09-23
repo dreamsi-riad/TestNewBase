@@ -4612,6 +4612,258 @@
       border-bottom: 1px solid #f1f5f9;
       color: #1e293b;
     }
+
+    /* ===== ACTIVITY CYCLE STYLES ===== */
+    .act-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .act-date-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 8px 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    }
+    .act-date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      cursor: pointer;
+      transition: all .15s ease;
+      white-space: nowrap;
+    }
+    .act-date-pill:hover {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+    .act-date-pill.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+    .act-custom-date-box {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+    .act-custom-date-box.show {
+      display: inline-flex;
+    }
+    .act-date-input {
+      padding: 3px 8px;
+      font-size: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #1e293b;
+      font-family: inherit;
+    }
+    .act-btn-apply {
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #059669;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s ease;
+    }
+    .act-btn-apply:hover {
+      background: #047857;
+    }
+
+    /* Progress Report Banner */
+    .act-report-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .act-report-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .act-report-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .act-badge-range {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .act-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    .act-stat-tile {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.02);
+      transition: transform .15s ease;
+    }
+    .act-stat-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+    .act-stat-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .act-stat-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+    .act-stat-number {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-top: 4px;
+    }
+    .act-stat-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    /* Progress bar */
+    .act-progress-wrap {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .act-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .act-progress-track {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+    }
+    .act-progress-fill-paid {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      transition: width .4s ease;
+    }
+    .act-progress-fill-due {
+      background: #f87171;
+      height: 100%;
+      transition: width .4s ease;
+    }
+
+    /* Course Cards Grid */
+    .act-courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .act-course-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all .2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .act-course-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+    }
+    .act-cc-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .act-cc-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+    .act-cc-badge-count {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .act-cc-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2563eb;
+      padding-top: 8px;
+      border-top: 1px dashed #e2e8f0;
+    }
   </style>
   <base target="_blank">
 </head>
@@ -4634,7 +4886,7 @@
       <nav id="nav"><button data-p="dashboard" class="active">▦ Dashboard</button><button data-p="pending"><span>⏳
             Pending Enrollments</span><span id="navPendingBadge"
             class="nav-pending-badge hidden"></span></button><button data-p="enrollments">🎓 Enrollments</button><button
-          data-p="students">👨‍🎓 Students</button><button data-p="credits">💳 Admin Credits</button><button data-p="zoom">📹 Zoom Meeting</button><button data-p="courses" class="master-only">📚
+          data-p="students">👨‍🎓 Students</button><button data-p="credits">💳 Admin Credits</button><button data-p="activity">🔄 Activity Cycle</button><button data-p="zoom">📹 Zoom Meeting</button><button data-p="courses" class="master-only">📚
           Courses</button><button data-p="content" class="master-only">▶ Course Content</button><button
           data-p="subjects" class="master-only">◈ Subject-wise</button><button data-p="teachers"
           class="master-only">👨‍🏫 Teachers</button><button data-p="free" class="master-only">🎁 Free
@@ -5735,7 +5987,7 @@
     lf.onsubmit = async e => { e.preventDefault(); try { let j = await doLogin(lm.value.trim(), lp.value); S.token = j.data.adminToken; S.user = j.data; localStorage.va_admin_token = S.token; localStorage.va_admin_user = JSON.stringify(S.user); show() } catch (e) { le.textContent = e.message } }
     nav.onclick = e => { let b = e.target.closest('[data-p]'); if (b) page(b.dataset.p) }
     async function page(p) {
-      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'credits') return adminCreditsPage(); if (p === 'content') return contentPage(); if (p === 'zoom') return zoomMeetingPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
+      if (MASTER_ONLY_PAGES.has(p) && !isMasterAdmin()) { toast('এই সেকশনে প্রবেশের অনুমতি নেই'); p = 'dashboard' } document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.p === p)); if (p === 'dashboard') return dashboard(); if (p === 'pending') return pending(); if (p === 'credits') return adminCreditsPage(); if (p === 'activity') return activityCyclePage(); if (p === 'content') return contentPage(); if (p === 'zoom') return zoomMeetingPage(); S.table = P[p][0]; S.offset = 0; S.search = ''; S.levelFilter = ''; S.courseFilter = ''; S.dueFilter = ''; S.enrolledDateFilter = ''; S.nextDateFilter = ''; if (S.table !== ENROLL_TABLE) { S.rawEnrollRows = []; S.lastRawData = null; }
       if (S.table !== STUDENT_TABLE) { S.rawStudentRows = []; S.lastStudentRawData = null; }
       if (S.table === ENROLL_TABLE) {
         content.innerHTML = `
@@ -9681,6 +9933,516 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeAdminCreditModal();
     });
+
+    // ============================================================
+    // ACTIVITY CYCLE MODULE
+    // ============================================================
+    const activityState = {
+      loading: false,
+      data: null, // { courses: [], enrollments: [] }
+      currentView: 'overview', // 'overview' | 'course_detail'
+      selectedCourse: null,
+      datePreset: 'all', // 'all' | 'today' | '7days' | '30days' | 'custom'
+      customFrom: '',
+      customTo: ''
+    };
+
+    function filterActivityEnrollments(enrollments, datePreset, customFrom, customTo) {
+      if (!enrollments || !enrollments.length) return [];
+      if (datePreset === 'all') return enrollments;
+
+      const todayIso = getTodayIso();
+      if (datePreset === 'today') {
+        return enrollments.filter(e => e.date === todayIso);
+      }
+      if (datePreset === '7days') {
+        const past7 = getFutureIso(-7);
+        return enrollments.filter(e => e.date && e.date >= past7 && e.date <= todayIso);
+      }
+      if (datePreset === '30days') {
+        const past30 = getFutureIso(-30);
+        return enrollments.filter(e => e.date && e.date >= past30 && e.date <= todayIso);
+      }
+      if (datePreset === 'custom') {
+        const from = customFrom || '0000-00-00';
+        const to = customTo || '9999-99-99';
+        return enrollments.filter(e => e.date && e.date >= from && e.date <= to);
+      }
+      return enrollments;
+    }
+
+    function getActivityDateRangeLabel(preset, from, to) {
+      if (preset === 'today') return '📅 আজকের ফলাফল';
+      if (preset === '7days') return '📆 বিগত ৭ দিনের ফলাফল';
+      if (preset === '30days') return '🗓️ বিগত ৩০ দিনের ফলাফল';
+      if (preset === 'custom') {
+        if (from && to) return `🗓️ ${from} হতে ${to}`;
+        if (from) return `🗓️ ${from} হতে বর্তমান`;
+        if (to) return `🗓️ ${to} পর্যন্ত`;
+        return '🗓️ কাস্টম সময়কাল';
+      }
+      return '🌐 সর্বমোট সময়কাল (All Time)';
+    }
+
+    async function activityCyclePage() {
+      content.innerHTML = `
+        <div class="act-wrap">
+          <div class="dash-header" style="margin-bottom:6px;">
+            <div>
+              <div class="dash-eyebrow">VISION ACADEMICS · PROGRESS & FINANCIAL CYCLE</div>
+              <h1 class="dash-title">🔄 Activity Cycle</h1>
+            </div>
+          </div>
+          <div id="actMainContainer"></div>
+        </div>
+      `;
+
+      if (!activityState.data) {
+        await loadActivityCycleData();
+      } else {
+        renderActivityCurrentView();
+      }
+    }
+
+    async function loadActivityCycleData(force = false) {
+      const container = document.getElementById('actMainContainer');
+      if (container) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
+            <div style="font-size:24px;margin-bottom:8px">⏳</div>
+            <div>অ্যাক্টিভিটি সাইকেল ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</div>
+          </div>
+        `;
+      }
+
+      try {
+        activityState.loading = true;
+        const res = await api('panel_admin_activity_cycle');
+        if (res && res.status === 'ok') {
+          activityState.data = {
+            courses: res.courses || [],
+            enrollments: res.enrollments || []
+          };
+          renderActivityCurrentView();
+        } else {
+          throw Error(res?.message || 'ডাটা ফেচ করতে ব্যর্থ হয়েছে।');
+        }
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `
+            <div class="panel" style="text-align:center;padding:30px;color:#dc2626">
+              ❌ ডাটা লোড করতে ব্যর্থ: ${esc(err.message)}
+              <div style="margin-top:10px">
+                <button type="button" class="btn primary" onclick="loadActivityCycleData(true)">🔄 পুনরায় চেষ্টা করুন</button>
+              </div>
+            </div>
+          `;
+        }
+      } finally {
+        activityState.loading = false;
+      }
+    }
+
+    function renderActivityDateFilterBar() {
+      const p = activityState.datePreset;
+      const isCustom = p === 'custom';
+      return `
+        <div class="act-date-bar">
+          <span style="font-size:12px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px">
+            <span>📅 সময়কাল ফিল্টার:</span>
+          </span>
+          <button type="button" class="act-date-pill ${p === 'all' ? 'active' : ''}" onclick="setActivityDatePreset('all')">
+            🌐 সর্বমোট
+          </button>
+          <button type="button" class="act-date-pill ${p === 'today' ? 'active' : ''}" onclick="setActivityDatePreset('today')">
+            📅 আজকে
+          </button>
+          <button type="button" class="act-date-pill ${p === '7days' ? 'active' : ''}" onclick="setActivityDatePreset('7days')">
+            📆 গত ৭ দিন
+          </button>
+          <button type="button" class="act-date-pill ${p === '30days' ? 'active' : ''}" onclick="setActivityDatePreset('30days')">
+            🗓️ গত ৩০ দিন
+          </button>
+          <button type="button" class="act-date-pill ${isCustom ? 'active' : ''}" onclick="toggleActivityCustomDateBox()">
+            🗓️ কাস্টম ক্যালেন্ডার
+          </button>
+
+          <div id="actCustomDateBox" class="act-custom-date-box ${isCustom ? 'show' : ''}">
+            <input type="date" id="actCustomFrom" class="act-date-input" value="${activityState.customFrom || ''}">
+            <span style="font-size:11px;color:#64748b">হতে</span>
+            <input type="date" id="actCustomTo" class="act-date-input" value="${activityState.customTo || ''}">
+            <button type="button" class="act-btn-apply" onclick="applyActivityCustomDate()">ফিল্টার করুন</button>
+          </div>
+
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+            <button type="button" class="btn ghost" style="padding:4px 10px;font-size:12px;height:auto" onclick="loadActivityCycleData(true)">
+              🔄 রিফ্রেশ
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function setActivityDatePreset(preset) {
+      activityState.datePreset = preset;
+      renderActivityCurrentView();
+    }
+
+    function toggleActivityCustomDateBox() {
+      if (activityState.datePreset === 'custom') {
+        activityState.datePreset = 'all';
+      } else {
+        activityState.datePreset = 'custom';
+      }
+      renderActivityCurrentView();
+    }
+
+    function applyActivityCustomDate() {
+      const fromEl = document.getElementById('actCustomFrom');
+      const toEl = document.getElementById('actCustomTo');
+      if (fromEl) activityState.customFrom = fromEl.value;
+      if (toEl) activityState.customTo = toEl.value;
+      activityState.datePreset = 'custom';
+      renderActivityCurrentView();
+    }
+
+    function renderActivityCurrentView() {
+      const container = document.getElementById('actMainContainer');
+      if (!container) return;
+
+      if (!activityState.data) {
+        container.innerHTML = `
+          <div class="panel" style="text-align:center;padding:40px;color:#64748b">
+            কোনো ডাটা পাওয়া যায়নি।
+          </div>
+        `;
+        return;
+      }
+
+      if (activityState.currentView === 'overview') {
+        renderActivityOverview(container);
+      } else if (activityState.currentView === 'course_detail') {
+        renderActivityCourseDetail(container);
+      }
+    }
+
+    function renderActivityOverview(container) {
+      const allCourses = activityState.data.courses || [];
+      const allEnrollments = activityState.data.enrollments || [];
+
+      // Filter enrollments by active date preset
+      const filtered = filterActivityEnrollments(
+        allEnrollments,
+        activityState.datePreset,
+        activityState.customFrom,
+        activityState.customTo
+      );
+
+      // Aggregate calculations
+      const totalCoursesCount = allCourses.length;
+      const enrolledCount = filtered.length;
+
+      let totalCourseValue = 0;
+      let totalDiscount = 0;
+      let totalPaid = 0;
+      let totalDue = 0;
+
+      for (const e of filtered) {
+        totalCourseValue += (e.coursePrice || 0);
+        totalDiscount += (e.discount || 0);
+        totalPaid += (e.paid || 0);
+        totalDue += (e.due || 0);
+      }
+
+      const effectiveTotal = Math.max(0, totalCourseValue - totalDiscount);
+      const collectionPct = effectiveTotal > 0
+        ? Math.min(100, Math.round((totalPaid / effectiveTotal) * 100))
+        : (totalPaid > 0 ? 100 : 0);
+
+      const rangeLabel = getActivityDateRangeLabel(
+        activityState.datePreset,
+        activityState.customFrom,
+        activityState.customTo
+      );
+
+      // Pre-compute enrollment counts per course for the filtered period
+      const courseCountMap = new Map();
+      for (const e of filtered) {
+        const k = String(e.course || '').toLowerCase().trim();
+        courseCountMap.set(k, (courseCountMap.get(k) || 0) + 1);
+      }
+
+      let html = `
+        ${renderActivityDateFilterBar()}
+
+        <!-- Overall Progress Report Banner -->
+        <div class="act-report-card">
+          <div class="act-report-head">
+            <div class="act-report-title">
+              <span>📊 সামগ্রিক প্রগ্রেস ও আর্থিক রিপোর্ট</span>
+            </div>
+            <span class="act-badge-range">${esc(rangeLabel)}</span>
+          </div>
+
+          <div class="act-stats-grid">
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">মোট কোর্স</span>
+                <div class="act-stat-icon-wrap" style="background:#eff6ff;color:#2563eb">📚</div>
+              </div>
+              <div class="act-stat-number">${totalCoursesCount} টি</div>
+            </div>
+
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">ভর্তি শিক্ষার্থী</span>
+                <div class="act-stat-icon-wrap" style="background:#ecfdf5;color:#059669">👨‍🎓</div>
+              </div>
+              <div class="act-stat-number" style="color:#059669">${enrolledCount} জন</div>
+            </div>
+
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">কোর্সের মোট মূল্য</span>
+                <div class="act-stat-icon-wrap" style="background:#fef3c7;color:#d97706">💰</div>
+              </div>
+              <div class="act-stat-number">৳${acFmtMoney(totalCourseValue)}</div>
+            </div>
+
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">সংগৃহীত টাকা (Paid)</span>
+                <div class="act-stat-icon-wrap" style="background:#f0fdf4;color:#16a34a">💵</div>
+              </div>
+              <div class="act-stat-number" style="color:#16a34a">৳${acFmtMoney(totalPaid)}</div>
+            </div>
+
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">বকেয়া রয়েছে (Due)</span>
+                <div class="act-stat-icon-wrap" style="background:#fff1f2;color:#e11d48">⏳</div>
+              </div>
+              <div class="act-stat-number" style="color:${totalDue > 0 ? '#e11d48' : '#64748b'}">৳${acFmtMoney(totalDue)}</div>
+            </div>
+
+            <div class="act-stat-tile">
+              <div class="act-stat-top">
+                <span class="act-stat-label">মোট ডিসকাউন্ট</span>
+                <div class="act-stat-icon-wrap" style="background:#f5f3ff;color:#7c3aed">🏷️</div>
+              </div>
+              <div class="act-stat-number" style="color:#7c3aed">৳${acFmtMoney(totalDiscount)}</div>
+            </div>
+          </div>
+
+          <!-- Collection Progress Bar -->
+          <div class="act-progress-wrap">
+            <div class="act-progress-labels">
+              <span>অর্থ আদায় অগ্রগতি (Collection Rate)</span>
+              <span>${collectionPct}% সম্পন্ন · ৳${acFmtMoney(totalPaid)} / ৳${acFmtMoney(effectiveTotal)}</span>
+            </div>
+            <div class="act-progress-track">
+              <div class="act-progress-fill-paid" style="width: ${collectionPct}%"></div>
+              <div class="act-progress-fill-due" style="width: ${100 - collectionPct}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Cards Section -->
+        <div style="margin-top:8px;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <h3 style="margin:0;font-size:15px;font-weight:800;color:#0f172a">কোর্স তালিকা (${allCourses.length}টি কোর্স)</h3>
+            <div style="font-size:12px;color:#64748b;margin-top:2px">কোর্সের বিস্তারিত অগ্রগতি রিপোর্ট দেখতে কোর্সের কার্ডে ক্লিক করুন</div>
+          </div>
+        </div>
+
+        <div class="act-courses-grid">
+      `;
+
+      for (const c of allCourses) {
+        const k = String(c.name || '').toLowerCase().trim();
+        const stCount = courseCountMap.get(k) || 0;
+        const tag = c.tag ? `· ${esc(c.tag)}` : '';
+        const level = c.level ? esc(c.level) : '';
+
+        html += `
+          <div class="act-course-card" onclick="selectActivityCourse('${esc(c.name)}')">
+            <div class="act-cc-head">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="ac-user-avatar" style="background:linear-gradient(135deg,#3b82f6,#2563eb);width:36px;height:36px;font-size:16px">📚</div>
+                <div>
+                  <div class="act-cc-title">${esc(c.name)}</div>
+                  <div style="font-size:11.5px;color:#64748b;margin-top:2px">${level} ${tag}</div>
+                </div>
+              </div>
+              <span class="act-cc-badge-count">
+                👥 ${stCount} জন
+              </span>
+            </div>
+
+            <div class="act-cc-footer">
+              <span>বিস্তারিত রিপোর্ট ও টাকার হিসাব দেখুন</span>
+              <span>➔</span>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function selectActivityCourse(courseName) {
+      activityState.selectedCourse = courseName;
+      activityState.currentView = 'course_detail';
+      renderActivityCurrentView();
+    }
+
+    function goToActivityOverview() {
+      activityState.currentView = 'overview';
+      activityState.selectedCourse = null;
+      renderActivityCurrentView();
+    }
+
+    function renderActivityCourseDetail(container) {
+      const allCourses = activityState.data.courses || [];
+      const allEnrollments = activityState.data.enrollments || [];
+      const targetCourseName = activityState.selectedCourse || '';
+
+      const courseObj = allCourses.find(c => String(c.name || '').toLowerCase().trim() === targetCourseName.toLowerCase().trim()) || { name: targetCourseName, level: '', tag: '' };
+
+      // Filter enrollments for this specific course
+      const courseAllEnrollments = allEnrollments.filter(e => String(e.course || '').toLowerCase().trim() === targetCourseName.toLowerCase().trim());
+
+      // Filter by active date preset
+      const filtered = filterActivityEnrollments(
+        courseAllEnrollments,
+        activityState.datePreset,
+        activityState.customFrom,
+        activityState.customTo
+      );
+
+      const enrolledCount = filtered.length;
+      let totalCourseValue = 0;
+      let totalDiscount = 0;
+      let totalPaid = 0;
+      let totalDue = 0;
+
+      for (const e of filtered) {
+        totalCourseValue += (e.coursePrice || 0);
+        totalDiscount += (e.discount || 0);
+        totalPaid += (e.paid || 0);
+        totalDue += (e.due || 0);
+      }
+
+      const effectiveTotal = Math.max(0, totalCourseValue - totalDiscount);
+      const collectionPct = effectiveTotal > 0
+        ? Math.min(100, Math.round((totalPaid / effectiveTotal) * 100))
+        : (totalPaid > 0 ? 100 : 0);
+
+      const rangeLabel = getActivityDateRangeLabel(
+        activityState.datePreset,
+        activityState.customFrom,
+        activityState.customTo
+      );
+
+      let html = `
+        <!-- Breadcrumb / Back Navigation -->
+        <div class="ac-breadcrumb-bar">
+          <div class="ac-crumb-item" onclick="goToActivityOverview()">
+            <span>🏠</span>
+            <span>সকল কোর্স (Activity Overview)</span>
+          </div>
+          <span class="ac-crumb-sep">›</span>
+          <div class="ac-crumb-item active">
+            <span>📚</span>
+            <span>${esc(courseObj.name)}</span>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+            <button type="button" class="btn ghost" style="padding:4px 10px;font-size:12px;height:auto" onclick="goToActivityOverview()">
+              ← সকল কোর্সে ফিরে যান
+            </button>
+          </div>
+        </div>
+
+        ${renderActivityDateFilterBar()}
+
+        <!-- Course Detailed Progress Report Card (Pure Analytics - No student list) -->
+        <div class="act-report-card">
+          <div class="act-report-head">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="ac-user-avatar" style="background:linear-gradient(135deg,#10b981,#059669);width:40px;height:40px;font-size:18px">🎓</div>
+              <div>
+                <h2 style="margin:0;font-size:17px;font-weight:800;color:#0f172a">${esc(courseObj.name)}</h2>
+                <div style="font-size:12px;color:#64748b;margin-top:2px">${esc(courseObj.level || '')} ${courseObj.tag ? '· ' + esc(courseObj.tag) : ''} · কোর্স অগ্রগতি রিপোর্ট</div>
+              </div>
+            </div>
+            <span class="act-badge-range">${esc(rangeLabel)}</span>
+          </div>
+
+          <div class="act-stats-grid">
+            <div class="act-stat-tile" style="border-top:3px solid #059669">
+              <div class="act-stat-top">
+                <span class="act-stat-label">ভর্তি শিক্ষার্থী সংখ্যা</span>
+                <div class="act-stat-icon-wrap" style="background:#ecfdf5;color:#059669">👨‍🎓</div>
+              </div>
+              <div class="act-stat-number" style="color:#059669">${enrolledCount} জন</div>
+            </div>
+
+            <div class="act-stat-tile" style="border-top:3px solid #d97706">
+              <div class="act-stat-top">
+                <span class="act-stat-label">কোর্সের মোট মূল্য</span>
+                <div class="act-stat-icon-wrap" style="background:#fef3c7;color:#d97706">💰</div>
+              </div>
+              <div class="act-stat-number">৳${acFmtMoney(totalCourseValue)}</div>
+            </div>
+
+            <div class="act-stat-tile" style="border-top:3px solid #16a34a">
+              <div class="act-stat-top">
+                <span class="act-stat-label">সংগৃহীত টাকা (Paid)</span>
+                <div class="act-stat-icon-wrap" style="background:#f0fdf4;color:#16a34a">💵</div>
+              </div>
+              <div class="act-stat-number" style="color:#16a34a">৳${acFmtMoney(totalPaid)}</div>
+            </div>
+
+            <div class="act-stat-tile" style="border-top:3px solid #e11d48">
+              <div class="act-stat-top">
+                <span class="act-stat-label">বকেয়া টাকা (Due)</span>
+                <div class="act-stat-icon-wrap" style="background:#fff1f2;color:#e11d48">⏳</div>
+              </div>
+              <div class="act-stat-number" style="color:${totalDue > 0 ? '#e11d48' : '#64748b'}">৳${acFmtMoney(totalDue)}</div>
+            </div>
+
+            <div class="act-stat-tile" style="border-top:3px solid #7c3aed">
+              <div class="act-stat-top">
+                <span class="act-stat-label">মোট ডিসকাউন্ট</span>
+                <div class="act-stat-icon-wrap" style="background:#f5f3ff;color:#7c3aed">🏷️</div>
+              </div>
+              <div class="act-stat-number" style="color:#7c3aed">৳${acFmtMoney(totalDiscount)}</div>
+            </div>
+          </div>
+
+          <!-- Collection Progress Bar for this Course -->
+          <div class="act-progress-wrap">
+            <div class="act-progress-labels">
+              <span>অর্থ আদায় অগ্রগতি (Course Collection Rate)</span>
+              <span>${collectionPct}% আদায় সম্পন্ন · ৳${acFmtMoney(totalPaid)} / ৳${acFmtMoney(effectiveTotal)}</span>
+            </div>
+            <div class="act-progress-track">
+              <div class="act-progress-fill-paid" style="width: ${collectionPct}%"></div>
+              <div class="act-progress-fill-due" style="width: ${100 - collectionPct}%"></div>
+            </div>
+          </div>
+
+          <!-- Summary Note Card -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;font-size:13px;color:#334155;line-height:1.6">
+            📌 <strong>সারসংক্ষেপ:</strong> 
+            নির্বাচিত সময়কালে (<strong>${esc(rangeLabel)}</strong>) এই কোর্সে সর্বমোট <strong>${enrolledCount} জন</strong> শিক্ষার্থী ভর্তি হয়েছেন। মোট কোর্সের মূল্য <strong>৳${acFmtMoney(totalCourseValue)}</strong>-এর মধ্যে ডিসকাউন্ট দেওয়া হয়েছে <strong>৳${acFmtMoney(totalDiscount)}</strong>। বর্তমানে সংগৃহীত হয়েছে <strong>৳${acFmtMoney(totalPaid)}</strong> এবং অবশিষ্ট বকেয়া রয়েছে <strong>৳${acFmtMoney(totalDue)}</strong>।
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
 
     if (S.token && S.user) {
       show();
