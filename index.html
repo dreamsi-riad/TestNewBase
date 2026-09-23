@@ -4075,6 +4075,20 @@
       background: linear-gradient(180deg, #f8faff 0%, #ffffff 100%);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 8px 20px rgba(37, 99, 235, 0.08);
     }
+    .zoom-course-card.has-active-meeting {
+      border-color: #86efac;
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+    }
+    .zoom-course-card.has-active-meeting.selected {
+      border-color: #16a34a;
+      background: linear-gradient(180deg, #dcfce7 0%, #ffffff 100%);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2), 0 8px 20px rgba(22, 163, 74, 0.1);
+    }
+    .zoom-course-card.has-active-meeting.selected .zcc-checkbox {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #ffffff;
+    }
     .zcc-top {
       display: flex;
       align-items: flex-start;
@@ -8123,13 +8137,27 @@
     function getVisibleZoomCourses() {
       const q = zoomManagerData.searchQuery;
       const lvl = zoomManagerData.levelFilter;
-      return (zoomManagerData.courses || []).filter(c => {
+      const list = (zoomManagerData.courses || []).filter(c => {
         const cName = String(c.name || '').trim();
         if (!cName) return false;
         if (lvl && !doesCourseMatchLevel(c, lvl)) return false;
         if (q && !cName.toLowerCase().includes(q)) return false;
         return true;
       });
+
+      // Sort: যে কোর্সগুলোতে রানিং মিটিং আছে সেগুলো সর্বপ্রথমে (1st-এ) দেখাবে
+      list.sort((a, b) => {
+        const mA = findMeetingForCourse(a.name);
+        const mB = findMeetingForCourse(b.name);
+        const hasA = (mA && String(mA.meeting_id || '').trim() !== '') ? 1 : 0;
+        const hasB = (mB && String(mB.meeting_id || '').trim() !== '') ? 1 : 0;
+        if (hasA !== hasB) {
+          return hasB - hasA; // রানিং মিটিং সবার আগে
+        }
+        return String(a.name || '').localeCompare(String(b.name || ''));
+      });
+
+      return list;
     }
 
     function renderZoomCoursesGrid() {
@@ -8151,9 +8179,14 @@
         const cLevel = getZoomCourseLevelBadge(c);
         const meeting = findMeetingForCourse(cName);
         const isSelected = zoomManagerData.selectedCourses.includes(cName);
+        const hasActiveMeeting = !!(meeting && String(meeting.meeting_id || '').trim());
 
-        const meetingInfoHtml = meeting && meeting.meeting_id
+        const meetingInfoHtml = hasActiveMeeting
           ? `<div class="zcc-meeting-info has-meeting">
+              <div style="color:#16a34a; font-weight:800; display:flex; align-items:center; gap:5px; margin-bottom:3px;">
+                <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 2px #bbf7d0;"></span>
+                লাইভ ক্লাস চলছে
+              </div>
               <div>🟢 <b>Meeting ID:</b> ${esc(meeting.meeting_id)}</div>
               <div>🔑 <b>Passcode:</b> ${esc(meeting.passcode || 'নেই')}</div>
             </div>`
@@ -8162,7 +8195,7 @@
             </div>`;
 
         return `
-          <div class="zoom-course-card ${isSelected ? 'selected' : ''}" onclick="toggleZoomCourseSelection('${esc(cName)}')">
+          <div class="zoom-course-card ${isSelected ? 'selected' : ''} ${hasActiveMeeting ? 'has-active-meeting' : ''}" onclick="toggleZoomCourseSelection('${esc(cName)}')">
             <div class="zcc-top">
               <div class="zcc-header-left">
                 <div class="zcc-checkbox">${isSelected ? '✓' : ''}</div>
@@ -8176,7 +8209,7 @@
       }).join('');
     }
 
-    function syncZoomTopDisplay() {
+    function syncZoomTopDisplay(opts = {}) {
       const count = zoomManagerData.selectedCourses.length;
       const nameEl = document.getElementById('zoomSelectedCourseName');
       const tagEl = document.getElementById('zoomStatusBadge');
@@ -8191,14 +8224,18 @@
         countBadge.textContent = `${count}টি নির্বাচিত`;
       }
 
+      const hasUserTypedId = idInp && idInp.value.trim() !== '';
+
       if (count === 0) {
         if (nameEl) nameEl.textContent = 'নিচ থেকে এক বা একাধিক কোর্স সিলেক্ট করুন';
         if (tagEl) {
           tagEl.className = 'zoom-meeting-status-tag unconfigured';
           tagEl.textContent = 'কোনো কোর্স সিলেক্ট করা নেই';
         }
-        if (idInp) idInp.value = '';
-        if (passInp) passInp.value = '';
+        if (opts.clearInputs) {
+          if (idInp) idInp.value = '';
+          if (passInp) passInp.value = '';
+        }
         if (saveBtn) saveBtn.textContent = '✓ সেভ / আপডেট করুন (Save Changes)';
         if (delBtn) delBtn.textContent = '✕ মিটিং মুছে ফেলুন';
         if (pillsWrap) {
@@ -8213,15 +8250,21 @@
         if (nameEl) nameEl.textContent = singleName;
         const meeting = findMeetingForCourse(singleName);
         if (meeting && meeting.meeting_id) {
-          if (idInp) idInp.value = meeting.meeting_id;
-          if (passInp) passInp.value = meeting.passcode || '';
+          // যদি ইনপুট ফিল্ড খালি থাকে বা কোর্স থেকে ডাটা লোড করার কথা বলা হয়, তবেই মিটিং আইডি বসবে
+          if (!hasUserTypedId || opts.loadFromCourse) {
+            if (idInp) idInp.value = meeting.meeting_id;
+            if (passInp) passInp.value = meeting.passcode || '';
+          }
           if (tagEl) {
             tagEl.className = 'zoom-meeting-status-tag active';
             tagEl.textContent = '🟢 মিটিং সেট করা আছে';
           }
         } else {
-          if (idInp) idInp.value = '';
-          if (passInp) passInp.value = '';
+          // ইউজার আগে থেকেই আইডি লিখে থাকলে তা মুছবে না
+          if (!hasUserTypedId && opts.clearInputs) {
+            if (idInp) idInp.value = '';
+            if (passInp) passInp.value = '';
+          }
           if (tagEl) {
             tagEl.className = 'zoom-meeting-status-tag unconfigured';
             tagEl.textContent = '⚪ মিটিং সেট করা নেই';
@@ -8239,9 +8282,21 @@
       // count > 1
       if (nameEl) nameEl.textContent = `${count}টি কোর্স একসাথে নির্বাচিত`;
       if (tagEl) {
+        const runningInSelected = zoomManagerData.selectedCourses.filter(cn => {
+          const m = findMeetingForCourse(cn);
+          return m && String(m.meeting_id || '').trim() !== '';
+        }).length;
+
         tagEl.className = 'zoom-meeting-status-tag active';
-        tagEl.textContent = `⚡ Multi-Select (${count})`;
+        if (runningInSelected === count) {
+          tagEl.textContent = `🟢 ${count}টিতেই লাইভ মিটিং রানিং`;
+        } else if (runningInSelected > 0) {
+          tagEl.textContent = `⚡ Multi-Select (${runningInSelected}/${count}টি রানিং)`;
+        } else {
+          tagEl.textContent = `⚡ Multi-Select (${count}টি নির্বাচিত)`;
+        }
       }
+
       if (saveBtn) saveBtn.textContent = `✓ নির্বাচিত (${count}টি) কোর্সে একযোগে সেভ করুন`;
       if (delBtn) delBtn.textContent = `✕ নির্বাচিত (${count}টি) কোর্সের মিটিং মুছুন`;
 
@@ -8258,14 +8313,17 @@
 
     function toggleZoomCourseSelection(courseName) {
       if (!courseName) return;
+      const idInp = document.getElementById('zoomMeetingIdInput');
+      const passInp = document.getElementById('zoomPasscodeInput');
+      const hasTypedId = idInp && idInp.value.trim() !== '';
+
       const idx = zoomManagerData.selectedCourses.indexOf(courseName);
       if (idx >= 0) {
         zoomManagerData.selectedCourses.splice(idx, 1);
       } else {
         zoomManagerData.selectedCourses.push(courseName);
-        const idInp = document.getElementById('zoomMeetingIdInput');
-        const passInp = document.getElementById('zoomPasscodeInput');
-        if (zoomManagerData.selectedCourses.length === 1 || (idInp && !idInp.value)) {
+        // যদি টেক্সটবক্সে আগে থেকে আইডি লেখা না থাকে এবং এই কোর্সে মিটিং থাকে, তবে ইনপুটে লোড করবে
+        if (!hasTypedId) {
           const meeting = findMeetingForCourse(courseName);
           if (meeting && meeting.meeting_id) {
             if (idInp) idInp.value = meeting.meeting_id;
@@ -8274,6 +8332,33 @@
         }
       }
 
+      syncZoomTopDisplay();
+      renderZoomCoursesGrid();
+    }
+
+    function selectOnlyRunningZoomCourses() {
+      const running = [];
+      let firstMeetingId = '';
+      let firstPasscode = '';
+      for (const c of zoomManagerData.courses) {
+        const m = findMeetingForCourse(c.name);
+        if (m && String(m.meeting_id || '').trim() !== '') {
+          running.push(String(c.name || '').trim());
+          if (!firstMeetingId) {
+            firstMeetingId = String(m.meeting_id || '').trim();
+            firstPasscode = String(m.passcode || '').trim();
+          }
+        }
+      }
+      if (!running.length) {
+        toast('ℹ️ বর্তমানে কোনো কোর্সে রানিং মিটিং নেই।');
+        return;
+      }
+      zoomManagerData.selectedCourses = running;
+      const idInp = document.getElementById('zoomMeetingIdInput');
+      const passInp = document.getElementById('zoomPasscodeInput');
+      if (idInp) idInp.value = firstMeetingId;
+      if (passInp) passInp.value = firstPasscode;
       syncZoomTopDisplay();
       renderZoomCoursesGrid();
     }
@@ -8303,7 +8388,7 @@
 
     function deselectAllZoomCourses() {
       zoomManagerData.selectedCourses = [];
-      syncZoomTopDisplay();
+      syncZoomTopDisplay({ clearInputs: false });
       renderZoomCoursesGrid();
     }
 
@@ -8414,8 +8499,12 @@
             !lowerSet.has(String(m.course_name || '').toLowerCase().trim())
           );
           zoomManagerData.selectedCourses = [];
+          const idInp = document.getElementById('zoomMeetingIdInput');
+          const passInp = document.getElementById('zoomPasscodeInput');
+          if (idInp) idInp.value = '';
+          if (passInp) passInp.value = '';
           toast(`🗑️ ${count}টি কোর্সের জুম মিটিং মুছে ফেলা হয়েছে।`);
-          syncZoomTopDisplay();
+          syncZoomTopDisplay({ clearInputs: true });
           renderZoomCoursesGrid();
         } else {
           alert('❌ ' + (res?.message || 'মুছে ফেলতে ব্যর্থ হয়েছে।'));
@@ -8504,6 +8593,7 @@
               <span id="zoomSelectionCountBadge" class="zst-badge">০টি নির্বাচিত</span>
             </div>
             <div class="zst-actions">
+              <button type="button" class="zst-btn" style="background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" onclick="selectOnlyRunningZoomCourses()">🟢 শুধু রানিং মিটিং সিলেক্ট করুন</button>
               <button type="button" class="zst-btn" onclick="selectAllVisibleZoomCourses()">☑ দৃশ্যমান সব সিলেক্ট করুন</button>
               <button type="button" class="zst-btn" onclick="deselectAllZoomCourses()">☒ সিলেকশন মুছুন</button>
             </div>
@@ -8525,13 +8615,37 @@
         zoomManagerData.meetings = res.meetings || [];
 
         updateZoomLevelBadges();
-        renderZoomCoursesGrid();
 
-        if (zoomManagerData.courses.length > 0 && zoomManagerData.selectedCourses.length === 0) {
-          toggleZoomCourseSelection(zoomManagerData.courses[0].name);
-        } else {
-          syncZoomTopDisplay();
+        // রানিং মিটিং থাকা কোর্সগুলো খুঁজে বের করা
+        const runningCourses = [];
+        let firstMeetingId = '';
+        let firstPasscode = '';
+
+        for (const c of zoomManagerData.courses) {
+          const m = findMeetingForCourse(c.name);
+          if (m && String(m.meeting_id || '').trim() !== '') {
+            runningCourses.push(String(c.name || '').trim());
+            if (!firstMeetingId) {
+              firstMeetingId = String(m.meeting_id || '').trim();
+              firstPasscode = String(m.passcode || '').trim();
+            }
+          }
         }
+
+        // যদি রানিং মিটিং থাকে, তবে সেগুলো সিলেক্ট থাকবে ও ইনপুটে ডাটা থাকবে
+        if (runningCourses.length > 0) {
+          zoomManagerData.selectedCourses = runningCourses;
+          const idInp = document.getElementById('zoomMeetingIdInput');
+          const passInp = document.getElementById('zoomPasscodeInput');
+          if (idInp && !idInp.value) idInp.value = firstMeetingId;
+          if (passInp && !passInp.value) passInp.value = firstPasscode;
+        } else {
+          // কোনো রানিং মিটিং না থাকলে ০টি সিলেক্ট থাকবে (কখনোই অটো কোনো কার্ড সিলেক্ট হবে না)
+          zoomManagerData.selectedCourses = [];
+        }
+
+        syncZoomTopDisplay();
+        renderZoomCoursesGrid();
       } catch (err) {
         const grid = document.getElementById('zoomCoursesGrid');
         if (grid) {
