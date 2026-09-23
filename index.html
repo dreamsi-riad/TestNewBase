@@ -7983,29 +7983,72 @@
       { id: 'SSC', name: 'SSC', icon: '🎒' }
     ];
 
-    function getZoomCourseLevel(c) {
-      if (!c) return '';
-      const raw = String(c.level || '').trim();
-      if (!raw) {
-        const nameUpper = String(c.name || '').toUpperCase();
-        if (nameUpper.includes('HSC')) return 'HSC';
-        if (nameUpper.includes('SSC')) return 'SSC';
-        if (nameUpper.includes('MBA')) return 'MBA';
-        if (nameUpper.includes('BBS')) return 'BBS';
-        if (nameUpper.includes('PROFESSIONAL')) return 'BBA Professional';
-        if (nameUpper.includes('DCU')) return 'BBA DCU';
-        if (nameUpper.includes('NU')) return 'BBA NU';
-        return '';
+    function doesCourseMatchLevel(c, targetLevel) {
+      if (!c) return false;
+      if (!targetLevel) return true; // All levels
+
+      const rawLevel = String(c.level || '').trim().toUpperCase();
+      const rawTag = String(c.tag || '').trim().toUpperCase();
+      const rawName = String(c.name || '').trim().toUpperCase();
+
+      if (targetLevel === 'BBA DCU') {
+        if (rawLevel === 'BBA DCU') return true;
+        if (rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL')) return false;
+        if (rawTag.includes('DCU') || rawLevel.includes('DCU') || rawName.includes('DCU') || rawName.includes('7 COLLEGE') || rawName.includes('DHAKA')) return true;
+        if (rawLevel === 'BBA' || rawName.includes('BBA')) {
+          if (rawTag === 'NU' || (rawName.includes('NU') && !rawName.includes('DCU'))) return false;
+          return true;
+        }
+        return false;
       }
-      const u = raw.toUpperCase();
-      if (u === 'BBA DCU') return 'BBA DCU';
-      if (u === 'BBA NU') return 'BBA NU';
-      if (u.includes('PROFESSIONAL')) return 'BBA Professional';
-      if (u === 'BBS') return 'BBS';
-      if (u === 'MBA') return 'MBA';
-      if (u === 'HSC') return 'HSC';
-      if (u === 'SSC') return 'SSC';
-      return raw;
+
+      if (targetLevel === 'BBA NU') {
+        if (rawLevel === 'BBA NU') return true;
+        if (rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL')) return false;
+        if (rawTag.includes('NU') || rawLevel.includes('NU') || rawName.includes('NU') || rawName.includes('NATIONAL')) return true;
+        if (rawLevel === 'BBA' || rawName.includes('BBA')) {
+          if (rawTag === 'DCU' || (rawName.includes('DCU') && !rawName.includes('NU'))) return false;
+          return true;
+        }
+        return false;
+      }
+
+      if (targetLevel === 'BBA Professional') {
+        return rawLevel.includes('PROFESSIONAL') || rawName.includes('PROFESSIONAL');
+      }
+
+      if (targetLevel === 'BBS') {
+        return rawLevel === 'BBS' || rawLevel.includes('BBS') || rawName.includes('BBS');
+      }
+
+      if (targetLevel === 'MBA') {
+        return rawLevel === 'MBA' || rawLevel.includes('MBA') || rawName.includes('MBA');
+      }
+
+      if (targetLevel === 'HSC') {
+        return rawLevel === 'HSC' || rawLevel.includes('HSC') || rawName.includes('HSC');
+      }
+
+      if (targetLevel === 'SSC') {
+        return rawLevel === 'SSC' || rawLevel.includes('SSC') || rawName.includes('SSC');
+      }
+
+      return rawLevel === targetLevel.toUpperCase();
+    }
+
+    function getZoomCourseLevelBadge(c) {
+      if (!c) return 'Course';
+      if (doesCourseMatchLevel(c, 'BBA Professional')) return 'BBA Professional';
+      const isDcu = doesCourseMatchLevel(c, 'BBA DCU');
+      const isNu = doesCourseMatchLevel(c, 'BBA NU');
+      if (isDcu && isNu) return 'BBA (NU & DCU)';
+      if (isDcu) return 'BBA DCU';
+      if (isNu) return 'BBA NU';
+      if (doesCourseMatchLevel(c, 'BBS')) return 'BBS';
+      if (doesCourseMatchLevel(c, 'MBA')) return 'MBA';
+      if (doesCourseMatchLevel(c, 'HSC')) return 'HSC';
+      if (doesCourseMatchLevel(c, 'SSC')) return 'SSC';
+      return c.level || 'Course';
     }
 
     function renderZoomLevelButtons() {
@@ -8023,8 +8066,11 @@
       const counts = { '': courses.length };
       ZOOM_LEVEL_TABS.forEach(t => { if (t.id) counts[t.id] = 0; });
       for (const c of courses) {
-        const lvl = getZoomCourseLevel(c);
-        if (counts[lvl] !== undefined) counts[lvl]++;
+        for (const t of ZOOM_LEVEL_TABS) {
+          if (t.id && doesCourseMatchLevel(c, t.id)) {
+            counts[t.id]++;
+          }
+        }
       }
       document.querySelectorAll('#zoomLevelBar .cc-badge-count').forEach(b => {
         const l = b.dataset.zoomLevelBadge ?? '';
@@ -8063,7 +8109,7 @@
       return (zoomManagerData.courses || []).filter(c => {
         const cName = String(c.name || '').trim();
         if (!cName) return false;
-        if (lvl && getZoomCourseLevel(c) !== lvl) return false;
+        if (lvl && !doesCourseMatchLevel(c, lvl)) return false;
         if (q && !cName.toLowerCase().includes(q)) return false;
         return true;
       });
@@ -8085,7 +8131,7 @@
 
       container.innerHTML = filtered.map(c => {
         const cName = String(c.name || '').trim();
-        const cLevel = getZoomCourseLevel(c) || c.level || 'Course';
+        const cLevel = getZoomCourseLevelBadge(c);
         const meeting = findMeetingForCourse(cName);
         const isSelected = zoomManagerData.selectedCourses.includes(cName);
 
