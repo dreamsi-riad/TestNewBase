@@ -8408,11 +8408,13 @@
         });
 
         if (res && res.status === 'ok') {
+          const count = selected.length;
           const lowerSet = new Set(selected.map(s => s.toLowerCase().trim()));
           zoomManagerData.meetings = (zoomManagerData.meetings || []).filter(m =>
             !lowerSet.has(String(m.course_name || '').toLowerCase().trim())
           );
-          toast(`🗑️ ${selected.length}টি কোর্সের জুম মিটিং মুছে ফেলা হয়েছে।`);
+          zoomManagerData.selectedCourses = [];
+          toast(`🗑️ ${count}টি কোর্সের জুম মিটিং মুছে ফেলা হয়েছে।`);
           syncZoomTopDisplay();
           renderZoomCoursesGrid();
         } else {
@@ -8454,7 +8456,7 @@
                 <div class="zoom-input-col">
                   <label for="zoomMeetingIdInput">
                     <span>Meeting ID *</span>
-                    <small style="color:#64748b;font-weight:normal">(স্পেস ছাড়া জুম মিটিং আইডি)</small>
+                    <small style="color:#64748b;font-weight:normal">(স্পেস সহ বা ছাড়া যেকোনো ফরম্যাটে দেওয়া যাবে)</small>
                   </label>
                   <input type="text" id="zoomMeetingIdInput" class="adm-enroll-num-input" placeholder="যেমনঃ 9876543210" required>
                 </div>
