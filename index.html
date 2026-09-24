@@ -7588,7 +7588,7 @@
         const ro = (secret && id);
         const note = (secret && id) ? ' <span class="field-note">(use Reset PW)</span>' : '';
         const large = isLargeColumn(c) || (name === 'address');
-        const bool = !isStatusField && (/BOOL/i.test(type) || /^(blocked|get_wt|top_this|active)$/i.test(name));
+        const bool = !isStatusField && (/BOOL/i.test(type) || /^(blocked|get_wt|active)$/i.test(name));
         const isEnrollDate = name === 'expires_at' || name === 'next_date' || name === 'next_payment_date';
         const isDateCol = isEnrollDate || isDateColumn(name);
         const inputType = secret ? 'password' : isDateCol ? 'date' : /INT|REAL|NUM|DECIMAL|FLOAT|DOUBLE/i.test(type) ? 'number' : 'text';
@@ -7632,6 +7632,18 @@
             <select class="access-spinner" data-c="${esc(name)}" data-val="${cur}" onchange="this.dataset.val=this.value">
               <option value="Limited Access" ${cur === 'Limited Access' ? 'selected' : ''}>Limited Access</option>
               <option value="Full Access" ${cur === 'Full Access' ? 'selected' : ''}>Full Access</option>
+            </select>
+          </div>`;
+        }
+        if (name === 'top_this') {
+          const cur = String(v || '').trim().toLowerCase();
+          return `<div class="${large ? 'full' : ''}">
+            <label>${fieldLabel}</label>
+            <select data-c="${esc(name)}" ${ro ? 'disabled' : ''}>
+              <option value="">Normal (খালি / ডিফল্ট)</option>
+              <option value="modal" ${cur === 'modal' ? 'selected' : ''}>modal (পপআপ মডাল হিসেবে শো হবে)</option>
+              <option value="TRUE" ${/^(true|yes|1)$/i.test(cur) ? 'selected' : ''}>TRUE (টপ দিস মোড)</option>
+              <option value="FALSE" ${/^(false|no|0)$/i.test(cur) ? 'selected' : ''}>FALSE</option>
             </select>
           </div>`;
         }
