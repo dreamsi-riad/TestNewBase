@@ -5864,6 +5864,7 @@
       created_at: 'Created At',
       updated_at: 'Updated At',
       requested_at: 'Requested At',
+      teachers: 'Teachers / Instructors',
       fail_count: 'Failed Attempts',
       locked_until: 'Locked Until',
       last_attempt_at: 'Last Attempt'
@@ -6685,6 +6686,14 @@
       if (/^(true|false|yes|no)$/i.test(s.trim())) {
         const on = /^(true|yes)$/i.test(s.trim());
         return `<span class="badge ${on ? 'on' : 'off'}">${esc(s)}</span>`;
+      }
+      if (name === 'teachers') {
+        const rawTeachers = String(s || '').split(/[,、\n]/).map(x => x.trim()).filter(Boolean);
+        if (rawTeachers.length) {
+          return `<div class="adm-teacher-pills" style="display:flex;flex-wrap:wrap;gap:4px;">` +
+            rawTeachers.map(t => `<span class="badge" style="background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;font-weight:600;font-size:11.5px;padding:2px 8px;border-radius:12px;">${esc(t)}</span>`).join('') +
+            `</div>`;
+        }
       }
       return `<span title="${esc(s)}">${esc(s)}</span>`;
     }
@@ -7653,6 +7662,14 @@
             <input class="adm-enroll-date-input" data-c="${esc(name)}" value="${esc(dateValue)}" ${ro ? 'readonly' : ''} type="date" onclick="openDatePicker(this)" onkeydown="if(event.key==='Enter'||event.key===' '){openDatePicker(this);event.preventDefault();}">
           </div>`;
         }
+        if (name === 'teachers') {
+          return `<div class="${large ? 'full' : ''}">
+            <label>${fieldLabel}${note}</label>
+            <input data-c="${esc(name)}" value="${esc(dateValue)}" ${ro ? 'readonly' : ''} type="text" list="admTeachersDatalist" placeholder="e.g. Md. Faruk Hossain, Al Mamun (কমা দিয়ে আলাদা করুন)">
+            <datalist id="admTeachersDatalist"></datalist>
+            <div style="font-size:11.5px;color:#64748b;margin-top:4px;">শিক্ষকদের নাম কমা (,) দিয়ে লিখুন। Teachers টেবিলের নামের সাথে মিললে কোর্স ডিটেইলস পেজে তাদের ছবি ও পরিচয় স্বয়ংক্রিয়ভাবে দেখাবে।</div>
+          </div>`;
+        }
         return `<div class="${large ? 'full' : ''}">
           <label>${fieldLabel}${note}</label>
           ${large
@@ -7681,6 +7698,23 @@
     </div>`;
       ef.onsubmit = save;
       drawer.classList.remove('hidden');
+      populateTeachersDatalist();
+    }
+    let admCachedTeacherList = null;
+    async function populateTeachersDatalist() {
+      const dl = document.getElementById('admTeachersDatalist');
+      if (!dl) return;
+      try {
+        if (!admCachedTeacherList) {
+          const res = await api('admin_rows', { table: 'teachers', limit: 100 });
+          if (res?.data?.rows) {
+            admCachedTeacherList = res.data.rows.map(r => String(r.name || '').trim()).filter(Boolean);
+          }
+        }
+        if (admCachedTeacherList && admCachedTeacherList.length) {
+          dl.innerHTML = admCachedTeacherList.map(n => `<option value="${esc(n)}">`).join('');
+        }
+      } catch (err) {}
     }
     async function save(e) {
       e.preventDefault();
